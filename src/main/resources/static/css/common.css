@@ -1,0 +1,70 @@
+.margin-top-3{
+    margin-top: 3%;
+}
+
+.margin-top-5{
+    margin-top: 5%;
+}
+
+.margin-top-10{
+    margin-top: 10%;
+}
+
+.login{
+    max-width: 30%;
+}
+
+.alert{
+    position: absolute;
+    top: 3%;
+    right: 1%;
+    width: 25%;
+}
+
+.header{
+    width: 100%;
+    padding: 0.5%;
+}
+
+.left{
+    background-color: #3C3C3C;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.right{
+    background-color: #FFFFFF;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.closeScroller{
+    overflow: hidden;
+}
+
+#alert-success{
+    display: none;
+}
+
+#alert-danger{
+    display: none;
+}
+
+#headerUserName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+::-webkit-scrollbar{
+      width: 5px;
+}
+
+::-webkit-scrollbar-track{
+
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #BEBEBE;
+    border-radius: 10px;
+}

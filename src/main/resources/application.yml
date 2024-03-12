@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:quote.db
+    platform: sqlite
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+  servlet:
+    multipart:
+      max-file-size: 150MB
+      max-request-size: 1000MB
+server:
+  port: 1234
+thymeleaf:
+  cache: false
+  prefix: classpath:/templates/
+  suffix: .html
+  encoding: UTF-8
+  mode: HTML5
+jwt:
+  secret: QeDw59VfDM6YvJCbo1zMCGplBZNxIFYrBTXD3wPBa96J1SkhTIzKNIGHTibyhYv56akicDWEDu2plVNogTn1UNgj7T8louHBzLebDnFF0F7V4d0FoIQ72H9L

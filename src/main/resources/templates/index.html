@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>首頁</title>
+    <th:block th:include="common/css.html"></th:block>
+    <th:block th:include="common/js.html"></th:block>
+    <script th:src="@{js/login.js}" type="text/javascript"></script>
+</head>
+<body>
+    <div class="margin-top-10"></div>
+    <div class="m-auto login">
+        <h1 class="h3 mb-3 fw-normal">歡迎光臨</h1>
+        <div class="form-floating">
+            <input class="form-control margin-top-3" id="account" placeholder="test">
+            <label for="account">請輸入帳號...</label>
+            <div class="invalid-feedback">
+                帳號不得為空!
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control margin-top-3" id="password" placeholder="123">
+            <label for="password">請輸入密碼...</label>
+            <div class="invalid-feedback">
+                密碼不得為空!
+            </div>
+        </div>
+        <button class="btn btn-primary w-100 py-2 margin-top-3" type="submit" onclick="login();">登入</button>
+    </div>
+    <div th:include="common/alert.html"></div>
+</body>
+</html>
