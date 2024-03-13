@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.Instant;
 
 @ToString(callSuper = true)
 @Data
@@ -72,7 +72,7 @@ public class UserEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
-    private Date deletedTime;
+    private Instant deletedTime;
 
     // 刪除人員
     @Column(

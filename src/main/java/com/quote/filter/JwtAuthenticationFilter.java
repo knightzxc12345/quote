@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = authorHeader.substring(Common.TOKEN_PREFIX.length());
         String userName = getUserName(token);
-        if(StringUtils.isBlank(userName)){
+        if(null == userName){
             HttpUtil.write(AuthEnum.A00006);
             return;
         }

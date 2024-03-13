@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <!--專案名稱-->
+    <contextName>quote</contextName>
+    <!--日誌路徑-->
+    <property name="logHome" value="../quote/logs"/>
+    <!--專案名稱-->
+    <property name="projectName" value="quote"/>
+    <appender name="FILE-ROLLING"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--log名稱-->
+        <file>${logHome}/${projectName}.log</file>
+        <!--日誌rolling原則-->
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--壓縮檔命名原則-->
+            <fileNamePattern>
+                ${logHome}/archived/${projectName}.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <!--maxFileSize：每個日誌空間最大上限-->
+            <maxFileSize>10MB</maxFileSize>
+            <!--totalSizeCap：所有日誌空間最大上限，超過會刪除舊的-->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!--maxHistory：日誌保留天數-->
+            <maxHistory>120</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread])
+                %highlight(%-5level) %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread])
+                %highlight(%-5level) %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="local,dev,uat,prod">
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev,uat,prod">
+        <root level="info">
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+    </springProfile>
+
+</configuration>

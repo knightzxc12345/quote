@@ -20,8 +20,7 @@
 		<poi.version>5.2.3</poi.version>
 		<jwt.version>0.11.5</jwt.version>
 		<jackson.version>2.12.5</jackson.version>
-		<sqlite.jdbc.version>3.36.0.3</sqlite.jdbc.version>
-		<sqlite.dialect.version>0.1.2</sqlite.dialect.version>
+		<mysql.version>8.0.27</mysql.version>
 	</properties>
 
 	<dependencies>
@@ -82,10 +81,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!--	Mysql	-->
 		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
-			<version>${sqlite.jdbc.version}</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 
 		<dependency>

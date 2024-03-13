@@ -11,12 +11,13 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
+import java.util.UUID;
 
 @ToString(callSuper = true)
 @Data
 @Table(name = "item", indexes = {
-        @Index(name = "item_find", columnList = "is_deleted, name, desc"),
+        @Index(name = "item_find", columnList = "is_deleted, name, specification"),
 })
 @Entity
 public class ItemEntity extends BaseEntity {
@@ -34,14 +35,14 @@ public class ItemEntity extends BaseEntity {
 
     // 規格
     @Column(
-            name = "desc",
+            name = "specification",
             nullable = false,
             updatable = true,
             unique = false,
             length = 256
     )
     @NotBlank
-    private String desc;
+    private String specification;
 
     // 單價
     @Column(
@@ -82,7 +83,7 @@ public class ItemEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
-    private Date deletedTime;
+    private Instant deletedTime;
 
     // 刪除人員
     @Column(
@@ -93,6 +94,6 @@ public class ItemEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

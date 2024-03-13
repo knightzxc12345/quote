@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.Date;
 
 @MappedSuperclass
@@ -66,7 +67,7 @@ public class BaseEntity {
             updatable = true,
             unique = false
     )
-    private Date modifiedTime;
+    private Instant modifiedTime;
 
     // 編輯人員
     @Column(
