@@ -1,10 +1,11 @@
 package com.quote.service.user;
 
 import com.quote.entity.user.UserEntity;
-import com.quote.repository.UserRepository;
+import com.quote.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity create(UserEntity userEntity, String userUuid) {
         userEntity.setUuid(UUID.randomUUID().toString());
         userEntity.setCreateUser(userUuid);
-        userEntity.setCreateTime(new Date());
+        userEntity.setCreateTime(Instant.now());
         userEntity.setIsDeleted(false);
         return userRepository.save(userEntity);
     }

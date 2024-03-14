@@ -25,37 +25,34 @@ function validateInput(value, elementId) {
 }
 
 function valid(account, password){
-    const url = 'common/login/v1';
     const data = {
         "account" : account,
         "password" : password
     }
     let name = '';
     let token = '';
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+    $.ajax({
+        url: 'common/login/v1',
+        contentType: 'application/json',
+        type: 'POST',
+        data: JSON.stringify(data),
+        success: function(response) {
+            if(response.code != 'C00001'){
+                alertError('系統錯誤');
+                return;
+            }
+            name = response.data.name;
+            token = response.data.token;
+            if(isEmpty(name) || isEmpty(token)){
+                alertError('查無使用者');
+                return;
+            }
+            localStorage.setItem('name', name);
+            localStorage.setItem('token', token);
+            location.href = "/quote";
         },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.code == 'C00001'){
-            name = data.data.name;
-            token = data.data.token;
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
         }
-        if(isEmpty(name) || isEmpty(token)){
-            alertError('查無使用者');
-            return;
-        }
-        localStorage.setItem('name', data.data.name);
-        localStorage.setItem('token', data.data.token);
-        goQuote();
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-function goQuote(){
-    location.href = "/quote";
+    });
 }

@@ -4,7 +4,7 @@ import com.quote.base.ResponseBody;
 import com.quote.base.eunms.CommonEnum;
 import com.quote.controller.common.request.LoginRequest;
 import com.quote.controller.common.response.LoginResponse;
-import com.quote.usecase.LoginUseCase;
+import com.quote.usecase.login.LoginUseCase;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

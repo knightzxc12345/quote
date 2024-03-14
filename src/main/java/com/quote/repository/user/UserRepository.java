@@ -1,4 +1,4 @@
-package com.quote.repository;
+package com.quote.repository.user;
 
 import com.quote.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

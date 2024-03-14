@@ -1,4 +1,4 @@
-package com.quote.usecase;
+package com.quote.usecase.login;
 
 import com.quote.controller.common.request.LoginRequest;
 import com.quote.controller.common.response.LoginResponse;

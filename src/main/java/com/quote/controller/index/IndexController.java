@@ -11,4 +11,9 @@ public class IndexController {
         return "quote";
     }
 
+    @RequestMapping("/customer")
+    public String customer() {
+        return "customer";
+    }
+
 }

@@ -1,3 +1,7 @@
+.margin-top-2{
+    margin-top: 2%;
+}
+
 .margin-top-3{
     margin-top: 3%;
 }
@@ -10,6 +14,10 @@
     margin-top: 10%;
 }
 
+.margin-right-3{
+    margin-right: 3%;
+}
+
 .login{
     max-width: 30%;
 }
@@ -18,12 +26,29 @@
     position: absolute;
     top: 3%;
     right: 1%;
-    width: 25%;
+    width: 15%;
+    z-index: 9999;
 }
 
 .header{
     width: 100%;
     padding: 0.5%;
+    background-color: #F2E6E6;
+}
+
+.menu{
+    margin-top: 1%;
+}
+
+.menu .list-group-item{
+    border: none;
+    font-weight: bold;
+    margin: 3%;
+    border-radius: inherit;
+}
+
+.menu-active{
+    background-color: #ECECFF;
 }
 
 .left{
@@ -38,8 +63,28 @@
     overflow-y: auto;
 }
 
-.closeScroller{
+.title{
+    margin-top: 2%;
+}
+
+.title h3{
+    font-weight: bold;
+}
+
+.close-scroller{
     overflow: hidden;
+}
+
+.offcanvas-footer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px #E0E0E0;
+    padding: 3%;
+}
+
+.hide{
+    display: none;
 }
 
 #alert-success{
@@ -50,10 +95,11 @@
     display: none;
 }
 
-#headerUserName{
+#header-username{
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
 }
 
 ::-webkit-scrollbar{

@@ -1,7 +1,23 @@
 const globalUserName = localStorage.getItem('name');
 const globalToken = localStorage.getItem('token');
+const headers = {
+    'Authorization': `Bearer ${globalToken}`,
+};
 
-window.onload = function() {
+function init(){
+    valid();
+    // 初始化人名
+    $("#header-username").text(globalUserName);
+    // 初始化menu
+    if(window.location.pathname === '/quote'){
+        $("#menu-quote").addClass('menu-active');
+    }
+    if(window.location.pathname === '/customer'){
+        $("#menu-customer").addClass('menu-active');
+    }
+}
+
+function valid(){
     if(window.location.pathname === '/'){
         return;
     }
@@ -9,8 +25,7 @@ window.onload = function() {
         goBack();
         return;
     }
-    $("#headerUserName").text(globalUserName);
-};
+}
 
 function isEmpty(value) {
     return value === null || value === undefined || value === '';
@@ -40,4 +55,56 @@ function logout(){
     localStorage.setItem('name', null);
     localStorage.setItem('token', null);
     location.href = "/";
+}
+
+function setPage(elementId, pageTotal, pageNow){
+    $(elementId).empty();
+    if(0 == pageTotal){
+        return;
+    }
+    if(0 == pageNow){
+        $(elementId).append(`
+            <li class="page-item disabled">
+                <span class="page-link" data-val="pre">上一頁</span>
+            </li>
+        `);
+    }
+    if(0 != pageNow){
+        $(elementId).append(`
+            <li class="page-item">
+                <span class="page-link" data-val="pre">上一頁</span>
+            </li>
+        `);
+    }
+    for(let i = 0; i < pageTotal; i++){
+        if(i == pageNow){
+            $(elementId).append(`
+                <li class="page-item active">
+                    <span class="page-link" data-val="${i + 1}">${i + 1}</span>
+                </li>
+            `);
+        }
+        if(i != pageNow){
+            $(elementId).append(`
+                <li class="page-item">
+                    <span class="page-link" data-val="${i + 1}">${i + 1}</span>
+                </li>
+            `);
+        }
+
+    }
+    if(pageTotal == pageNow + 1){
+        $(elementId).append(`
+            <li class="page-item disabled">
+                <span class="page-link" data-val="next">下一頁</span>
+            </li>
+        `);
+    }
+    if(pageTotal != pageNow + 1){
+        $(elementId).append(`
+            <li class="page-item">
+                <span class="page-link" data-val="next">下一頁</span>
+            </li>
+        `);
+    }
 }
