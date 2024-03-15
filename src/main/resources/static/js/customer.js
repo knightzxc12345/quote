@@ -30,8 +30,26 @@ function offcanvasEvent(){
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
             $('#add-customer-name').val('');
             $('#add-customer-address').val('');
+            $('#add-customer-deputy-manager-name').val('');
+            $('#add-customer-deputy-manager-mobile').val('');
+            $('#add-customer-deputy-manager-email').val('');
+            $('#add-customer-manager-name').val('');
+            $('#add-customer-manager-mobile').val('');
+            $('#add-customer-manager-email').val('');
+            $('#add-customer-general-affairs-manager-name').val('');
+            $('#add-customer-general-affairs-manager-mobile').val('');
+            $('#add-customer-general-affairs-manager-email').val('');
             $('#update-customer-name').val('');
             $('#update-customer-address').val('');
+            $('#update-customer-deputy-manager-name').val('');
+            $('#update-customer-deputy-manager-mobile').val('');
+            $('#update-customer-deputy-manager-email').val('');
+            $('#update-customer-manager-name').val('');
+            $('#update-customer-manager-mobile').val('');
+            $('#update-customer-manager-email').val('');
+            $('#update-customer-general-affairs-manager-name').val('');
+            $('#update-customer-general-affairs-manager-mobile').val('');
+            $('#update-customer-general-affairs-manager-email').val('');
         }
     });
     $('#customerList').on('click', '.get-update-customer-json', function() {
@@ -40,6 +58,15 @@ function offcanvasEvent(){
         $('#update-customer-uuid').val(jsonData.customerUuid);
         $('#update-customer-name').val(jsonData.name);
         $('#update-customer-address').val(jsonData.address);
+        $('#update-customer-deputy-manager-name').val(jsonData.deputyManagerName);
+        $('#update-customer-deputy-manager-mobile').val(jsonData.deputyManagerMobile);
+        $('#update-customer-deputy-manager-email').val(jsonData.deputyManagerEmail);
+        $('#update-customer-manager-name').val(jsonData.managerName);
+        $('#update-customer-manager-mobile').val(jsonData.managerMobile);
+        $('#update-customer-manager-email').val(jsonData.managerEmail);
+        $('#update-customer-general-affairs-manager-name').val(jsonData.generalAffairsManagerName);
+        $('#update-customer-general-affairs-manager-mobile').val(jsonData.generalAffairsManagerMobile);
+        $('#update-customer-general-affairs-manager-email').val(jsonData.generalAffairsManagerEmail);
     });
     $('#customerList').on('click', '.get-delete-customer-json', function() {
         const row = $(this).closest('tr');
@@ -101,8 +128,23 @@ function getCustomers() {
                         <td>${value.name}</td>
                         <td>${value.address}</td>
                         <td>
+                            ${value.deputyManagerName}<br/>
+                            ${value.deputyManagerMobile}<br/>
+                            ${value.deputyManagerEmail}
+                        </td>
+                        <td>
+                            ${value.managerName}<br/>
+                            ${value.managerMobile}<br/>
+                            ${value.managerEmail}
+                        </td>
+                        <td>
+                            ${value.generalAffairsManagerName}<br/>
+                            ${value.generalAffairsManagerMobile}<br/>
+                            ${value.generalAffairsManagerEmail}
+                        </td>
+                        <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-customer-json' data-bs-toggle='offcanvas' data-bs-target='#update-customer' aria-controls='update-customer'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-customer-json' data-bs-toggle="modal" data-bs-target="#deleteCustomerModal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-customer-json' data-bs-toggle="modal" data-bs-target="#delete-customer-modal">刪除</button>
                         </td>
                     </tr>
                 `);
@@ -128,6 +170,15 @@ function getCustomers() {
 function addCustomer() {
     const name = $("#add-customer-name").val();
     const address = $("#add-customer-address").val();
+    const deputyManagerName = $('#add-customer-deputy-manager-name').val();
+    const deputyManagerMobile = $('#add-customer-deputy-manager-mobile').val();
+    const deputyManagerEmail = $('#add-customer-deputy-manager-email').val();
+    const managerName = $('#add-customer-manager-name').val();
+    const managerMobile = $('#add-customer-manager-mobile').val();
+    const managerEmail = $('#add-customer-manager-email').val();
+    const generalAffairsManagerName = $('#add-customer-general-affairs-manager-name').val();
+    const generalAffairsManagerMobile = $('#add-customer-general-affairs-manager-mobile').val();
+    const generalAffairsManagerEmail = $('#add-customer-general-affairs-manager-email').val();
     // 驗證姓名是否為空
     const nameValid = validateInput(name, "#add-customer-name");
     if (!nameValid) {
@@ -136,6 +187,15 @@ function addCustomer() {
     var data = {
         name: name,
         address: address,
+        deputyManagerName: deputyManagerName,
+        deputyManagerMobile: deputyManagerMobile,
+        deputyManagerEmail: deputyManagerEmail,
+        managerName: managerName,
+        managerMobile: managerMobile,
+        managerEmail: managerEmail,
+        generalAffairsManagerName: generalAffairsManagerName,
+        generalAffairsManagerMobile: generalAffairsManagerMobile,
+        generalAffairsManagerEmail: generalAffairsManagerEmail
     };
     $.ajax({
         url: 'customer/v1',
@@ -166,6 +226,15 @@ function updateCustomer() {
     const customerUuid = $('#update-customer-uuid').val();
     const name = $("#update-customer-name").val();
     const address = $("#update-customer-address").val();
+    const deputyManagerName = $('#update-customer-deputy-manager-name').val();
+    const deputyManagerMobile = $('#update-customer-deputy-manager-mobile').val();
+    const deputyManagerEmail = $('#update-customer-deputy-manager-email').val();
+    const managerName = $('#update-customer-manager-name').val();
+    const managerMobile = $('#update-customer-manager-mobile').val();
+    const managerEmail = $('#update-customer-manager-email').val();
+    const generalAffairsManagerName = $('#update-customer-general-affairs-manager-name').val();
+    const generalAffairsManagerMobile = $('#update-customer-general-affairs-manager-mobile').val();
+    const generalAffairsManagerEmail = $('#update-customer-general-affairs-manager-email').val();
     // 驗證姓名是否為空
     const nameValid = validateInput(name, "#update-customer-name");
     if (!nameValid) {
@@ -174,6 +243,15 @@ function updateCustomer() {
     var data = {
         name: name,
         address: address,
+        deputyManagerName: deputyManagerName,
+        deputyManagerMobile: deputyManagerMobile,
+        deputyManagerEmail: deputyManagerEmail,
+        managerName: managerName,
+        managerMobile: managerMobile,
+        managerEmail: managerEmail,
+        generalAffairsManagerName: generalAffairsManagerName,
+        generalAffairsManagerMobile: generalAffairsManagerMobile,
+        generalAffairsManagerEmail: generalAffairsManagerEmail
     };
     $.ajax({
         url: 'customer/v1/' + customerUuid,

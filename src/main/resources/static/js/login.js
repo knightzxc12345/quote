@@ -49,7 +49,7 @@ function valid(account, password){
             }
             localStorage.setItem('name', name);
             localStorage.setItem('token', token);
-            location.href = "/quote";
+            location.href = "/customer";
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);

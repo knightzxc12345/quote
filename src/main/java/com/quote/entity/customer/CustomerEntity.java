@@ -41,6 +41,96 @@ public class CustomerEntity extends BaseEntity {
     )
     private String address;
 
+    // 協理名稱
+    @Column(
+            name = "deputy_manager_name",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    private String deputyManagerName;
+
+    // 協理電話
+    @Column(
+            name = "deputy_manager_mobile",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 32
+    )
+    private String deputyManagerMobile;
+
+    // 協理信箱
+    @Column(
+            name = "deputy_manager_email",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 128
+    )
+    private String deputyManagerEmail;
+
+    // 主管名稱
+    @Column(
+            name = "manager_name",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    private String managerName;
+
+    // 主管電話
+    @Column(
+            name = "manager_mobile",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 32
+    )
+    private String managerMobile;
+
+    // 主管信箱
+    @Column(
+            name = "manager_email",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 128
+    )
+    private String managerEmail;
+
+    // 總務名稱
+    @Column(
+            name = "general_affairs_manager_name",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    private String generalAffairsManagerName;
+
+    // 總務電話
+    @Column(
+            name = "general_affairs_manager_mobile",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 32
+    )
+    private String generalAffairsManagerMobile;
+
+    // 總務信箱
+    @Column(
+            name = "general_affairs_manager_email",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 128
+    )
+    private String generalAffairsManagerEmail;
+
     // 是否刪除
     @Column(
             name = "is_deleted",

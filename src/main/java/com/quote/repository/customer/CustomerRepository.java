@@ -25,7 +25,10 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
                 CustomerEntity c 
             WHERE 
                 c.isDeleted = false
-                AND (:keyword IS NULL OR c.name LIKE CONCAT('%', :keyword, '%')) 
+                AND 
+                (
+                    (:keyword IS NULL OR c.name LIKE CONCAT('%', :keyword, '%'))
+                )
             ORDER BY 
                 c.name
             """
@@ -40,7 +43,10 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
                 CustomerEntity c 
             WHERE 
                 c.isDeleted = false
-                AND (:keyword IS NULL OR c.name LIKE CONCAT('%', :keyword, '%')) 
+                AND 
+                (
+                    (:keyword IS NULL OR c.name LIKE CONCAT('%', :keyword, '%'))
+                )
             ORDER BY 
                 c.name
             """

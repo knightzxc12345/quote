@@ -9,11 +9,14 @@ function init(){
     // 初始化人名
     $("#header-username").text(globalUserName);
     // 初始化menu
-    if(window.location.pathname === '/quote'){
-        $("#menu-quote").addClass('menu-active');
-    }
     if(window.location.pathname === '/customer'){
         $("#menu-customer").addClass('menu-active');
+    }
+    if(window.location.pathname === '/product'){
+        $("#menu-product").addClass('menu-active');
+    }
+    if(window.location.pathname === '/quote'){
+        $("#menu-quote").addClass('menu-active');
     }
 }
 

@@ -7,7 +7,25 @@ public record CustomerUpdateRequest(
         @NotBlank(message = "名稱不得為空")
         String name,
 
-        String address
+        String address,
+
+        String deputyManagerName,
+
+        String deputyManagerMobile,
+
+        String deputyManagerEmail,
+
+        String managerName,
+
+        String managerMobile,
+
+        String managerEmail,
+
+        String generalAffairsManagerName,
+
+        String generalAffairsManagerMobile,
+
+        String generalAffairsManagerEmail
 
 ) {
 }

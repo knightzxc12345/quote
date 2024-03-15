@@ -32,9 +32,12 @@
                 <table class="table table-striped" id="customerList">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 30%;">客戶名稱</th>
-                            <th scope="col" style="width: 60%;">客戶地址</th>
-                            <th scope="col"></th>
+                            <th scope="col">名稱</th>
+                            <th scope="col">地址</th>
+                            <th scope="col">協理</th>
+                            <th scope="col">經理</th>
+                            <th scope="col">總務</th>
+                            <th scope="col" style="width: 10%;"></th>
                         </tr>
                     </thead>
                     <tbody id="customer-tbody">
@@ -70,6 +73,42 @@
                 <span class="input-group-text">地址</span>
                 <input type="text" class="form-control" id="add-customer-address" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理名稱</span>
+                <input type="text" class="form-control" id="add-customer-deputy-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理電話</span>
+                <input type="text" class="form-control" id="add-customer-deputy-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理信箱</span>
+                <input type="text" class="form-control" id="add-customer-deputy-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理名稱</span>
+                <input type="text" class="form-control" id="add-customer-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理電話</span>
+                <input type="text" class="form-control" id="add-customer-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理信箱</span>
+                <input type="text" class="form-control" id="add-customer-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務名稱</span>
+                <input type="text" class="form-control" id="add-customer-general-affairs-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務電話</span>
+                <input type="text" class="form-control" id="add-customer-general-affairs-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務信箱</span>
+                <input type="text" class="form-control" id="add-customer-general-affairs-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
         </div>
         <div class="offcanvas-footer">
             <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
@@ -95,6 +134,42 @@
                 <span class="input-group-text">地址</span>
                 <input type="text" class="form-control" id="update-customer-address" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理名稱</span>
+                <input type="text" class="form-control" id="update-customer-deputy-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理電話</span>
+                <input type="text" class="form-control" id="update-customer-deputy-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">協理信箱</span>
+                <input type="text" class="form-control" id="update-customer-deputy-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理名稱</span>
+                <input type="text" class="form-control" id="update-customer-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理電話</span>
+                <input type="text" class="form-control" id="update-customer-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">經理信箱</span>
+                <input type="text" class="form-control" id="update-customer-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務名稱</span>
+                <input type="text" class="form-control" id="update-customer-general-affairs-manager-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務電話</span>
+                <input type="text" class="form-control" id="update-customer-general-affairs-manager-mobile" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總務信箱</span>
+                <input type="text" class="form-control" id="update-customer-general-affairs-manager-email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
         </div>
         <div class="offcanvas-footer">
             <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
@@ -102,11 +177,11 @@
         </div>
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static" id="deleteCustomerModal" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" id="delete-customer-modal" tabindex="-1" aria-labelledby="delete-customer-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">刪除確認</h1>
+                    <h1 class="modal-title fs-5">刪除確認</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

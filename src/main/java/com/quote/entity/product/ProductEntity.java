@@ -1,4 +1,4 @@
-package com.quote.entity.item;
+package com.quote.entity.product;
 
 import com.quote.entity.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -12,15 +12,27 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.UUID;
 
 @ToString(callSuper = true)
 @Data
-@Table(name = "item", indexes = {
-        @Index(name = "item_find", columnList = "is_deleted, name, specification"),
+@Table(name = "product", indexes = {
+        @Index(name = "product_find", columnList = "is_deleted, name, specification"),
+        @Index(name = "product_select_no", columnList = "is_deleted, no"),
+        @Index(name = "product_select_name", columnList = "is_deleted, name"),
+        @Index(name = "product_select_specification", columnList = "is_deleted, specification")
 })
 @Entity
-public class ItemEntity extends BaseEntity {
+public class ProductEntity extends BaseEntity {
+
+    // 編號
+    @Column(
+            name = "no",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 10
+    )
+    private String no;
 
     // 品名
     @Column(
@@ -44,6 +56,16 @@ public class ItemEntity extends BaseEntity {
     @NotBlank
     private String specification;
 
+    // 單位
+    @Column(
+            name = "unit",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 32
+    )
+    private String unit;
+
     // 單價
     @Column(
             name = "unit_price",
@@ -54,7 +76,7 @@ public class ItemEntity extends BaseEntity {
     @NotNull
     private BigDecimal unitPrice;
 
-    // 原價
+    // 成本
     @Column(
             name = "origin_price",
             nullable = false,
@@ -94,6 +116,6 @@ public class ItemEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private UUID deletedUser;
+    private String deletedUser;
 
 }

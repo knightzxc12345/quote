@@ -102,6 +102,10 @@
     font-weight: bold;
 }
 
+#customerList td{
+    vertical-align: middle;
+}
+
 ::-webkit-scrollbar{
       width: 5px;
 }

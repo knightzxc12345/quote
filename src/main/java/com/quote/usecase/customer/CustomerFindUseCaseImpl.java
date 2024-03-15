@@ -55,7 +55,16 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
         return new CustomerFindResponse(
                 customerEntity.getUuid(),
                 customerEntity.getName(),
-                customerEntity.getAddress()
+                customerEntity.getAddress(),
+                customerEntity.getDeputyManagerName(),
+                customerEntity.getDeputyManagerMobile(),
+                customerEntity.getDeputyManagerEmail(),
+                customerEntity.getManagerName(),
+                customerEntity.getManagerMobile(),
+                customerEntity.getManagerEmail(),
+                customerEntity.getGeneralAffairsManagerName(),
+                customerEntity.getGeneralAffairsManagerMobile(),
+                customerEntity.getGeneralAffairsManagerEmail()
         );
     }
 
@@ -68,7 +77,16 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
             responses.add(new CustomerFindAllResponse(
                     customerEntity.getUuid(),
                     customerEntity.getName(),
-                    customerEntity.getAddress()
+                    customerEntity.getAddress(),
+                    customerEntity.getDeputyManagerName(),
+                    customerEntity.getDeputyManagerMobile(),
+                    customerEntity.getDeputyManagerEmail(),
+                    customerEntity.getManagerName(),
+                    customerEntity.getManagerMobile(),
+                    customerEntity.getManagerEmail(),
+                    customerEntity.getGeneralAffairsManagerName(),
+                    customerEntity.getGeneralAffairsManagerMobile(),
+                    customerEntity.getGeneralAffairsManagerEmail()
             ));
         }
         return responses;
