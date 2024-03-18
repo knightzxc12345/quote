@@ -27,9 +27,10 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/common/**",
-            "/quote",
             "/customer",
+            "/vendor",
             "/product",
+            "/quote",
             "/"
     };
 

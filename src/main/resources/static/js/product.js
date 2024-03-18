@@ -2,10 +2,11 @@ let globalPageNow = 0;
 let globalPageSize = 12;
 let globalPageTotal = 0;
 let globalKeyword = '';
+let globalVendor = '';
 
 window.onload = function () {
     init();
-    getProducts(globalPageNow, globalPageSize);
+    getVendors();
     offcanvasEvent();
     pageEvent();
     searchEnter();
@@ -28,23 +29,21 @@ function search(){
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
-            $('#add-product-no').val('');
-            $('#add-product-name').val('');
-            $('#add-product-specification').val('');
-            $('#add-product-unit').val('');
-            $('#add-product-unit-price').val('');
-            $('#add-product-origin-price').val('');
-            $('#update-product-no').val('');
-            $('#update-product-name').val('');
-            $('#update-product-specification').val('');
-            $('#update-product-unit').val('');
-            $('#update-product-unit-price').val('');
-            $('#update-product-origin-price').val('');
+            $('.offcanvas-body .form-control').val('');
+            $('.offcanvas-body .form-control').removeClass('is-valid');
+            $('.offcanvas-body .form-control').removeClass('is-invalid');
         }
     });
     $('#productList').on('click', '.get-update-product-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
+        const vendorUuid = jsonData.vendorUuid;
+        $('#update-product-vendor option').each(function() {
+            console.log($(this).val());
+            if($(this).val() == vendorUuid) {
+                $(this).prop('selected', true);
+            }
+        });
         $('#update-product-uuid').val(jsonData.productUuid);
         $('#update-product-no').val(jsonData.no);
         $('#update-product-name').val(jsonData.name);
@@ -88,9 +87,44 @@ function pageEvent(){
     });
 }
 
+function getVendors(){
+    $.ajax({
+        url: `vendor/v1`,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00002') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            globalVendor = response.data;
+            $.each(response.data, function(key, value) {
+                $('#add-product-vendor').append(`
+                    <option value='${value.vendorUuid}'>${value.name}</option>
+                `);
+                $('#update-product-vendor').append(`
+                    <option value='${value.vendorUuid}'>${value.name}</option>
+                `);
+            });
+            getProducts(globalPageNow, globalPageSize);
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
 function getProducts() {
-    let name = '';
-    let token = '';
     $.ajax({
         url: `product/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
@@ -107,15 +141,18 @@ function getProducts() {
             }
             $("#product-tbody").empty();
             $.each(response.data.responses, function (key, value) {
+                let vendorName = findVendorName(value.vendorUuid);
+                let unitPriceFormatted = value.unitPrice.toLocaleString();
+                let originPriceFormatted = value.originPrice.toLocaleString();
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
-                        <td class='hide'>${value.productUuid}</th>
+                        <td>${vendorName}</td>
                         <td>${value.no}</td>
                         <td>${value.name}</td>
                         <td>${value.specification}</td>
                         <td>${value.unit}</td>
-                        <td>${value.unitPrice}</td>
-                        <td>${value.originPrice}</td>
+                        <td>${unitPriceFormatted}</td>
+                        <td>${originPriceFormatted}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-product' aria-controls='update-product'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product-modal">刪除</button>
@@ -141,7 +178,17 @@ function getProducts() {
     });
 }
 
+function findVendorName(vendorUuid) {
+    for (var i = 0; i < globalVendor.length; i++) {
+        if (globalVendor[i].vendorUuid === vendorUuid) {
+            return globalVendor[i].name;
+        }
+    }
+    return null;
+}
+
 function addProduct() {
+    const vendorUuid = $("#add-product-vendor").val();
     const no = $("#add-product-no").val();
     const name = $("#add-product-name").val();
     const specification = $("#add-product-specification").val();
@@ -149,16 +196,18 @@ function addProduct() {
     const unitPrice = $("#add-product-unit-price").val();
     const originPrice = $("#add-product-origin-price").val();
     // 驗證
-    const noValid = validateInput(name, "#add-product-no");
+    const vendorUuidValid = validateInput(vendorUuid, "#add-product-vendor-uuid");
+    const noValid = validateInput(no, "#add-product-no");
     const nameValid = validateInput(name, "#add-product-name");
-    const specificationValid = validateInput(name, "#add-product-specification");
-    const unitValid = validateInput(name, "#add-product-unit");
-    const unitPriceValid = validateInput(name, "#add-product-unit-price");
-    const originPriceValid = validateInput(name, "#add-product-origin-price");
-    if (!noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
+    const specificationValid = validateInput(specification, "#add-product-specification");
+    const unitValid = validateInput(unit, "#add-product-unit");
+    const unitPriceValid = validateNumberInput(unitPrice, "#add-product-unit-price");
+    const originPriceValid = validateNumberInput(originPrice, "#add-product-origin-price");
+    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
         return;
     }
     var data = {
+        vendorUuid: vendorUuid,
         no: no,
         name: name,
         specification: specification,
@@ -193,23 +242,26 @@ function addProduct() {
 
 function updateProduct() {
     const productUuid = $('#update-product-uuid').val();
-    const no = $("#add-product-no").val();
-    const name = $("#add-product-name").val();
-    const specification = $("#add-product-specification").val();
-    const unit = $("#add-product-unit").val();
-    const unitPrice = $("#add-product-unit-price").val();
-    const originPrice = $("#add-product-origin-price").val();
+    const vendorUuid = $("#update-product-vendor").val();
+    const no = $("#update-product-no").val();
+    const name = $("#update-product-name").val();
+    const specification = $("#update-product-specification").val();
+    const unit = $("#update-product-unit").val();
+    const unitPrice = $("#update-product-unit-price").val().replace(/,/g, '');
+    const originPrice = $("#update-product-origin-price").val().replace(/,/g, '');
     // 驗證
-    const noValid = validateInput(name, "#add-product-no");
-    const nameValid = validateInput(name, "#add-product-name");
-    const specificationValid = validateInput(name, "#add-product-specification");
-    const unitValid = validateInput(name, "#add-product-unit");
-    const unitPriceValid = validateInput(name, "#add-product-unit-price");
-    const originPriceValid = validateInput(name, "#add-product-origin-price");
-    if (!noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
+    const vendorUuidValid = validateInput(vendorUuid, "#update-product-vendor-uuid");
+    const noValid = validateInput(no, "#update-product-no");
+    const nameValid = validateInput(name, "#update-product-name");
+    const specificationValid = validateInput(specification, "#update-product-specification");
+    const unitValid = validateInput(unit, "#update-product-unit");
+    const unitPriceValid = validateNumberInput(unitPrice, "#update-product-unit-price");
+    const originPriceValid = validateNumberInput(originPrice, "#update-product-origin-price");
+    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
         return;
     }
     var data = {
+        vendorUuid: vendorUuid,
         no: no,
         name: name,
         specification: specification,
@@ -271,6 +323,20 @@ function deleteProduct(){
 function validateInput(value, elementId) {
     const element = $(elementId);
     if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        return false;
+    }
+    element.removeClass("is-invalid").addClass("is-valid");
+    return true;
+}
+
+function validateNumberInput(value, elementId) {
+    const element = $(elementId);
+    if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        return false;
+    }
+    if (!/^\d+$/.test(value)) {
         element.removeClass("is-valid").addClass("is-invalid");
         return false;
     }

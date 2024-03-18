@@ -17,13 +17,7 @@
         <div class="col-10 right">
             <div class="d-flex justify-content-between title">
                 <div>
-                    <h3>客戶管理</h3>
-                </div>
-                <div>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="product-search-input" placeholder="請輸入搜尋文字..." aria-label="請輸入搜尋文字..." aria-describedby="product-search">
-                        <button class="btn btn-outline-secondary" type="button" id="product-search" onclick="search();">搜尋</button>
-                    </div>
+                    <h3>產品管理</h3>
                 </div>
                 <div>
                     <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-product" aria-controls="add-product">新增產品</button>
@@ -32,6 +26,7 @@
             <table class="table table-striped" id="productList">
                 <thead>
                 <tr>
+                    <th scope="col">廠商</th>
                     <th scope="col">編號</th>
                     <th scope="col">品名</th>
                     <th scope="col">規格</th>
@@ -64,6 +59,12 @@
     </div>
     <div class="offcanvas-body">
         <div class="input-group mb-3">
+            <label class="input-group-text" for="add-product-vendor">廠商</label>
+            <select class="form-select" id="add-product-vendor">
+
+            </select>
+        </div>
+        <div class="input-group mb-3">
             <span class="input-group-text">編號</span>
             <input type="text" class="form-control" id="add-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             <div class="invalid-feedback">
@@ -95,14 +96,14 @@
             <span class="input-group-text">單價</span>
             <input type="text" class="form-control" id="add-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             <div class="invalid-feedback">
-                單價不得為空!
+                單價不得為空且必須為數字!
             </div>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">成本</span>
             <input type="text" class="form-control" id="add-product-origin-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             <div class="invalid-feedback">
-                成本不得為空!
+                成本不得為空且必須為數字!
             </div>
         </div>
     </div>
@@ -119,6 +120,12 @@
     </div>
     <div class="offcanvas-body">
         <div class="hide" id="update-product-uuid"></div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="update-product-vendor">廠商</label>
+            <select class="form-select" id="update-product-vendor">
+
+            </select>
+        </div>
         <div class="input-group mb-3">
             <span class="input-group-text">編號</span>
             <input type="text" class="form-control" id="update-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
@@ -151,14 +158,14 @@
             <span class="input-group-text">單價</span>
             <input type="text" class="form-control" id="update-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             <div class="invalid-feedback">
-                單價不得為空!
+                單價不得為空且必須為數字!
             </div>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">成本</span>
             <input type="text" class="form-control" id="update-product-origin-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
             <div class="invalid-feedback">
-                成本不得為空!
+                成本不得為空且必須為數字!
             </div>
         </div>
     </div>
@@ -181,7 +188,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-success btn-sm" onclick="deleteProduct();">刪除</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="deleteProduct();"確定</button>
             </div>
         </div>
     </div>

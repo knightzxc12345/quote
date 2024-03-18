@@ -21,7 +21,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerEntity create(CustomerEntity customerEntity, String userUuid) {
-        check(customerEntity);
+        CustomerEntity isExists = customerRepository.findByIsDeletedFalseAndName(customerEntity.getName());
+        if(null != isExists){
+            throw new BusinessException(CustomerEnum.CU0001);
+        }
         customerEntity.setUuid(UUID.randomUUID().toString());
         customerEntity.setCreateTime(Instant.now());
         customerEntity.setCreateUser(userUuid);
@@ -29,15 +32,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(customerEntity);
     }
 
-    private void check(CustomerEntity customerEntity){
-        CustomerEntity isExists = customerRepository.findByIsDeletedFalseAndName(customerEntity.getName());
-        if(null != isExists){
-            throw new BusinessException(CustomerEnum.CU0001);
-        }
-    }
-
     @Override
     public void update(CustomerEntity customerEntity, String userUuid) {
+        CustomerEntity isExists = customerRepository.findByIsDeletedFalseAndName(customerEntity.getName());
+        if(null != isExists && !customerEntity.getUuid().equals(isExists.getUuid())){
+            throw new BusinessException(CustomerEnum.CU0001);
+        }
         customerEntity.setModifiedTime(Instant.now());
         customerEntity.setModifiedUser(userUuid);
         customerRepository.save(customerEntity);

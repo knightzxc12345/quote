@@ -16,13 +16,23 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "product", indexes = {
-        @Index(name = "product_find", columnList = "is_deleted, name, specification"),
+        @Index(name = "product_find", columnList = "is_deleted, vendor_uuid, name, specification"),
         @Index(name = "product_select_no", columnList = "is_deleted, no"),
         @Index(name = "product_select_name", columnList = "is_deleted, name"),
         @Index(name = "product_select_specification", columnList = "is_deleted, specification")
 })
 @Entity
 public class ProductEntity extends BaseEntity {
+
+    // 廠商uuid
+    @Column(
+            name = "vendor_uuid",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    private String vendorUuid;
 
     // 編號
     @Column(

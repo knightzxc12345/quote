@@ -28,28 +28,9 @@ function search(){
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
-            $('#add-customer-name').val('');
-            $('#add-customer-address').val('');
-            $('#add-customer-deputy-manager-name').val('');
-            $('#add-customer-deputy-manager-mobile').val('');
-            $('#add-customer-deputy-manager-email').val('');
-            $('#add-customer-manager-name').val('');
-            $('#add-customer-manager-mobile').val('');
-            $('#add-customer-manager-email').val('');
-            $('#add-customer-general-affairs-manager-name').val('');
-            $('#add-customer-general-affairs-manager-mobile').val('');
-            $('#add-customer-general-affairs-manager-email').val('');
-            $('#update-customer-name').val('');
-            $('#update-customer-address').val('');
-            $('#update-customer-deputy-manager-name').val('');
-            $('#update-customer-deputy-manager-mobile').val('');
-            $('#update-customer-deputy-manager-email').val('');
-            $('#update-customer-manager-name').val('');
-            $('#update-customer-manager-mobile').val('');
-            $('#update-customer-manager-email').val('');
-            $('#update-customer-general-affairs-manager-name').val('');
-            $('#update-customer-general-affairs-manager-mobile').val('');
-            $('#update-customer-general-affairs-manager-email').val('');
+            $('.offcanvas-body .form-control').val('');
+            $('.offcanvas-body .form-control').removeClass('is-valid');
+            $('.offcanvas-body .form-control').removeClass('is-invalid');
         }
     });
     $('#customerList').on('click', '.get-update-customer-json', function() {
@@ -104,8 +85,6 @@ function pageEvent(){
 }
 
 function getCustomers() {
-    let name = '';
-    let token = '';
     $.ajax({
         url: `customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
@@ -124,7 +103,6 @@ function getCustomers() {
             $.each(response.data.responses, function (key, value) {
                 $("#customer-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
-                        <td class='hide'>${value.customerUuid}</th>
                         <td>${value.name}</td>
                         <td>${value.address}</td>
                         <td>

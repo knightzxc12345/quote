@@ -1,11 +1,16 @@
 package com.quote.service.product;
 
+import com.quote.base.eunms.ProductEnum;
 import com.quote.entity.product.ProductEntity;
+import com.quote.handler.BusinessException;
 import com.quote.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,6 +21,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void create(ProductEntity productEntity, String userUuid) {
+        ProductEntity isExists = productRepository.findByVendorUuidAndNameAndSpecification(
+                productEntity.getVendorUuid(),
+                productEntity.getName(),
+                productEntity.getSpecification()
+        );
+        if(null != isExists){
+            throw new BusinessException(ProductEnum.PR0001);
+        }
         productEntity.setUuid(UUID.randomUUID().toString());
         productEntity.setIsDeleted(false);
         productEntity.setCreateTime(Instant.now());
@@ -25,6 +38,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(ProductEntity productEntity, String userUuid) {
+        ProductEntity isExists = productRepository.findByVendorUuidAndNameAndSpecification(
+                productEntity.getVendorUuid(),
+                productEntity.getName(),
+                productEntity.getSpecification()
+        );
+        if(null != isExists && !productEntity.getUuid().equals(isExists.getUuid())){
+            throw new BusinessException(ProductEnum.PR0001);
+        }
         productEntity.setModifiedTime(Instant.now());
         productEntity.setModifiedUser(userUuid);
         productRepository.save(productEntity);
@@ -41,6 +62,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductEntity findByUuid(String productUuid) {
         return productRepository.findByIsDeletedFalseAndUuid(productUuid);
+    }
+
+    @Override
+    public List<ProductEntity> findAllLike(String keyword) {
+        return productRepository.findAll(keyword);
+    }
+
+    @Override
+    public Page<ProductEntity> findAllLikeByPage(String keyword, Pageable pageable) {
+        return productRepository.findAllByPage(keyword, pageable);
     }
 
 }

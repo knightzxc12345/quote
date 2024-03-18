@@ -16,6 +16,7 @@ public class ProductCreateUseCaseImpl implements ProductCreateUseCase {
     @Override
     public void create(ProductCreateRequest request) {
         ProductEntity productEntity = new ProductEntity();
+        productEntity.setVendorUuid(request.vendorUuid());
         productEntity.setNo(request.no());
         productEntity.setName(request.name());
         productEntity.setSpecification(request.specification());
