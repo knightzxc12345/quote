@@ -18,7 +18,7 @@ public record ProductFindResponse(
 
         BigDecimal unitPrice,
 
-        BigDecimal originPrice
+        BigDecimal costPrice
 
 ) {
 }

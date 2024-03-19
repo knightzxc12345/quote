@@ -57,6 +57,11 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public List<VendorEntity> findAll() {
+        return vendorRepository.findByIsDeletedFalseOrderByNameAsc();
+    }
+
+    @Override
     public List<VendorEntity> findAllLike(String keyword) {
         return vendorRepository.findAll(keyword);
     }

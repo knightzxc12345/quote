@@ -15,8 +15,7 @@ window.onload = function () {
 function searchEnter(){
     $("#product-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
-            globalKeyword = $("#product-search-input").val();
-            getProducts();
+            search();
         }
     });
 }
@@ -50,7 +49,7 @@ function offcanvasEvent(){
         $('#update-product-specification').val(jsonData.specification);
         $('#update-product-unit').val(jsonData.unit);
         $('#update-product-unit-price').val(jsonData.unitPrice);
-        $('#update-product-origin-price').val(jsonData.originPrice);
+        $('#update-product-cost-price').val(jsonData.costPrice);
     });
     $('#productList').on('click', '.get-delete-product-json', function() {
         const row = $(this).closest('tr');
@@ -143,7 +142,7 @@ function getProducts() {
             $.each(response.data.responses, function (key, value) {
                 let vendorName = findVendorName(value.vendorUuid);
                 let unitPriceFormatted = value.unitPrice.toLocaleString();
-                let originPriceFormatted = value.originPrice.toLocaleString();
+                let costPriceFormatted = value.costPrice.toLocaleString();
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${vendorName}</td>
@@ -152,7 +151,7 @@ function getProducts() {
                         <td>${value.specification}</td>
                         <td>${value.unit}</td>
                         <td>${unitPriceFormatted}</td>
-                        <td>${originPriceFormatted}</td>
+                        <td>${costPriceFormatted}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-product' aria-controls='update-product'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product-modal">刪除</button>
@@ -194,7 +193,7 @@ function addProduct() {
     const specification = $("#add-product-specification").val();
     const unit = $("#add-product-unit").val();
     const unitPrice = $("#add-product-unit-price").val();
-    const originPrice = $("#add-product-origin-price").val();
+    const costPrice = $("#add-product-cost-price").val();
     // 驗證
     const vendorUuidValid = validateInput(vendorUuid, "#add-product-vendor-uuid");
     const noValid = validateInput(no, "#add-product-no");
@@ -202,8 +201,8 @@ function addProduct() {
     const specificationValid = validateInput(specification, "#add-product-specification");
     const unitValid = validateInput(unit, "#add-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#add-product-unit-price");
-    const originPriceValid = validateNumberInput(originPrice, "#add-product-origin-price");
-    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
+    const costPriceValid = validateNumberInput(costPrice, "#add-product-cost-price");
+    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     var data = {
@@ -213,7 +212,7 @@ function addProduct() {
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,
-        originPrice: originPrice
+        costPrice: costPrice
     };
     $.ajax({
         url: 'product/v1',
@@ -248,7 +247,7 @@ function updateProduct() {
     const specification = $("#update-product-specification").val();
     const unit = $("#update-product-unit").val();
     const unitPrice = $("#update-product-unit-price").val().replace(/,/g, '');
-    const originPrice = $("#update-product-origin-price").val().replace(/,/g, '');
+    const costPrice = $("#update-product-cost-price").val().replace(/,/g, '');
     // 驗證
     const vendorUuidValid = validateInput(vendorUuid, "#update-product-vendor-uuid");
     const noValid = validateInput(no, "#update-product-no");
@@ -256,8 +255,8 @@ function updateProduct() {
     const specificationValid = validateInput(specification, "#update-product-specification");
     const unitValid = validateInput(unit, "#update-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#update-product-unit-price");
-    const originPriceValid = validateNumberInput(originPrice, "#update-product-origin-price");
-    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !originPriceValid) {
+    const costPriceValid = validateNumberInput(costPrice, "#update-product-cost-price");
+    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     var data = {
@@ -267,7 +266,7 @@ function updateProduct() {
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,
-        originPrice: originPrice
+        costPrice: costPrice
     };
     $.ajax({
         url: 'product/v1/' + productUuid,

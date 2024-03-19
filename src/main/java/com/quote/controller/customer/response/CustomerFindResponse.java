@@ -8,6 +8,8 @@ public record CustomerFindResponse(
 
         String address,
 
+        String vatNumber,
+
         String deputyManagerName,
 
         String deputyManagerMobile,

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,6 +37,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByAccount(String account) {
         return userRepository.findByIsDeletedFalseAndAccount(account);
+    }
+
+    @Override
+    public List<UserEntity> findByRoleUuid(String roleUuid) {
+        return userRepository.findByIsDeletedFalseAndRoleUuidOrderByNameAsc(roleUuid);
     }
 
 }

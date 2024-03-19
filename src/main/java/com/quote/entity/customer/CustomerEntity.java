@@ -15,7 +15,7 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "customer", indexes = {
-        @Index(name = "customer_find", columnList = "is_deleted, name"),
+        @Index(name = "customer_find_all", columnList = "is_deleted, name"),
 })
 @Entity
 public class CustomerEntity extends BaseEntity {
@@ -40,6 +40,16 @@ public class CustomerEntity extends BaseEntity {
             length = 256
     )
     private String address;
+
+    // 統一編號
+    @Column(
+            name = "vat_number",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 20
+    )
+    private String vatNumber;
 
     // 協理名稱
     @Column(

@@ -15,8 +15,63 @@
     <div class="container-fluid">
         <div class="row">
             <th:block th:include="common/menu.html"></th:block>
-            <div class="col-10 right">
+            <div class="col-11 right">
+                <div class="d-flex justify-content-between title">
+                    <div>
+                        <h3>報價單管理</h3>
+                    </div>
+                    <div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="quote-search-input" placeholder="請輸入搜尋文字..." aria-label="請輸入搜尋文字..." aria-describedby="v-search">
+                            <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas">新增報價單</button>
+                    </div>
+                </div>
+                <table class="table table-striped" id="quoteList">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 10%;">建立日期</th>
+                        <th scope="col" style="width: 10%;">客戶名稱</th>
+                        <th scope="col" style="width: 10%;">總計</th>
+                        <th scope="col" style="width: 10%;">總計成本</th>
+                        <th scope="col" style="width: 10%;">狀態</th>
+                        <th scope="col" style="width: 10%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="quote-tbody">
+                    </tbody>
+                </table>
 
+                <div class="d-flex justify-content-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination" id="quoteListPage">
+
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="delete-quote-modal" tabindex="-1" aria-labelledby="delete-quote-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">刪除確認</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="hide" id="delete-quote-uuid"></div>
+                    確定要刪除此客戶?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="deleteQuote();">確定</button>
+                </div>
             </div>
         </div>
     </div>

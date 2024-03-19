@@ -15,12 +15,12 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "user", indexes = {
-        @Index(name = "user_find", columnList = "is_deleted, account, password"),
+        @Index(name = "user_find_all", columnList = "is_deleted, account, password"),
 })
 @Entity
 public class UserEntity extends BaseEntity {
 
-    // 用戶名稱
+    // 名稱
     @Column(
             name = "name",
             nullable = false,
@@ -31,7 +31,7 @@ public class UserEntity extends BaseEntity {
     @NotBlank
     private String name;
 
-    // 用戶帳號
+    // 帳號
     @Column(
             name = "account",
             nullable = false,
@@ -42,7 +42,7 @@ public class UserEntity extends BaseEntity {
     @NotBlank
     private String account;
 
-    // 用戶密碼
+    // 密碼
     @Column(
             name = "password",
             nullable = false,
@@ -52,6 +52,28 @@ public class UserEntity extends BaseEntity {
     )
     @NotBlank
     private String password;
+
+    // 手機
+    @Column(
+            name = "mobile",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 15
+    )
+    @NotBlank
+    private String mobile;
+
+    // 角色
+    @Column(
+            name = "role_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String roleUuid;
 
     // 是否刪除
     @Column(

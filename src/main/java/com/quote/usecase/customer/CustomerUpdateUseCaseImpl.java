@@ -18,6 +18,7 @@ public class CustomerUpdateUseCaseImpl implements CustomerUpdateUseCase {
         CustomerEntity customerEntity = customerService.findByUuid(customerUuid);
         customerEntity.setName(request.name());
         customerEntity.setAddress(request.address());
+        customerEntity.setVatNumber(request.vatNumber());
         customerEntity.setDeputyManagerName(request.deputyManagerName());
         customerEntity.setDeputyManagerMobile(request.deputyManagerMobile());
         customerEntity.setDeputyManagerEmail(request.deputyManagerEmail());

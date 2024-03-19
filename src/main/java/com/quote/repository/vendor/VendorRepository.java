@@ -17,6 +17,8 @@ public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
 
     VendorEntity findByIsDeletedFalseAndUuid(String uuid);
 
+    List<VendorEntity> findByIsDeletedFalseOrderByNameAsc();
+
     @Query(value =
             """
             SELECT

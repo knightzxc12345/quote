@@ -19,9 +19,31 @@ public class InitUserServiceImpl implements InitUserService {
     @Override
     public void init() {
         UserEntity userEntity = new UserEntity();
-        userEntity.setName("鹿");
+        userEntity.setName("劉建廷");
         userEntity.setAccount("tim");
         userEntity.setPassword("Aa000000");
+        userEntity.setMobile("0912686525");
+        userEntity.setRoleUuid(Common.BUSINESS);
+        if(isExists(userEntity)){
+            return;
+        }
+        userService.create(userEntity, Common.SYSTEM);
+        userEntity = new UserEntity();
+        userEntity.setName("林淑樺");
+        userEntity.setAccount("joyce");
+        userEntity.setPassword("Aa000000");
+        userEntity.setMobile("0978510507");
+        userEntity.setRoleUuid(Common.BUSINESS);
+        if(isExists(userEntity)){
+            return;
+        }
+        userService.create(userEntity, Common.SYSTEM);
+        userEntity = new UserEntity();
+        userEntity.setName("李宜靜");
+        userEntity.setAccount("boss");
+        userEntity.setPassword("Aa000000");
+        userEntity.setMobile("0925218238");
+        userEntity.setRoleUuid(Common.MANAGER);
         if(isExists(userEntity)){
             return;
         }

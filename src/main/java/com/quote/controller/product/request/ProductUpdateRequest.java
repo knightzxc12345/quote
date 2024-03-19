@@ -26,7 +26,7 @@ public record ProductUpdateRequest(
         BigDecimal unitPrice,
 
         @NotNull(message = "成本不得為空")
-        BigDecimal originPrice
+        BigDecimal costPrice
 
 ) {
 }

@@ -22,7 +22,7 @@ public class ProductCreateUseCaseImpl implements ProductCreateUseCase {
         productEntity.setSpecification(request.specification());
         productEntity.setUnit(request.unit());
         productEntity.setUnitPrice(request.unitPrice());
-        productEntity.setOriginPrice(request.originPrice());
+        productEntity.setCostPrice(request.costPrice());
         productService.create(productEntity, JwtUtil.extractUsername());
     }
 

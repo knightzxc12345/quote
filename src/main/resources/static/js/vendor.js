@@ -14,8 +14,7 @@ window.onload = function () {
 function searchEnter(){
     $("#vendor-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
-            globalKeyword = $("#vendor-search-input").val();
-            getVendors();
+            search();
         }
     });
 }

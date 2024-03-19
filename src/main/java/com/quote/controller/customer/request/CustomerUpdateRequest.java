@@ -9,6 +9,8 @@ public record CustomerUpdateRequest(
 
         String address,
 
+        String vatNumber,
+
         String deputyManagerName,
 
         String deputyManagerMobile,

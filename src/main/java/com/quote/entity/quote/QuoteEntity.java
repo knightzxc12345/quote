@@ -1,4 +1,4 @@
-package com.quote.entity.vendor;
+package com.quote.entity.quote;
 
 import com.quote.entity.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -14,62 +14,95 @@ import java.time.Instant;
 
 @ToString(callSuper = true)
 @Data
-@Table(name = "vendor", indexes = {
-        @Index(name = "vendor_find_all", columnList = "is_deleted, name"),
+@Table(name = "quote", indexes = {
+        @Index(name = "quote_find_all", columnList = "is_deleted, user_uuid, customer_uuid"),
 })
 @Entity
-public class VendorEntity extends BaseEntity {
+public class QuoteEntity extends BaseEntity {
 
-    // 名稱
+    // 業務uuid
     @Column(
-            name = "name",
+            name = "user_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String userUuid;
+
+    // 業務名稱
+    @Column(
+            name = "user_name",
             nullable = false,
             updatable = true,
             unique = false,
             length = 64
     )
     @NotBlank
-    private String name;
+    private String userName;
 
-    // 地址
+    // 業務uuid
     @Column(
-            name = "address",
+            name = "customer_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String customerUuid;
+
+    // 客戶名稱
+    @Column(
+            name = "customer_name",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    @NotBlank
+    private String customerName;
+
+    // 客戶地址
+    @Column(
+            name = "customer_address",
             nullable = true,
             updatable = true,
             unique = false,
             length = 256
     )
-    private String address;
+    private String customerAddress;
 
-    // 手機
+    // 統一編號
     @Column(
-            name = "mobile",
+            name = "customer_vat_number",
             nullable = true,
             updatable = true,
             unique = false,
             length = 20
     )
-    private String mobile;
+    private String customerVatNumber;
 
-    // 電話
+    // 承辦人員
     @Column(
-            name = "tel",
+            name = "handle_staff_name",
             nullable = true,
             updatable = true,
             unique = false,
-            length = 20
+            length = 64
     )
-    private String tel;
+    private String handleStaffName;
 
-    // 傳真
+    // 承辦人員電話
     @Column(
-            name = "fax",
+            name = "handle_staff_mobile",
             nullable = true,
             updatable = true,
             unique = false,
-            length = 20
+            length = 32
     )
-    private String fax;
+    private String handleStaffMobile;
 
     // 是否刪除
     @Column(

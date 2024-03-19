@@ -8,191 +8,197 @@
     <script th:src="@{js/product.js}" type="text/javascript"></script>
 </head>
 <body class="close-scroller">
-<th:block th:include="common/header.html"></th:block>
-<th:block th:include="common/alert.html"></th:block>
+    <th:block th:include="common/header.html"></th:block>
+    <th:block th:include="common/alert.html"></th:block>
 
-<div class="container-fluid">
-    <div class="row">
-        <th:block th:include="common/menu.html"></th:block>
-        <div class="col-10 right">
-            <div class="d-flex justify-content-between title">
-                <div>
-                    <h3>產品管理</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <th:block th:include="common/menu.html"></th:block>
+            <div class="col-11 right">
+                <div class="d-flex justify-content-between title">
+                    <div>
+                        <h3>產品管理</h3>
+                    </div>
+                    <div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="product-search-input" placeholder="請輸入搜尋文字..." aria-label="請輸入搜尋文字..." aria-describedby="v-search">
+                            <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-product" aria-controls="add-product">新增產品</button>
+                    </div>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-product" aria-controls="add-product">新增產品</button>
+                <table class="table table-striped" id="productList">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 10%;">廠商</th>
+                        <th scope="col" style="width: 10%;">編號</th>
+                        <th scope="col" style="width: 15%;">品名</th>
+                        <th scope="col" style="width: 25%;">規格</th>
+                        <th scope="col" style="width: 10%;">單位</th>
+                        <th scope="col" style="width: 10%;">單價</th>
+                        <th scope="col" style="width: 10%;">成本</th>
+                        <th scope="col" style="width: 10%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="product-tbody">
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination" id="productListPage">
+
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="add-product" aria-labelledby="add-product-label">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="add-product-label">新增產品</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="add-product-vendor">廠商</label>
+                <select class="form-select" id="add-product-vendor">
+
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">編號</span>
+                <input type="text" class="form-control" id="add-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    編號不得為空!
                 </div>
             </div>
-            <table class="table table-striped" id="productList">
-                <thead>
-                <tr>
-                    <th scope="col">廠商</th>
-                    <th scope="col">編號</th>
-                    <th scope="col">品名</th>
-                    <th scope="col">規格</th>
-                    <th scope="col">單位</th>
-                    <th scope="col">單價</th>
-                    <th scope="col">成本</th>
-                    <th scope="col" style="width: 10%;"></th>
-                </tr>
-                </thead>
-                <tbody id="product-tbody">
-                </tbody>
-            </table>
-
-            <div class="d-flex justify-content-center">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination" id="productListPage">
-
-                    </ul>
-                </nav>
+            <div class="input-group mb-3">
+                <span class="input-group-text">品名</span>
+                <input type="text" class="form-control" id="add-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    品名不得為空!
+                </div>
             </div>
-
+            <div class="input-group mb-3">
+                <span class="input-group-text">規格</span>
+                <input type="text" class="form-control" id="add-product-specification" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    規格不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單位</span>
+                <input type="text" class="form-control" id="add-product-unit" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    單位不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單價</span>
+                <input type="text" class="form-control" id="add-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    單價不得為空且必須為數字!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">成本</span>
+                <input type="text" class="form-control" id="add-product-cost-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    成本不得為空且必須為數字!
+                </div>
+            </div>
+        </div>
+        <div class="offcanvas-footer">
+            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-outline-success btn-sm" onclick="addProduct();">送出</button>
         </div>
     </div>
-</div>
 
-<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="add-product" aria-labelledby="add-product-label">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="add-product-label">新增產品</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="add-product-vendor">廠商</label>
-            <select class="form-select" id="add-product-vendor">
+    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="update-product" aria-labelledby="add-product-label">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="update-product-label">更新產品</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="hide" id="update-product-uuid"></div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="update-product-vendor">廠商</label>
+                <select class="form-select" id="update-product-vendor">
 
-            </select>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">編號</span>
-            <input type="text" class="form-control" id="add-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                編號不得為空!
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">編號</span>
+                <input type="text" class="form-control" id="update-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    編號不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">品名</span>
+                <input type="text" class="form-control" id="update-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    品名不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">規格</span>
+                <input type="text" class="form-control" id="update-product-specification" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    規格不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單位</span>
+                <input type="text" class="form-control" id="update-product-unit" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    單位不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單價</span>
+                <input type="text" class="form-control" id="update-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    單價不得為空且必須為數字!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">成本</span>
+                <input type="text" class="form-control" id="update-product-cost-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="invalid-feedback">
+                    成本不得為空且必須為數字!
+                </div>
             </div>
         </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">品名</span>
-            <input type="text" class="form-control" id="add-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                品名不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">規格</span>
-            <input type="text" class="form-control" id="add-product-specification" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                規格不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">單位</span>
-            <input type="text" class="form-control" id="add-product-unit" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                單位不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">單價</span>
-            <input type="text" class="form-control" id="add-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                單價不得為空且必須為數字!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">成本</span>
-            <input type="text" class="form-control" id="add-product-origin-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                成本不得為空且必須為數字!
-            </div>
+        <div class="offcanvas-footer">
+            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-outline-success btn-sm" onclick="updateProduct();">送出</button>
         </div>
     </div>
-    <div class="offcanvas-footer">
-        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-        <button type="button" class="btn btn-outline-success btn-sm" onclick="addProduct();">送出</button>
-    </div>
-</div>
 
-<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="update-product" aria-labelledby="add-product-label">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="update-product-label">更新產品</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="hide" id="update-product-uuid"></div>
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="update-product-vendor">廠商</label>
-            <select class="form-select" id="update-product-vendor">
-
-            </select>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">編號</span>
-            <input type="text" class="form-control" id="update-product-no" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                編號不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">品名</span>
-            <input type="text" class="form-control" id="update-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                品名不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">規格</span>
-            <input type="text" class="form-control" id="update-product-specification" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                規格不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">單位</span>
-            <input type="text" class="form-control" id="update-product-unit" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                單位不得為空!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">單價</span>
-            <input type="text" class="form-control" id="update-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                單價不得為空且必須為數字!
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">成本</span>
-            <input type="text" class="form-control" id="update-product-origin-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            <div class="invalid-feedback">
-                成本不得為空且必須為數字!
+    <div class="modal fade" data-bs-backdrop="static" id="delete-product-modal" tabindex="-1" aria-labelledby="delete-product-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">刪除確認</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="hide" id="delete-product-uuid"></div>
+                    確定要刪除此產品?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="deleteProduct();"確定</button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="offcanvas-footer">
-        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-        <button type="button" class="btn btn-outline-success btn-sm" onclick="updateProduct();">送出</button>
-    </div>
-</div>
-
-<div class="modal fade" data-bs-backdrop="static" id="delete-product-modal" tabindex="-1" aria-labelledby="delete-product-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5">刪除確認</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="hide" id="delete-product-uuid"></div>
-                確定要刪除此產品?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-success btn-sm" onclick="deleteProduct();"確定</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

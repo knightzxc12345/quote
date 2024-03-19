@@ -22,7 +22,7 @@ public class ProductUpdateUseCaseImpl implements ProductUpdateUseCase {
         productEntity.setSpecification(request.specification());
         productEntity.setUnit(request.unit());
         productEntity.setUnitPrice(request.unitPrice());
-        productEntity.setOriginPrice(request.originPrice());
+        productEntity.setCostPrice(request.costPrice());
         productService.update(productEntity, JwtUtil.extractUsername());
     }
 

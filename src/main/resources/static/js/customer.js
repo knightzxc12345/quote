@@ -14,8 +14,7 @@ window.onload = function () {
 function searchEnter(){
     $("#customer-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
-            globalKeyword = $("#customer-search-input").val();
-            getCustomers();
+            search();
         }
     });
 }
@@ -39,6 +38,7 @@ function offcanvasEvent(){
         $('#update-customer-uuid').val(jsonData.customerUuid);
         $('#update-customer-name').val(jsonData.name);
         $('#update-customer-address').val(jsonData.address);
+        $('#update-customer-vat-number').val(jsonData.vatNumber);
         $('#update-customer-deputy-manager-name').val(jsonData.deputyManagerName);
         $('#update-customer-deputy-manager-mobile').val(jsonData.deputyManagerMobile);
         $('#update-customer-deputy-manager-email').val(jsonData.deputyManagerEmail);
@@ -105,6 +105,7 @@ function getCustomers() {
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${value.name}</td>
                         <td>${value.address}</td>
+                        <td>${value.vatNumber}</td>
                         <td>
                             ${value.deputyManagerName}<br/>
                             ${value.deputyManagerMobile}<br/>
@@ -148,6 +149,7 @@ function getCustomers() {
 function addCustomer() {
     const name = $("#add-customer-name").val();
     const address = $("#add-customer-address").val();
+    const vatNumber = $("#add-customer-vat-number").val();
     const deputyManagerName = $('#add-customer-deputy-manager-name').val();
     const deputyManagerMobile = $('#add-customer-deputy-manager-mobile').val();
     const deputyManagerEmail = $('#add-customer-deputy-manager-email').val();
@@ -165,6 +167,7 @@ function addCustomer() {
     var data = {
         name: name,
         address: address,
+        vatNumber: vatNumber,
         deputyManagerName: deputyManagerName,
         deputyManagerMobile: deputyManagerMobile,
         deputyManagerEmail: deputyManagerEmail,
@@ -204,6 +207,7 @@ function updateCustomer() {
     const customerUuid = $('#update-customer-uuid').val();
     const name = $("#update-customer-name").val();
     const address = $("#update-customer-address").val();
+    const vatNumber = $("#update-customer-vat-number").val();
     const deputyManagerName = $('#update-customer-deputy-manager-name').val();
     const deputyManagerMobile = $('#update-customer-deputy-manager-mobile').val();
     const deputyManagerEmail = $('#update-customer-deputy-manager-email').val();
@@ -221,6 +225,7 @@ function updateCustomer() {
     var data = {
         name: name,
         address: address,
+        vatNumber: vatNumber,
         deputyManagerName: deputyManagerName,
         deputyManagerMobile: deputyManagerMobile,
         deputyManagerEmail: deputyManagerEmail,

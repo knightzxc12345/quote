@@ -16,7 +16,7 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "product", indexes = {
-        @Index(name = "product_find", columnList = "is_deleted, vendor_uuid, name, specification"),
+        @Index(name = "product_find_all", columnList = "is_deleted, vendor_uuid, name, specification"),
         @Index(name = "product_select_no", columnList = "is_deleted, no"),
         @Index(name = "product_select_name", columnList = "is_deleted, name"),
         @Index(name = "product_select_specification", columnList = "is_deleted, specification")
@@ -88,13 +88,13 @@ public class ProductEntity extends BaseEntity {
 
     // 成本
     @Column(
-            name = "origin_price",
+            name = "cost_price",
             nullable = false,
             updatable = true,
             unique = false
     )
     @NotNull
-    private BigDecimal originPrice;
+    private BigDecimal costPrice;
 
     // 是否刪除
     @Column(

@@ -64,7 +64,7 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
                 productEntity.getSpecification(),
                 productEntity.getUnit(),
                 productEntity.getUnitPrice(),
-                productEntity.getOriginPrice()
+                productEntity.getCostPrice()
         );
     }
 
@@ -82,7 +82,7 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
                     productEntity.getSpecification(),
                     productEntity.getUnit(),
                     productEntity.getUnitPrice(),
-                    productEntity.getOriginPrice()
+                    productEntity.getCostPrice()
             ));
         }
         return responses;
