@@ -3,13 +3,16 @@ let globalPageSize = 12;
 let globalPageTotal = 0;
 let globalKeyword = '';
 let globalVendor = '';
+let globalItem = '';
 
 window.onload = function () {
     init();
     getVendors();
+    getItems();
     offcanvasEvent();
     pageEvent();
     searchEnter();
+    selectChange();
 };
 
 function searchEnter(){
@@ -17,6 +20,12 @@ function searchEnter(){
         if (event.keyCode === 13) {
             search();
         }
+    });
+}
+
+function selectChange(){
+    $("#add-product-vendor").off().change(function() {
+        changeItem();
     });
 }
 
@@ -88,7 +97,7 @@ function pageEvent(){
 
 function getVendors(){
     $.ajax({
-        url: `vendor/v1`,
+        url: `common/vendor/v1`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -120,6 +129,49 @@ function getVendors(){
             }
             console.log(jsonResponse);
         }
+    });
+}
+
+function getItems(){
+    $.ajax({
+        url: `common/item/v1`,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00002') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            globalItem = response.data;
+            changeItem();
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
+function changeItem(){
+    let vendorUuid = $('#add-product-vendor').val();
+    let item = $('#add-product-item');
+    item.empty();
+    $.each(globalItem, function(key, value) {
+        if(value.vendorUuid != vendorUuid){
+            return;
+        }
+        item.append(`
+            <option value='${value.itemUuid}'>${value.name}</option>
+        `);
     });
 }
 
@@ -189,7 +241,7 @@ function findVendorName(vendorUuid) {
 function addProduct() {
     const vendorUuid = $("#add-product-vendor").val();
     const no = $("#add-product-no").val();
-    const name = $("#add-product-name").val();
+    const itemUuid = $("#add-product-item").val();
     const specification = $("#add-product-specification").val();
     const unit = $("#add-product-unit").val();
     const unitPrice = $("#add-product-unit-price").val();
@@ -197,18 +249,17 @@ function addProduct() {
     // 驗證
     const vendorUuidValid = validateInput(vendorUuid, "#add-product-vendor-uuid");
     const noValid = validateInput(no, "#add-product-no");
-    const nameValid = validateInput(name, "#add-product-name");
     const specificationValid = validateInput(specification, "#add-product-specification");
     const unitValid = validateInput(unit, "#add-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#add-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#add-product-cost-price");
-    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     var data = {
         vendorUuid: vendorUuid,
         no: no,
-        name: name,
+        itemUuid: itemUuid,
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,

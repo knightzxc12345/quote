@@ -36,6 +36,11 @@ function offcanvasEvent(){
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
     });
+    $('#quoteList').on('click', '.get-update-quote-json', function() {
+        const row = $(this).closest('tr');
+        const jsonData = row.data('json');
+        updateQuote(jsonData.quoteUuid);
+    });
     $('#quoteList').on('click', '.get-delete-quote-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
@@ -97,7 +102,7 @@ function getCustomers() {
                         <td>${value.status}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-review-quote-json' data-bs-toggle='offcanvas' data-bs-target='#review-quote' aria-controls='review-quote'>預覽</button>
-                            <button type='button' class='btn btn-secondary btn-sm margin-right-3'>編輯</button>
+                            <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-quote-json'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote-modal">刪除</button>
                         </td>
                     </tr>
@@ -119,6 +124,14 @@ function getCustomers() {
             console.log(jsonResponse);
         }
     });
+}
+
+function addQuote(){
+    location.href = "/quote/create";
+}
+
+function updateQuote(quoteUuid){
+    location.href = "/quote/update/" + quoteUuid;
 }
 
 function deleteQuote(){

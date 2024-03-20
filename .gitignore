@@ -31,6 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-quote.log
+design.log
 logs/archived/**
+logs/design.log
 logs/quote.log

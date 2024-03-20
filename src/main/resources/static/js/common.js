@@ -21,6 +21,12 @@ function init(){
     if(window.location.pathname === '/quote'){
         $("#menu-quote").addClass('menu-active');
     }
+    if(window.location.pathname === '/quote/create'){
+        $("#menu-quote").addClass('menu-active');
+    }
+    if(window.location.pathname === '/quote/update'){
+        $("#menu-quote").addClass('menu-active');
+    }
 }
 
 function valid(){
@@ -38,18 +44,18 @@ function isEmpty(value) {
 }
 
 function alertSuccess(message){
-    $("#alert-success-message").val(message);
-    $("#alert-success").css("display", "");
+    $(".alert-success-message").val(message);
+    $(".alert-success").css("display", "");
     window.setTimeout(function(){
-        $("#alert-success").css("display", "none");
+        $(".alert-success").css("display", "none");
     }, 5000);
 }
 
 function alertError(message){
-    $("#alert-danger-message").text(message);
-    $("#alert-danger").css("display", "block");
+    $(".alert-danger-message").text(message);
+    $(".alert-danger").css("display", "block");
     window.setTimeout(function(){
-        $("#alert-danger").css("display", "none");
+        $(".alert-danger").css("display", "none");
     }, 5000);
 }
 

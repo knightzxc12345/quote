@@ -88,23 +88,12 @@
     display: none;
 }
 
-#alert-success{
+.alert-success{
     display: none;
 }
 
-#alert-danger{
+.alert-danger{
     display: none;
-}
-
-#header-username{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
-
-#customerList td{
-    vertical-align: middle;
 }
 
 ::-webkit-scrollbar{

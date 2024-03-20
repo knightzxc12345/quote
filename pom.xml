@@ -9,11 +9,11 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.quote</groupId>
-	<artifactId>quote</artifactId>
+	<groupId>com.design</groupId>
+	<artifactId>design</artifactId>
 	<packaging>war</packaging>
-	<name>quote</name>
-	<description>Quote</description>
+	<name>design</name>
+	<description>Design</description>
 
 	<properties>
 		<java.version>17</java.version>
