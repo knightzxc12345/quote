@@ -1,5 +1,6 @@
 package com.design.usecase.customer;
 
+import com.design.controller.common.response.CommonCustomerFindAllResponse;
 import com.design.controller.customer.request.CustomerFindRequest;
 import com.design.controller.customer.response.CustomerFindAllResponse;
 import com.design.controller.customer.response.CustomerFindPageResponse;
@@ -48,6 +49,12 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
         );
     }
 
+    @Override
+    public List<CommonCustomerFindAllResponse> findAllCommon() {
+        List<CustomerEntity> customerEntities = customerService.findAll();
+        return formatCommon(customerEntities);
+    }
+
     private CustomerFindResponse format(CustomerEntity customerEntity){
         return new CustomerFindResponse(
                 customerEntity.getUuid(),
@@ -86,6 +93,21 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
                     customerEntity.getGeneralAffairsManagerName(),
                     customerEntity.getGeneralAffairsManagerMobile(),
                     customerEntity.getGeneralAffairsManagerEmail()
+            ));
+        }
+        return responses;
+    }
+
+    private List<CommonCustomerFindAllResponse> formatCommon(List<CustomerEntity> customerEntities){
+        List<CommonCustomerFindAllResponse> responses = new ArrayList<>();
+        if(null == customerEntities || customerEntities.isEmpty()){
+            return responses;
+        }
+        for(CustomerEntity customerEntity : customerEntities){
+            responses.add(new CommonCustomerFindAllResponse(
+                    customerEntity.getUuid(),
+                    customerEntity.getName(),
+                    customerEntity.getAddress()
             ));
         }
         return responses;

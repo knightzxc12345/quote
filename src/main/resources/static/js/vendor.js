@@ -79,7 +79,7 @@ function pageEvent(){
 
 function getVendors() {
     $.ajax({
-        url: `vendor/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
+        url: `/vendor/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -145,7 +145,7 @@ function addVendor() {
         fax: fax
     };
     $.ajax({
-        url: 'vendor/v1',
+        url: '/vendor/v1',
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'POST',
@@ -189,7 +189,7 @@ function updateVendor() {
         fax: fax
     };
     $.ajax({
-        url: 'vendor/v1/' + vendorUuid,
+        url: '/vendor/v1/' + vendorUuid,
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'PUT',
@@ -216,7 +216,7 @@ function updateVendor() {
 function deleteVendor(){
     const vendorUuid = $('#delete-vendor-uuid').val();
     $.ajax({
-        url: 'vendor/v1/' + vendorUuid,
+        url: '/vendor/v1/' + vendorUuid,
         contentType: 'application/json',
         type: 'DELETE',
         headers: headers,

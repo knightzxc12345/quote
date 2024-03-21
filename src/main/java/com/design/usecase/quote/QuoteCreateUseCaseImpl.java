@@ -79,7 +79,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             quoteDetailEntity.setVoteUuid(vendorEntity.getUuid());
             quoteDetailEntity.setVoteName(vendorEntity.getName());
             quoteDetailEntity.setProductNo(productEntity.getNo());
-            quoteDetailEntity.setProductName(productEntity.getName());
+//            quoteDetailEntity.setProductName(productEntity.getName());
             quoteDetailEntity.setProductSpecification(productEntity.getSpecification());
             quoteDetailEntity.setProductUnitPrice(productEntity.getUnitPrice());
             quoteDetailEntity.setProductCustomUnitPrice(product.customUnitPrice());

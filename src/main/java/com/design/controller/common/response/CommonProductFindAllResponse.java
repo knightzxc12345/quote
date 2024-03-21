@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 
 public record CommonProductFindAllResponse(
 
+        String productUuid,
+
         String vendorUuid,
 
-        String productUuid,
+        String itemUuid,
 
         String no,
 

@@ -94,7 +94,7 @@ function pageEvent(){
 
 function getVendors(){
     $.ajax({
-        url: `common/vendor/v1`,
+        url: `/common/vendor/v1`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -136,7 +136,7 @@ function getVendors(){
 }
 
 function getItems() {
-    let url = `item/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
+    let url = `/item/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
     if(!isEmpty(globalVendorSelect)){
         url += `&vendorUuid=${globalVendorSelect}`;
     }
@@ -210,7 +210,7 @@ function addItem() {
         name: name
     };
     $.ajax({
-        url: 'item/v1',
+        url: '/item/v1',
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'POST',
@@ -249,7 +249,7 @@ function updateItem() {
         name: name
     };
     $.ajax({
-        url: 'item/v1/' + itemUuid,
+        url: '/item/v1/' + itemUuid,
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'PUT',
@@ -276,7 +276,7 @@ function updateItem() {
 function deleteItem(){
     const itemUuid = $('#delete-item-uuid').val();
     $.ajax({
-        url: 'item/v1/' + itemUuid,
+        url: '/item/v1/' + itemUuid,
         contentType: 'application/json',
         type: 'DELETE',
         headers: headers,

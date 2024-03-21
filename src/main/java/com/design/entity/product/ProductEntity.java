@@ -16,7 +16,7 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "product", indexes = {
-        @Index(name = "product_find_all", columnList = "is_deleted, vendor_uuid, name, specification")
+        @Index(name = "product_find_all", columnList = "is_deleted, vendor_uuid, item_uuid, specification")
 })
 @Entity
 public class ProductEntity extends BaseEntity {

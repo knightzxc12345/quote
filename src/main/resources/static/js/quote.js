@@ -78,7 +78,7 @@ function pageEvent(){
 
 function getCustomers() {
     $.ajax({
-        url: `customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
+        url: `/customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -137,7 +137,7 @@ function updateQuote(quoteUuid){
 function deleteQuote(){
     const quoteUuid = $('#delete-quote-uuid').val();
     $.ajax({
-        url: 'quote/v1/' + quoteUuid,
+        url: '/quote/v1/' + quoteUuid,
         contentType: 'application/json',
         type: 'DELETE',
         headers: headers,

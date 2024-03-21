@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface UserFindUseCase {
 
-    List<CommonUserFindAllResponse> findAllByRoleUuid(String roleUuid);
+    List<CommonUserFindAllResponse> findAllCommonByRoleUuid(String roleUuid);
 
 }

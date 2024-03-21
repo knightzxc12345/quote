@@ -1,9 +1,11 @@
 package com.design.controller.common;
 
+import com.design.base.Common;
 import com.design.base.ResponseBody;
 import com.design.base.eunms.CommonEnum;
 import com.design.controller.common.request.LoginRequest;
 import com.design.controller.common.response.*;
+import com.design.usecase.customer.CustomerFindUseCase;
 import com.design.usecase.item.ItemFindUseCase;
 import com.design.usecase.login.LoginUseCase;
 import com.design.usecase.product.ProductFindUseCase;
@@ -26,6 +28,8 @@ public class CommonController {
 
     private final UserFindUseCase userFindUseCase;
 
+    private final CustomerFindUseCase customerFindUseCase;
+
     private final VendorFindUseCase vendorFindUseCase;
 
     private final ProductFindUseCase productFindUseCase;
@@ -42,11 +46,18 @@ public class CommonController {
     }
 
     @GetMapping(
-            value = "user/v1/{roleUuid}"
+            value = "user/v1/business"
     )
-    public ResponseBody findAllUser(
-            @PathVariable("roleUuid") @NotNull final String roleUuid) {
-        List<CommonUserFindAllResponse> responses = userFindUseCase.findAllByRoleUuid(roleUuid);
+    public ResponseBody findAllBusiness() {
+        List<CommonUserFindAllResponse> responses = userFindUseCase.findAllCommonByRoleUuid(Common.BUSINESS);
+        return new ResponseBody(CommonEnum.C00002, responses);
+    }
+
+    @GetMapping(
+            value = "customer/v1"
+    )
+    public ResponseBody findAllCustomer() {
+        List<CommonCustomerFindAllResponse> responses = customerFindUseCase.findAllCommon();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 

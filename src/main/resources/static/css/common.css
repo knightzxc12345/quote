@@ -96,6 +96,10 @@
     display: none;
 }
 
+.vertical-align-middle td{
+    vertical-align: middle;
+}
+
 ::-webkit-scrollbar{
       width: 5px;
 }

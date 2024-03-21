@@ -1,5 +1,6 @@
 package com.design.usecase.customer;
 
+import com.design.controller.common.response.CommonCustomerFindAllResponse;
 import com.design.controller.customer.request.CustomerFindRequest;
 import com.design.controller.customer.response.CustomerFindAllResponse;
 import com.design.controller.customer.response.CustomerFindPageResponse;
@@ -14,5 +15,7 @@ public interface CustomerFindUseCase {
     List<CustomerFindAllResponse> findAll(CustomerFindRequest request);
 
     CustomerFindPageResponse findAllByPage(CustomerFindRequest request);
+
+    List<CommonCustomerFindAllResponse> findAllCommon();
 
 }

@@ -4,15 +4,16 @@ let globalPageTotal = 0;
 let globalKeyword = '';
 let globalVendor = '';
 let globalItem = '';
+let globalVendorSelect;
 
 window.onload = function () {
     init();
     getVendors();
-    getItems();
     offcanvasEvent();
     pageEvent();
     searchEnter();
     selectChange();
+    inputChange();
 };
 
 function searchEnter(){
@@ -25,8 +26,39 @@ function searchEnter(){
 
 function selectChange(){
     $("#add-product-vendor").off().change(function() {
-        changeItem();
+        changeAddProductItem();
     });
+    $("#update-product-vendor").off().change(function() {
+        changeUpdateProductItem();
+    });
+    $('#vendor-name-select').off().change(function() {
+        let value = $(this).val();
+        globalVendorSelect = 'all' == value ? null : value;
+        getProducts();
+    });
+}
+
+function inputChange(){
+    $("#add-product-unit-price").change(function() {
+        $(this).val(updateValue($(this)));
+    });
+    $("#add-product-cost-price").change(function() {
+        $(this).val(updateValue($(this)));
+    });
+    $("#update-product-unit-price").change(function() {
+        $(this).val(updateValue($(this)));
+    });
+    $("#update-product-cost-price").change(function() {
+        $(this).val(updateValue($(this)));
+    });
+}
+
+function updateValue(element){
+    let value = $(element).val().replace(/,/g, '');
+    if(!/^\d+$/.test(value)){
+        return "1";
+    }
+    return Number(value).toLocaleString();
 }
 
 function search(){
@@ -46,9 +78,15 @@ function offcanvasEvent(){
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
         const vendorUuid = jsonData.vendorUuid;
+        const itemUuid = jsonData.itemUuid;
         $('#update-product-vendor option').each(function() {
-            console.log($(this).val());
             if($(this).val() == vendorUuid) {
+                $(this).prop('selected', true);
+            }
+        });
+        changeUpdateProductItem();
+        $('#update-product-item option').each(function() {
+            if($(this).val() == itemUuid) {
                 $(this).prop('selected', true);
             }
         });
@@ -97,7 +135,7 @@ function pageEvent(){
 
 function getVendors(){
     $.ajax({
-        url: `common/vendor/v1`,
+        url: `/common/vendor/v1`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -111,7 +149,13 @@ function getVendors(){
                 return;
             }
             globalVendor = response.data;
+            $('#vendor-name-select').append(`
+                <option value='all'>全部</option>
+            `);
             $.each(response.data, function(key, value) {
+                $('#vendor-name-select').append(`
+                    <option value='${value.vendorUuid}'>${value.name}</option>
+                `);
                 $('#add-product-vendor').append(`
                     <option value='${value.vendorUuid}'>${value.name}</option>
                 `);
@@ -119,7 +163,7 @@ function getVendors(){
                     <option value='${value.vendorUuid}'>${value.name}</option>
                 `);
             });
-            getProducts(globalPageNow, globalPageSize);
+            getItems();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -134,7 +178,7 @@ function getVendors(){
 
 function getItems(){
     $.ajax({
-        url: `common/item/v1`,
+        url: `/common/item/v1`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -148,7 +192,9 @@ function getItems(){
                 return;
             }
             globalItem = response.data;
-            changeItem();
+            changeAddProductItem();
+            changeUpdateProductItem();
+            getProducts(globalPageNow, globalPageSize);
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -161,23 +207,13 @@ function getItems(){
     });
 }
 
-function changeItem(){
-    let vendorUuid = $('#add-product-vendor').val();
-    let item = $('#add-product-item');
-    item.empty();
-    $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != vendorUuid){
-            return;
-        }
-        item.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
-        `);
-    });
-}
-
 function getProducts() {
+    let url = `product/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
+    if(!isEmpty(globalVendorSelect)){
+        url += `&vendorUuid=${globalVendorSelect}`;
+    }
     $.ajax({
-        url: `product/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
+        url: url,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -193,13 +229,14 @@ function getProducts() {
             $("#product-tbody").empty();
             $.each(response.data.responses, function (key, value) {
                 let vendorName = findVendorName(value.vendorUuid);
+                let itemName = findItemName(value.itemUuid);
                 let unitPriceFormatted = value.unitPrice.toLocaleString();
                 let costPriceFormatted = value.costPrice.toLocaleString();
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${vendorName}</td>
                         <td>${value.no}</td>
-                        <td>${value.name}</td>
+                        <td>${itemName}</td>
                         <td>${value.specification}</td>
                         <td>${value.unit}</td>
                         <td>${unitPriceFormatted}</td>
@@ -229,10 +266,47 @@ function getProducts() {
     });
 }
 
+function changeAddProductItem(){
+    let vendorUuid = $('#add-product-vendor').val();
+    let item = $('#add-product-item');
+    item.empty();
+    $.each(globalItem, function(key, value) {
+        if(value.vendorUuid != vendorUuid){
+            return;
+        }
+        item.append(`
+            <option value='${value.itemUuid}'>${value.name}</option>
+        `);
+    });
+}
+
+function changeUpdateProductItem(){
+    let vendorUuid = $('#update-product-vendor').val();
+    let item = $('#update-product-item');
+    item.empty();
+    $.each(globalItem, function(key, value) {
+        if(value.vendorUuid != vendorUuid){
+            return;
+        }
+        item.append(`
+            <option value='${value.itemUuid}'>${value.name}</option>
+        `);
+    });
+}
+
 function findVendorName(vendorUuid) {
     for (var i = 0; i < globalVendor.length; i++) {
         if (globalVendor[i].vendorUuid === vendorUuid) {
             return globalVendor[i].name;
+        }
+    }
+    return null;
+}
+
+function findItemName(itemUuid) {
+    for (var i = 0; i < globalItem.length; i++) {
+        if (globalItem[i].itemUuid === itemUuid) {
+            return globalItem[i].name;
         }
     }
     return null;
@@ -244,8 +318,8 @@ function addProduct() {
     const itemUuid = $("#add-product-item").val();
     const specification = $("#add-product-specification").val();
     const unit = $("#add-product-unit").val();
-    const unitPrice = $("#add-product-unit-price").val();
-    const costPrice = $("#add-product-cost-price").val();
+    const unitPrice = $("#add-product-unit-price").val().replace(/,/g, '');
+    const costPrice = $("#add-product-cost-price").val().replace(/,/g, '');
     // 驗證
     const vendorUuidValid = validateInput(vendorUuid, "#add-product-vendor-uuid");
     const noValid = validateInput(no, "#add-product-no");
@@ -266,7 +340,7 @@ function addProduct() {
         costPrice: costPrice
     };
     $.ajax({
-        url: 'product/v1',
+        url: '/product/v1',
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'POST',
@@ -294,7 +368,7 @@ function updateProduct() {
     const productUuid = $('#update-product-uuid').val();
     const vendorUuid = $("#update-product-vendor").val();
     const no = $("#update-product-no").val();
-    const name = $("#update-product-name").val();
+    const itemUuid = $("#add-product-item").val();
     const specification = $("#update-product-specification").val();
     const unit = $("#update-product-unit").val();
     const unitPrice = $("#update-product-unit-price").val().replace(/,/g, '');
@@ -302,25 +376,24 @@ function updateProduct() {
     // 驗證
     const vendorUuidValid = validateInput(vendorUuid, "#update-product-vendor-uuid");
     const noValid = validateInput(no, "#update-product-no");
-    const nameValid = validateInput(name, "#update-product-name");
     const specificationValid = validateInput(specification, "#update-product-specification");
     const unitValid = validateInput(unit, "#update-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#update-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#update-product-cost-price");
-    if (!vendorUuidValid || !noValid || !nameValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     var data = {
         vendorUuid: vendorUuid,
         no: no,
-        name: name,
+        itemUuid: itemUuid,
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,
         costPrice: costPrice
     };
     $.ajax({
-        url: 'product/v1/' + productUuid,
+        url: '/product/v1/' + productUuid,
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'PUT',
@@ -347,7 +420,7 @@ function updateProduct() {
 function deleteProduct(){
     const productUuid = $('#delete-product-uuid').val();
     $.ajax({
-        url: 'product/v1/' + productUuid,
+        url: '/product/v1/' + productUuid,
         contentType: 'application/json',
         type: 'DELETE',
         headers: headers,

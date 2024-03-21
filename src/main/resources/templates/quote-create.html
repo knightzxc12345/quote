@@ -26,7 +26,7 @@
                     <button type="button" class="btn btn-outline-dark" onclick="addQuote();">送出</button>
                 </div>
             </div>
-            <table class="table table-striped" id="quoteList">
+            <table class="table table-striped vertical-align-middle" id="quoteList">
                 <thead>
                 <tr>
                     <th scope="col" style="width: 1%;"></th>
@@ -39,51 +39,40 @@
                     <th scope="col" style="width: 5%;">單位</th>
                     <th scope="col" style="width: 8%;">單價</th>
                     <th scope="col" style="width: 9%;">價款</th>
-                    <th scope="col" style="width: 8%;">客製單價</th>
-                    <th scope="col" style="width: 9%;">客製價款</th>
+                    <th scope="col" style="width: 8%;">單價調整</th>
+                    <th scope="col" style="width: 9%;">價款調整</th>
                     <th scope="col" style="width: 1%;"></th>
                 </tr>
                 </thead>
                 <tbody id="quote-tbody">
-                    <tr>
-                        <td>
-                            <button class="btn btn-danger btn-sm">x</button>
-                        </td>
-                        <td>1</td>
-                        <td></td>
-                        <td>
-                            <select class="form-select select2 add-vendor-name-select" aria-label="Floating label select example">
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-select select2 add-product-name-select" aria-label="Floating label select example">
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-select select2 add-product-specification-select" aria-label="Floating label select example">
-                            </select>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>
-                            <button class="btn btn-success btn-sm">+</button>
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
 
             <div class="d-flex total">
-                <div class="p-2 flex-grow-1 col-8"></div>
+                <div class="p-2 col-1 total-title">
+                    單位名稱
+                </div>
+                <div class="p-2 col-1">
+                    <select class="form-select select2 add-product-customer-name-select">
+
+                    </select>
+                </div>
+                <div class="p-2 col-1 total-title">
+                    承辦業務
+                </div>
+                <div class="p-2 col-1">
+                    <select class="form-select select2 add-product-user-name-select">
+
+                    </select>
+                </div>
+                <div class="p-2 col-4"></div>
                 <div class="p-2 col-1 total-title">合計</div>
                 <div class="p-2 col-1">
                     <span>$</span>
                     <span id="add-quote-amount">0</span>
                 </div>
-                <div class="p-2 col-1 total-title">客製合計</div>
+                <div class="p-2 col-1 total-title">調整合計</div>
                 <div class="p-2 col-1 red-text">
                     <span>$</span>
                     <span id="add-quote-custom-amount">0</span>
@@ -91,7 +80,13 @@
             </div>
 
             <div class="d-flex total">
-                <div class="p-2 flex-grow-1 col-8"></div>
+                <div class="p-2 col-1 total-title">
+                    單位地址
+                </div>
+                <div class="p-2 col-2 add-product-customer-address">
+
+                </div>
+                <div class="p-2 col-5"></div>
                 <div class="p-2 col-1 total-title">5%稅</div>
                 <div class="p-2 col-1">
                     <span>$</span>
@@ -105,13 +100,25 @@
             </div>
 
             <div class="d-flex total">
-                <div class="p-2 flex-grow-1 col-8"></div>
+                <div class="p-2 col-1 total-title">
+                    分行承辦
+                </div>
+                <div class="p-2 col-1">
+                    <input class="form-control form-control-sm under-taker"/>
+                </div>
+                <div class="p-2 col-1 total-title">
+                    承辦電話
+                </div>
+                <div class="p-2 col-1">
+                    <input class="form-control form-control-sm under-taker-tel"/>
+                </div>
+                <div class="p-2 flex-grow-1 col-4"></div>
                 <div class="p-2 col-1 total-title">總計</div>
                 <div class="p-2 col-1">
                     <span>$</span>
                     <span id="add-quote-total-amount">0</span>
                 </div>
-                <div class="p-2 col-1 total-title">客製總計</div>
+                <div class="p-2 col-1 total-title">調整總計</div>
                 <div class="p-2 col-1 red-text">
                     <span>$</span>
                     <span id="add-quote-custom-total-amount">0</span>

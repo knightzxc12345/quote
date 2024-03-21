@@ -86,7 +86,7 @@ function pageEvent(){
 
 function getCustomers() {
     $.ajax({
-        url: `customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
+        url: `/customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -179,7 +179,7 @@ function addCustomer() {
         generalAffairsManagerEmail: generalAffairsManagerEmail
     };
     $.ajax({
-        url: 'customer/v1',
+        url: '/customer/v1',
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'POST',
@@ -237,7 +237,7 @@ function updateCustomer() {
         generalAffairsManagerEmail: generalAffairsManagerEmail
     };
     $.ajax({
-        url: 'customer/v1/' + customerUuid,
+        url: '/customer/v1/' + customerUuid,
         contentType: 'application/json',
         data: JSON.stringify(data),
         type: 'PUT',
@@ -264,7 +264,7 @@ function updateCustomer() {
 function deleteCustomer(){
     const customerUuid = $('#delete-customer-uuid').val();
     $.ajax({
-        url: 'customer/v1/' + customerUuid,
+        url: '/customer/v1/' + customerUuid,
         contentType: 'application/json',
         type: 'DELETE',
         headers: headers,

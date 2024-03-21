@@ -8,9 +8,9 @@ public record ProductFindAllResponse(
 
         String vendorUuid,
 
-        String no,
-
         String itemUuid,
+
+        String no,
 
         String specification,
 

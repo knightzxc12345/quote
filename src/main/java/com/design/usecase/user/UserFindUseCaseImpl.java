@@ -16,7 +16,7 @@ public class UserFindUseCaseImpl implements UserFindUseCase {
     private final UserService userService;
 
     @Override
-    public List<CommonUserFindAllResponse> findAllByRoleUuid(String roleUuid) {
+    public List<CommonUserFindAllResponse> findAllCommonByRoleUuid(String roleUuid) {
         List<UserEntity> userEntities = userService.findByRoleUuid(roleUuid);
         return format(userEntities);
     }

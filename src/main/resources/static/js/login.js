@@ -32,7 +32,7 @@ function valid(account, password){
     let name = '';
     let token = '';
     $.ajax({
-        url: 'common/login/v1',
+        url: '/common/login/v1',
         contentType: 'application/json',
         type: 'POST',
         data: JSON.stringify(data),

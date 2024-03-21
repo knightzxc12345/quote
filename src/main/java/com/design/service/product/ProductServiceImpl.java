@@ -21,9 +21,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void create(ProductEntity productEntity, String userUuid) {
-        ProductEntity isExists = productRepository.findByVendorUuidAndNameAndSpecification(
+        ProductEntity isExists = productRepository.findByVendorUuidAndItemUuidAndSpecification(
                 productEntity.getVendorUuid(),
-                productEntity.getName(),
+                productEntity.getItemUuid(),
                 productEntity.getSpecification()
         );
         if(null != isExists){
@@ -38,9 +38,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(ProductEntity productEntity, String userUuid) {
-        ProductEntity isExists = productRepository.findByVendorUuidAndNameAndSpecification(
+        ProductEntity isExists = productRepository.findByVendorUuidAndItemUuidAndSpecification(
                 productEntity.getVendorUuid(),
-                productEntity.getName(),
+                productEntity.getItemUuid(),
                 productEntity.getSpecification()
         );
         if(null != isExists && !productEntity.getUuid().equals(isExists.getUuid())){
@@ -66,17 +66,29 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> findAll() {
-        return productRepository.findByIsDeletedFalseOrderByNoAscNameAscSpecificationAsc();
+        return productRepository.findByIsDeletedFalseOrderByVendorUuidAscItemUuidAscSpecificationAsc();
     }
 
     @Override
-    public List<ProductEntity> findAllLike(String keyword) {
-        return productRepository.findAll(keyword);
+    public List<ProductEntity> findAllLike(
+            String vendorUuid,
+            String keyword) {
+        return productRepository.findAll(
+                vendorUuid,
+                keyword
+        );
     }
 
     @Override
-    public Page<ProductEntity> findAllLikeByPage(String keyword, Pageable pageable) {
-        return productRepository.findAllByPage(keyword, pageable);
+    public Page<ProductEntity> findAllLikeByPage(
+            String vendorUuid,
+            String keyword,
+            Pageable pageable) {
+        return productRepository.findAllByPage(
+                vendorUuid,
+                keyword,
+                pageable
+        );
     }
 
 }

@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    ProductEntity findByVendorUuidAndNameAndSpecification(String vendorUuid, String name, String specification);
+    ProductEntity findByVendorUuidAndItemUuidAndSpecification(String vendorUuid, String itemUuid, String specification);
 
     ProductEntity findByIsDeletedFalseAndUuid(String productUuid);
 
-    List<ProductEntity> findByIsDeletedFalseOrderByNoAscNameAscSpecificationAsc();
+    List<ProductEntity> findByIsDeletedFalseOrderByVendorUuidAscItemUuidAscSpecificationAsc();
 
     @Query(value =
             """
@@ -27,19 +27,22 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
                 ProductEntity p
             WHERE 
                 p.isDeleted = false
+                AND (:vendorUuid IS NULL OR p.vendorUuid = :vendorUuid)
                 AND 
                 (
-                    (:keyword IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) OR
                     (:keyword IS NULL OR p.specification LIKE CONCAT('%', :keyword, '%'))
                 )
             ORDER BY 
                 p.vendorUuid,
+                p.itemUuid,
                 p.no,
-                p.name,
                 p.specification
             """
     )
-    List<ProductEntity> findAll(@Param("keyword") String keyword);
+    List<ProductEntity> findAll(
+            @Param("vendorUuid") String vendorUuid,
+            @Param("keyword") String keyword
+    );
 
     @Query(value =
             """
@@ -49,13 +52,16 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
                 ProductEntity p 
             WHERE 
                 p.isDeleted = false
+                AND (:vendorUuid IS NULL OR p.vendorUuid = :vendorUuid)
                 AND 
                 (
-                    (:keyword IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) OR
                     (:keyword IS NULL OR p.specification LIKE CONCAT('%', :keyword, '%'))
                 )
             """
     )
-    Page<ProductEntity> findAllByPage(@Param("keyword") String keyword, Pageable pageable);
+    Page<ProductEntity> findAllByPage(
+            @Param("vendorUuid") String vendorUuid,
+            @Param("keyword") String keyword, Pageable pageable
+    );
 
 }

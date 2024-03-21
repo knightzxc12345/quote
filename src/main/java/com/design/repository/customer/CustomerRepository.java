@@ -17,6 +17,8 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
     CustomerEntity findByIsDeletedFalseAndUuid(String customerUuid);
 
+    List<CustomerEntity> findByIsDeletedFalseOrderByNameAsc();
+
     @Query(value =
             """
             SELECT

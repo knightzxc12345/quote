@@ -18,8 +18,15 @@ public interface ProductService {
 
     List<ProductEntity> findAll();
 
-    List<ProductEntity> findAllLike(String keyword);
+    List<ProductEntity> findAllLike(
+            String vendorUuid,
+            String keyword
+    );
 
-    Page<ProductEntity> findAllLikeByPage(String keyword, Pageable pageable);
+    Page<ProductEntity> findAllLikeByPage(
+            String vendorUuid,
+            String keyword,
+            Pageable pageable
+    );
 
 }
