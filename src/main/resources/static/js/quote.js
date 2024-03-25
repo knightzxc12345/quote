@@ -76,9 +76,9 @@ function pageEvent(){
     });
 }
 
-function getCustomers() {
+function getQuotes() {
     $.ajax({
-        url: `/customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
+        url: `/quote/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -98,6 +98,7 @@ function getCustomers() {
                         <td>${value.createDate}</td>
                         <td>${value.customerName}</td>
                         <td>${value.amount}</td>
+                        <td>${value.customAmount}</td>
                         <td>${value.costAmount}</td>
                         <td>${value.status}</td>
                         <td>

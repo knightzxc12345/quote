@@ -295,7 +295,7 @@ function changeUpdateProductItem(){
 }
 
 function findVendorName(vendorUuid) {
-    for (var i = 0; i < globalVendor.length; i++) {
+    for (let i = 0; i < globalVendor.length; i++) {
         if (globalVendor[i].vendorUuid === vendorUuid) {
             return globalVendor[i].name;
         }
@@ -304,7 +304,7 @@ function findVendorName(vendorUuid) {
 }
 
 function findItemName(itemUuid) {
-    for (var i = 0; i < globalItem.length; i++) {
+    for (let i = 0; i < globalItem.length; i++) {
         if (globalItem[i].itemUuid === itemUuid) {
             return globalItem[i].name;
         }
@@ -330,7 +330,7 @@ function addProduct() {
     if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
-    var data = {
+    let data = {
         vendorUuid: vendorUuid,
         no: no,
         itemUuid: itemUuid,
@@ -383,7 +383,7 @@ function updateProduct() {
     if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
-    var data = {
+    let data = {
         vendorUuid: vendorUuid,
         no: no,
         itemUuid: itemUuid,

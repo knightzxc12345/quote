@@ -240,18 +240,19 @@ function appendColumn(){
             <td>
                 <button class="btn btn-danger btn-sm add-product-cancel">x</button>
             </td>
+            <td class="add-product-uuid hide"></td>
             <td class="add-product-index">1</td>
             <td class="add-product-no"></td>
             <td>
-                <select class="form-select select2 add-vendor-name-select" aria-label="Floating label select example">
+                <select class="form-select select2 add-vendor-name-select">
                 </select>
             </td>
             <td>
-                <select class="form-select select2 add-item-name-select" aria-label="Floating label select example">
+                <select class="form-select select2 add-item-name-select">
                 </select>
             </td>
             <td>
-                <select class="form-select select2 add-product-specification-select" aria-label="Floating label select example">
+                <select class="form-select select2 add-product-specification-select">
                 </select>
             </td>
             <td>
@@ -261,9 +262,10 @@ function appendColumn(){
             <td class="add-product-unit-price">0</td>
             <td class="add-product-amount">0</td>
             <td>
-                <input class="form-control form-control-sm add-product-custom-unit-price red-text" />
+                <input class="form-control form-control-sm add-product-custom-cost success-text"/>
             </td>
             <td class="add-product-custom-amount" style="color: red;">0</td>
+            <td class="add-product-amount">0</td>
             <td>
                 <button class="btn btn-success btn-sm add-product-add">+</button>
             </td>
@@ -443,5 +445,51 @@ function countTotal(){
 }
 
 function addQuote(){
+    const userUuid = $('.add-product-user-name-select').val();
+    const customerUuid = $('.add-product-customer-name-select').val();
+    const underTakerName = $('.add-product-under-taker-name').val();
+    const underTakerTel = $('.add-product-under-taker-tel').val();
+    let products = [];
+    let product;
+    $('#quote-tbody tr').each(function() {
+        product = {
+            productUuid: $(this).find('.add-product-specification-select').val(),
+            quantity: parseInt($(this).find('.add-product-quantity').val().replace(/,/g, '')),
+            customUnitPrice: parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''))
+        };
+        products.push(product);
+    });
+    let data = {
+        userUuid: userUuid,
+        customerUuid: customerUuid,
+        underTakerName: underTakerName,
+        underTakerTel: underTakerTel,
+        products: products
+    };
+    $.ajax({
+        url: `/quote/v1`,
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        type: 'POST',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00003') {
+                alertError('系統錯誤');
+                return;
+            }
+            $('.add-product-success-modal').modal('show');
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
 
+function goBack(){
+    location.href = "/quote";
 }

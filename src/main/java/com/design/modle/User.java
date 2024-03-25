@@ -12,8 +12,6 @@ import java.util.Collection;
 @Setter
 public class User implements UserDetails {
 
-    private String uuid;
-
     private String username;
 
     private String account;
@@ -25,8 +23,7 @@ public class User implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public User(UserEntity userEntity){
-        this.uuid = userEntity.getUuid();
-        this.username = userEntity.getName();
+        this.username = userEntity.getUuid();
         this.account = userEntity.getAccount();
         this.password = userEntity.getPassword();
     }

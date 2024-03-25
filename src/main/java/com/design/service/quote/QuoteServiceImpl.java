@@ -20,7 +20,6 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public QuoteEntity create(QuoteEntity quoteEntity, String userUuid) {
         quoteEntity.setIsDeleted(false);
-        quoteEntity.setUuid(UUID.randomUUID().toString());
         quoteEntity.setCreateTime(Instant.now());
         quoteEntity.setCreateUser(userUuid);
         return quoteRepository.save(quoteEntity);

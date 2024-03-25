@@ -15,7 +15,7 @@ import java.time.Instant;
 
 @ToString(callSuper = true)
 @Data
-@Table(name = "quote", indexes = {
+@Table(name = "quote_detail", indexes = {
         @Index(name = "quote_detail_find", columnList = "is_deleted, quote_uuid"),
 })
 @Entity
@@ -31,17 +31,6 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotBlank
     private String quoteUuid;
-
-    // 產品uuid
-    @Column(
-            name = "product_uuid",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotBlank
-    private String productUuid;
 
     // 廠商uuid
     @Column(
@@ -75,16 +64,38 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     private String productNo;
 
-    // 產品品名
+    // 品項uuid
     @Column(
-            name = "product_name",
+            name = "item_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String itemUuid;
+
+    // 品項名稱
+    @Column(
+            name = "item_name",
             nullable = false,
             updatable = true,
             unique = false,
             length = 64
     )
     @NotBlank
-    private String productName;
+    private String itemName;
+
+    // 產品uuid
+    @Column(
+            name = "product_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String productUuid;
 
     // 產品規格
     @Column(
@@ -156,6 +167,16 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotNull
     private BigDecimal productAmount;
+
+    // 產品成本總計
+    @Column(
+            name = "product_cost_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal productCostAmount;
 
     // 產品客製總計
     @Column(

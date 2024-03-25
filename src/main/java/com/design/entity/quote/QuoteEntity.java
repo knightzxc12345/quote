@@ -85,23 +85,23 @@ public class QuoteEntity extends BaseEntity {
 
     // 承辦人員
     @Column(
-            name = "handle_staff_name",
+            name = "under_taker_name",
             nullable = true,
             updatable = true,
             unique = false,
             length = 64
     )
-    private String handleStaffName;
+    private String underTakerName;
 
     // 承辦人員電話
     @Column(
-            name = "handle_staff_mobile",
+            name = "under_taker_mobile",
             nullable = true,
             updatable = true,
             unique = false,
             length = 32
     )
-    private String handleStaffMobile;
+    private String underTakerMobile;
 
     // 合計
     @Column(
@@ -112,16 +112,6 @@ public class QuoteEntity extends BaseEntity {
     )
     @NotNull
     private BigDecimal amount;
-
-    // 客製合計
-    @Column(
-            name = "custom_amount",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private BigDecimal customAmount;
 
     // 稅金
     @Column(
@@ -143,7 +133,27 @@ public class QuoteEntity extends BaseEntity {
     @NotNull
     private BigDecimal totalAmount;
 
-    // 總計
+    // 客製合計
+    @Column(
+            name = "custom_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal customAmount;
+
+    // 稅金
+    @Column(
+            name = "custom_tax",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal customTax;
+
+    // 客製總計
     @Column(
             name = "custom_total_amount",
             nullable = false,
@@ -152,6 +162,16 @@ public class QuoteEntity extends BaseEntity {
     )
     @NotNull
     private BigDecimal customerTotalAmount;
+
+    // 成本合計
+    @Column(
+            name = "cost_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal costAmount;
 
     // 報價單狀態
     @Column(

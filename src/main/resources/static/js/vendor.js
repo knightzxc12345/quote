@@ -137,7 +137,7 @@ function addVendor() {
     if (!nameValid) {
         return;
     }
-    var data = {
+    let data = {
         name: name,
         address: address,
         mobile: mobile,
@@ -181,7 +181,7 @@ function updateVendor() {
     if (!nameValid) {
         return;
     }
-    var data = {
+    let data = {
         name: name,
         address: address,
         mobile: mobile,

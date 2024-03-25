@@ -164,7 +164,7 @@ function addCustomer() {
     if (!nameValid) {
         return;
     }
-    var data = {
+    let data = {
         name: name,
         address: address,
         vatNumber: vatNumber,
@@ -222,7 +222,7 @@ function updateCustomer() {
     if (!nameValid) {
         return;
     }
-    var data = {
+    let data = {
         name: name,
         address: address,
         vatNumber: vatNumber,

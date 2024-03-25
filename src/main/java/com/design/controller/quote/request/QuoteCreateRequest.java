@@ -14,9 +14,9 @@ public record QuoteCreateRequest(
         @NotBlank(message = "客戶uuid不得為空")
         String customerUuid,
 
-        String handleStaffName,
+        String underTakerName,
 
-        String handleStaffMobile,
+        String underTakerTel,
 
         @NotNull(message = "產品清單")
         List<QuoteCreateRequest.Product> products

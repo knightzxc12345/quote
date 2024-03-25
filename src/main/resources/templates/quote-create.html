@@ -10,124 +10,142 @@
 </head>
 <body class="close-scroller">
 
-<th:block th:include="common/header.html"></th:block>
-<th:block th:include="common/alert.html"></th:block>
+    <th:block th:include="common/header.html"></th:block>
+    <th:block th:include="common/alert.html"></th:block>
 
-<div class="container-fluid">
-    <div class="row">
-        <th:block th:include="common/menu.html"></th:block>
-        <div class="col-11 right">
-            <div class="d-flex justify-content-between title">
-                <div>
-                    <h3>報價單建立</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <th:block th:include="common/menu.html"></th:block>
+            <div class="col-11 right">
+                <div class="d-flex justify-content-between title">
+                    <div>
+                        <h3>報價單建立</h3>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-dark" onclick="backQuote();">返回報價單</button>
+                        <button type="button" class="btn btn-outline-dark" onclick="addQuote();">送出</button>
+                    </div>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-outline-dark" onclick="backQuote();">返回報價單</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="addQuote();">送出</button>
+                <table class="table table-striped vertical-align-middle" id="quoteList">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 1%;"></th>
+                        <th scope="col" style="width: 4%;">項目</th>
+                        <th scope="col" style="width: 5%;">編號</th>
+                        <th scope="col" style="width: 9%;">廠商</th>
+                        <th scope="col" style="width: 15%;">品名</th>
+                        <th scope="col" style="width: 20%;">規格</th>
+                        <th scope="col" style="width: 5%;">數量</th>
+                        <th scope="col" style="width: 5%;">單位</th>
+                        <th scope="col" style="width: 7%;">單價</th>
+                        <th scope="col" style="width: 7%;">價款</th>
+                        <th scope="col" style="width: 7%;">單價調整</th>
+                        <th scope="col" style="width: 7%;">價款調整</th>
+                        <th scope="col" style="width: 7%;">成本</th>
+                        <th scope="col" style="width: 1%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="quote-tbody">
+
+                    </tbody>
+                </table>
+
+                <div class="d-flex total">
+                    <div class="p-2 col-1 total-title">
+                        單位名稱
+                    </div>
+                    <div class="p-2 col-1">
+                        <select class="form-select select2 add-product-customer-name-select">
+
+                        </select>
+                    </div>
+                    <div class="p-2 col-1 total-title">
+                        承辦業務
+                    </div>
+                    <div class="p-2 col-1">
+                        <select class="form-select select2 add-product-user-name-select">
+
+                        </select>
+                    </div>
+                    <div class="p-2 col-4"></div>
+                    <div class="p-2 col-1 total-title">合計</div>
+                    <div class="p-2 col-1">
+                        <span>$</span>
+                        <span id="add-quote-amount">0</span>
+                    </div>
+                    <div class="p-2 col-1 total-title">調整合計</div>
+                    <div class="p-2 col-1 red-text">
+                        <span>$</span>
+                        <span id="add-quote-custom-amount">0</span>
+                    </div>
                 </div>
+
+                <div class="d-flex total">
+                    <div class="p-2 col-1 total-title">
+                        單位地址
+                    </div>
+                    <div class="p-2 col-2 add-product-customer-address">
+
+                    </div>
+                    <div class="p-2 col-5"></div>
+                    <div class="p-2 col-1 total-title">5%稅</div>
+                    <div class="p-2 col-1">
+                        <span>$</span>
+                        <span id="add-quote-tax">0</span>
+                    </div>
+                    <div class="p-2 col-1 total-title">5%稅</div>
+                    <div class="p-2 col-1 red-text">
+                        <span>$</span>
+                        <span id="add-quote-custom-tax">0</span>
+                    </div>
+                </div>
+
+                <div class="d-flex total">
+                    <div class="p-2 col-1 total-title">
+                        分行承辦
+                    </div>
+                    <div class="p-2 col-1">
+                        <input class="form-control form-control-sm add-product-under-taker-name"/>
+                    </div>
+                    <div class="p-2 col-1 total-title">
+                        承辦電話
+                    </div>
+                    <div class="p-2 col-1">
+                        <input class="form-control form-control-sm add-product-under-taker-tel"/>
+                    </div>
+                    <div class="p-2 flex-grow-1 col-4"></div>
+                    <div class="p-2 col-1 total-title">總計</div>
+                    <div class="p-2 col-1">
+                        <span>$</span>
+                        <span id="add-quote-total-amount">0</span>
+                    </div>
+                    <div class="p-2 col-1 total-title">調整總計</div>
+                    <div class="p-2 col-1 red-text">
+                        <span>$</span>
+                        <span id="add-quote-custom-total-amount">0</span>
+                    </div>
+                </div>
+
             </div>
-            <table class="table table-striped vertical-align-middle" id="quoteList">
-                <thead>
-                <tr>
-                    <th scope="col" style="width: 1%;"></th>
-                    <th scope="col" style="width: 4%;">項目</th>
-                    <th scope="col" style="width: 5%;">編號</th>
-                    <th scope="col" style="width: 10%;">廠商</th>
-                    <th scope="col" style="width: 15%;">品名</th>
-                    <th scope="col" style="width: 20%;">規格</th>
-                    <th scope="col" style="width: 5%;">數量</th>
-                    <th scope="col" style="width: 5%;">單位</th>
-                    <th scope="col" style="width: 8%;">單價</th>
-                    <th scope="col" style="width: 9%;">價款</th>
-                    <th scope="col" style="width: 8%;">單價調整</th>
-                    <th scope="col" style="width: 9%;">價款調整</th>
-                    <th scope="col" style="width: 1%;"></th>
-                </tr>
-                </thead>
-                <tbody id="quote-tbody">
-
-                </tbody>
-            </table>
-
-            <div class="d-flex total">
-                <div class="p-2 col-1 total-title">
-                    單位名稱
-                </div>
-                <div class="p-2 col-1">
-                    <select class="form-select select2 add-product-customer-name-select">
-
-                    </select>
-                </div>
-                <div class="p-2 col-1 total-title">
-                    承辦業務
-                </div>
-                <div class="p-2 col-1">
-                    <select class="form-select select2 add-product-user-name-select">
-
-                    </select>
-                </div>
-                <div class="p-2 col-4"></div>
-                <div class="p-2 col-1 total-title">合計</div>
-                <div class="p-2 col-1">
-                    <span>$</span>
-                    <span id="add-quote-amount">0</span>
-                </div>
-                <div class="p-2 col-1 total-title">調整合計</div>
-                <div class="p-2 col-1 red-text">
-                    <span>$</span>
-                    <span id="add-quote-custom-amount">0</span>
-                </div>
-            </div>
-
-            <div class="d-flex total">
-                <div class="p-2 col-1 total-title">
-                    單位地址
-                </div>
-                <div class="p-2 col-2 add-product-customer-address">
-
-                </div>
-                <div class="p-2 col-5"></div>
-                <div class="p-2 col-1 total-title">5%稅</div>
-                <div class="p-2 col-1">
-                    <span>$</span>
-                    <span id="add-quote-tax">0</span>
-                </div>
-                <div class="p-2 col-1 total-title">5%稅</div>
-                <div class="p-2 col-1 red-text">
-                    <span>$</span>
-                    <span id="add-quote-custom-tax">0</span>
-                </div>
-            </div>
-
-            <div class="d-flex total">
-                <div class="p-2 col-1 total-title">
-                    分行承辦
-                </div>
-                <div class="p-2 col-1">
-                    <input class="form-control form-control-sm under-taker"/>
-                </div>
-                <div class="p-2 col-1 total-title">
-                    承辦電話
-                </div>
-                <div class="p-2 col-1">
-                    <input class="form-control form-control-sm under-taker-tel"/>
-                </div>
-                <div class="p-2 flex-grow-1 col-4"></div>
-                <div class="p-2 col-1 total-title">總計</div>
-                <div class="p-2 col-1">
-                    <span>$</span>
-                    <span id="add-quote-total-amount">0</span>
-                </div>
-                <div class="p-2 col-1 total-title">調整總計</div>
-                <div class="p-2 col-1 red-text">
-                    <span>$</span>
-                    <span id="add-quote-custom-total-amount">0</span>
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
+
+    <div class="modal fade add-product-success-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">新增報價單</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    成功!!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="goBack();">完成</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

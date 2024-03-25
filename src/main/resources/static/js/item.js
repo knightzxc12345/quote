@@ -187,7 +187,7 @@ function getItems() {
 }
 
 function findVendorName(vendorUuid) {
-    for (var i = 0; i < globalVendor.length; i++) {
+    for (let i = 0; i < globalVendor.length; i++) {
         if (globalVendor[i].vendorUuid === vendorUuid) {
             return globalVendor[i].name;
         }
@@ -205,7 +205,7 @@ function addItem() {
     if (!vendorUuidValid || !nameValid) {
         return;
     }
-    var data = {
+    let data = {
         vendorUuid: vendorUuid,
         name: name
     };
@@ -244,7 +244,7 @@ function updateItem() {
     if (!vendorUuidValid || !nameValid) {
         return;
     }
-    var data = {
+    let data = {
         vendorUuid: vendorUuid,
         name: name
     };

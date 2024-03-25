@@ -3,12 +3,14 @@ package com.design.usecase.quote;
 import com.design.controller.quote.request.QuoteCreateRequest;
 import com.design.entity.customer.CustomerEntity;
 import com.design.entity.enums.QuoteStatus;
+import com.design.entity.item.ItemEntity;
 import com.design.entity.product.ProductEntity;
 import com.design.entity.quote.QuoteEntity;
 import com.design.entity.quote_detail.QuoteDetailEntity;
 import com.design.entity.user.UserEntity;
 import com.design.entity.vendor.VendorEntity;
 import com.design.service.customer.CustomerService;
+import com.design.service.item.ItemService;
 import com.design.service.product.ProductService;
 import com.design.service.quote.QuoteService;
 import com.design.service.quote_detail.QuoteDetailService;
@@ -19,8 +21,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +40,8 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
 
     private final QuoteDetailService quoteDetailService;
 
+    private final ItemService itemService;
+
     private final ProductService productService;
 
     private final VendorService vendorService;
@@ -45,19 +52,23 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         UserEntity userEntity = userService.findByUuid(request.userUuid());
         CustomerEntity customerEntity = customerService.findByUuid(request.customerUuid());
         QuoteEntity quoteEntity = new QuoteEntity();
+        quoteEntity.setUuid(UUID.randomUUID().toString());
         quoteEntity.setUserUuid(userEntity.getUuid());
         quoteEntity.setUserName(userEntity.getName());
         quoteEntity.setCustomerUuid(customerEntity.getUuid());
         quoteEntity.setCustomerName(customerEntity.getName());
         quoteEntity.setCustomerAddress(customerEntity.getAddress());
         quoteEntity.setCustomerVatNumber(customerEntity.getVatNumber());
-        quoteEntity.setHandleStaffName(request.handleStaffName());
-        quoteEntity.setHandleStaffMobile(request.handleStaffMobile());
+        quoteEntity.setUnderTakerName(request.underTakerName());
+        quoteEntity.setUnderTakerMobile(request.underTakerTel());
         quoteEntity.setQuoteStatus(QuoteStatus.CREATE);
-        // 建立報價單
-        quoteEntity = quoteService.create(quoteEntity, JwtUtil.extractUsername());
-        // 建立報價單明細
+        // 取得報價單明細清單
         List<QuoteDetailEntity> quoteDetailEntities = getQuoteDetails(products, quoteEntity);
+        // 設定金額
+        quoteEntity = setAmount(quoteDetailEntities, quoteEntity);
+        // 建立報價單
+        quoteService.create(quoteEntity, JwtUtil.extractUsername());
+        // 建立報價單明細
         quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUsername());
     }
 
@@ -68,23 +79,39 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         List<VendorEntity> vendorEntities = vendorService.findAll();
         List<QuoteDetailEntity> quoteDetailEntities = new ArrayList<>();
         QuoteDetailEntity quoteDetailEntity;
+        ItemEntity itemEntity;
         ProductEntity productEntity;
         VendorEntity vendorEntity;
+        BigDecimal amount;
+        BigDecimal customAmount;
+        BigDecimal costAmount;
         for(QuoteCreateRequest.Product product : products){
             productEntity = productService.findByUuid(product.productUuid());
+            amount = productEntity.getUnitPrice();
+            amount = amount.multiply(new BigDecimal(product.quantity()));
+            customAmount = product.customUnitPrice();
+            customAmount = customAmount.multiply(new BigDecimal(product.quantity()));
+            costAmount = productEntity.getCostPrice();
+            costAmount = costAmount.multiply(new BigDecimal(product.quantity()));
+            itemEntity = itemService.findByUuid(productEntity.getItemUuid());
             vendorEntity = getVendor(productEntity.getVendorUuid(), vendorEntities);
             quoteDetailEntity = new QuoteDetailEntity();
             quoteDetailEntity.setQuoteUuid(quoteEntity.getUuid());
-            quoteDetailEntity.setProductUuid(productEntity.getUuid());
             quoteDetailEntity.setVoteUuid(vendorEntity.getUuid());
             quoteDetailEntity.setVoteName(vendorEntity.getName());
             quoteDetailEntity.setProductNo(productEntity.getNo());
-//            quoteDetailEntity.setProductName(productEntity.getName());
+            quoteDetailEntity.setItemUuid(itemEntity.getUuid());
+            quoteDetailEntity.setItemName(itemEntity.getName());
+            quoteDetailEntity.setProductUuid(productEntity.getUuid());
+            quoteDetailEntity.setProductUnit(productEntity.getUnit());
             quoteDetailEntity.setProductSpecification(productEntity.getSpecification());
             quoteDetailEntity.setProductUnitPrice(productEntity.getUnitPrice());
             quoteDetailEntity.setProductCustomUnitPrice(product.customUnitPrice());
             quoteDetailEntity.setProductCostPrice(productEntity.getCostPrice());
             quoteDetailEntity.setProductQuantity(product.quantity());
+            quoteDetailEntity.setProductAmount(amount);
+            quoteDetailEntity.setProductCustomAmount(customAmount);
+            quoteDetailEntity.setProductCostAmount(costAmount);
             quoteDetailEntities.add(quoteDetailEntity);
         }
         return quoteDetailEntities;
@@ -101,6 +128,41 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             }
         }
         return null;
+    }
+
+    // 設定金額
+    private QuoteEntity setAmount(List<QuoteDetailEntity> quoteDetailEntities, QuoteEntity quoteEntity){
+        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
+            return quoteEntity;
+        }
+        BigDecimal amount = new BigDecimal(0);
+        BigDecimal tax = new BigDecimal(0);
+        BigDecimal totalAmount = new BigDecimal(0);
+        BigDecimal customAmount = new BigDecimal(0);
+        BigDecimal customTax = new BigDecimal(0);
+        BigDecimal customTotalAmount = new BigDecimal(0);
+        BigDecimal costAmount = new BigDecimal(0);
+        for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
+            amount = amount.add(quoteDetailEntity.getProductAmount());
+            customAmount = customAmount.add(quoteDetailEntity.getProductCustomAmount());
+            costAmount = costAmount.add(quoteDetailEntity.getProductCostAmount());
+        }
+        tax = amount.multiply(new BigDecimal(0.05));
+        tax = tax.setScale(0, RoundingMode.HALF_UP);
+        totalAmount = totalAmount.add(amount);
+        totalAmount = totalAmount.add(tax);
+        customTax = customAmount.multiply(new BigDecimal(0.05));
+        customTax = customTax.setScale(0, RoundingMode.HALF_UP);
+        customTotalAmount = customTotalAmount.add(customAmount);
+        customTotalAmount = customTotalAmount.add(tax);
+        quoteEntity.setAmount(amount);
+        quoteEntity.setTax(tax);
+        quoteEntity.setTotalAmount(totalAmount);
+        quoteEntity.setCustomAmount(customAmount);
+        quoteEntity.setCustomTax(customTax);
+        quoteEntity.setCustomerTotalAmount(customTotalAmount);
+        quoteEntity.setCostAmount(costAmount);
+        return quoteEntity;
     }
 
 }
