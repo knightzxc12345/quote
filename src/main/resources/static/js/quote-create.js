@@ -153,8 +153,8 @@ function setCustomer(){
 }
 
 function customerChange(){
-    let selectedCustomer = $(".add-product-customer-name-select").val();
     $(".add-product-customer-name-select").on("select2:select", function() {
+        let selectedCustomer = $(".add-product-customer-name-select").val();
         $.each(globalCustomer, function(key, value) {
             if(value.customerUuid != selectedCustomer){
                 return;
@@ -405,7 +405,7 @@ function columnChange(tr){
         }
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
-        let customUnitPrice = parseInt(inputCustomUnitPrice.va().replace(/,/g, ''));
+        let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
