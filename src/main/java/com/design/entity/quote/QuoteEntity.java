@@ -95,13 +95,13 @@ public class QuoteEntity extends BaseEntity {
 
     // 承辦人員電話
     @Column(
-            name = "under_taker_mobile",
+            name = "under_taker_tel",
             nullable = true,
             updatable = true,
             unique = false,
             length = 32
     )
-    private String underTakerMobile;
+    private String underTakerTel;
 
     // 合計
     @Column(

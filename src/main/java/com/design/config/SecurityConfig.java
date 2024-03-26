@@ -33,7 +33,7 @@ public class SecurityConfig {
             "/product",
             "/quote",
             "/quote/create",
-            "/quote/update",
+            "/quote/update/**",
             "/"
     };
 

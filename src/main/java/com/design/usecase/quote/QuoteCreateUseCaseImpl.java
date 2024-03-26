@@ -60,15 +60,15 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         quoteEntity.setCustomerAddress(customerEntity.getAddress());
         quoteEntity.setCustomerVatNumber(customerEntity.getVatNumber());
         quoteEntity.setUnderTakerName(request.underTakerName());
-        quoteEntity.setUnderTakerMobile(request.underTakerTel());
+        quoteEntity.setUnderTakerTel(request.underTakerTel());
         quoteEntity.setQuoteStatus(QuoteStatus.CREATE);
-        // 取得報價單明細清單
+        // 取得新的報價單明細清單
         List<QuoteDetailEntity> quoteDetailEntities = getQuoteDetails(products, quoteEntity);
         // 設定金額
         quoteEntity = setAmount(quoteDetailEntities, quoteEntity);
         // 建立報價單
         quoteService.create(quoteEntity, JwtUtil.extractUsername());
-        // 建立報價單明細
+        // 建立報價單明細清單
         quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUsername());
     }
 
@@ -157,12 +157,12 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         customTax = customAmount.multiply(new BigDecimal(0.05));
         customTax = customTax.setScale(0, RoundingMode.HALF_UP);
         customTotalAmount = customTotalAmount.add(customAmount);
-        customTotalAmount = customTotalAmount.add(tax);
+        customTotalAmount = customTotalAmount.add(customTax);
 
         costTax = costAmount.multiply(new BigDecimal(0.05));
         costTax = costTax.setScale(0, RoundingMode.HALF_UP);
         costTotalAmount = costTotalAmount.add(costAmount);
-        costTotalAmount = costTotalAmount.add(tax);
+        costTotalAmount = costTotalAmount.add(costTax);
 
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);

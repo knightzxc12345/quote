@@ -5,7 +5,9 @@ import com.design.controller.quote.response.QuoteFindAllResponse;
 import com.design.controller.quote.response.QuoteFindPageResponse;
 import com.design.controller.quote.response.QuoteFindResponse;
 import com.design.entity.quote.QuoteEntity;
+import com.design.entity.quote_detail.QuoteDetailEntity;
 import com.design.service.quote.QuoteService;
+import com.design.service.quote_detail.QuoteDetailService;
 import com.design.utils.InstantUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,21 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
 
     private final QuoteService quoteService;
 
+    private final QuoteDetailService quoteDetailService;
+
     @Override
     public QuoteFindResponse findByUuid(String quoteUuid) {
-        return null;
+        QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
+        List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
+        List<QuoteFindResponse.Product> products = getProducts(quoteDetailEntities);
+        return new QuoteFindResponse(
+                quoteEntity.getUuid(),
+                quoteEntity.getUserUuid(),
+                quoteEntity.getCustomerUuid(),
+                quoteEntity.getUnderTakerName(),
+                quoteEntity.getUnderTakerTel(),
+                products
+        );
     }
 
     @Override
@@ -60,6 +74,23 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
                 quoteEntityPage.getSize(),
                 responses
         );
+    }
+
+    private List<QuoteFindResponse.Product> getProducts(List<QuoteDetailEntity> quoteDetailEntities){
+        List<QuoteFindResponse.Product> products = new ArrayList<>();
+        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
+            return products;
+        }
+        for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
+            products.add(new QuoteFindResponse.Product(
+                    quoteDetailEntity.getVoteUuid(),
+                    quoteDetailEntity.getItemUuid(),
+                    quoteDetailEntity.getProductUuid(),
+                    quoteDetailEntity.getProductQuantity(),
+                    quoteDetailEntity.getProductCustomUnitPrice()
+            ));
+        }
+        return products;
     }
 
     private List<QuoteFindAllResponse> format(List<QuoteEntity> quoteEntities){

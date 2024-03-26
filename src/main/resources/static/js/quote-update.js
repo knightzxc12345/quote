@@ -8,8 +8,6 @@ let productIndex = 1;
 window.onload = function () {
     init();
     select2Init();
-    getVendors();
-    getCustomers();
     getUsers();
     selectChange();
     inputChange();
@@ -97,7 +95,7 @@ function getProducts(){
                 return;
             }
             globalProduct = response.data;
-            setSelect();
+            getQuotes();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -126,7 +124,7 @@ function getCustomers(){
                 return;
             }
             globalCustomer = response.data;
-            setCustomer();
+            getUsers();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -141,25 +139,25 @@ function getCustomers(){
 
 function setCustomer(){
     $.each(globalCustomer, function(key, value) {
-        let selectCustomer = $(".add-product-customer-name-select");
+        let selectCustomer = $(".update-product-customer-name-select");
         selectCustomer.append(`
             <option value='${value.customerUuid}'>${value.name}</option>
         `);
         if(key == 0){
-            $(".add-product-customer-address").text(value.address);
+            $(".update-product-customer-address").text(value.address);
         }
     });
     customerChange();
 }
 
 function customerChange(){
-    $(".add-product-customer-name-select").on("select2:select", function() {
-        let selectedCustomer = $(".add-product-customer-name-select").val();
+    $(".update-product-customer-name-select").on("select2:select", function() {
+        let selectedCustomer = $(".update-product-customer-name-select").val();
         $.each(globalCustomer, function(key, value) {
             if(value.customerUuid != selectedCustomer){
                 return;
             }
-            $(".add-product-customer-address").text(value.address);
+            $(".update-product-customer-address").text(value.address);
         });
     });
 }
@@ -180,7 +178,7 @@ function getUsers(){
                 return;
             }
             globalUser = response.data;
-            setUser();
+            getVendors();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -194,7 +192,7 @@ function getUsers(){
 }
 
 function setUser(){
-    let selectUser = $(".add-product-user-name-select");
+    let selectUser = $(".update-product-user-name-select");
     $.each(globalUser, function(key, value) {
         selectUser.append(`
             <option value='${value.userUuid}'>${value.name}</option>
@@ -202,16 +200,85 @@ function setUser(){
     });
 }
 
+function getQuotes(){
+    let quoteUuid = $('.update-quote-uuid').text();
+    $.ajax({
+        url: `/quote/v1/` + quoteUuid,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00001') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            $.each(response.data.products, function(index, value) {
+                setFirstSelect(value);
+            });
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
+function setFirstSelect(product){
+    appendColumnFirst(product);
+    let vendorUuid = product.vendorUuid;
+    let itemUuid = product.itemUuid;
+    let productUuid = product.productUuid;
+    let selectVendor = $('.update-vendor-name-select:last');
+    $.each(globalVendor, function(key, value) {
+        let isSelected = value.vendorUuid == product.vendorUuid ? 'selected' : '';
+        selectVendor.append(`
+            <option value='${value.vendorUuid}' ${isSelected}>${value.name}</option>
+        `);
+    });
+    let selectedVendorUuid = selectVendor.val();
+    let selectItem = $('.update-item-name-select:last');
+    $.each(globalItem, function(key, value) {
+        if(value.vendorUuid != selectedVendorUuid){
+            return;
+        }
+        let isSelected = value.itemUuid == product.itemUuid ? 'selected' : '';
+        selectItem.append(`
+            <option value='${value.itemUuid}' ${isSelected}>${value.name}</option>
+        `);
+    });
+    let selectedItemUuid = selectItem.val();
+    let selectProduct = $('.update-product-specification-select:last');
+    $.each(globalProduct, function(key, value) {
+        if(value.itemUuid != selectedItemUuid){
+            return;
+        }
+        let isSelected = value.productUuid == product.productUuid ? 'selected' : '';
+        selectProduct.append(`
+            <option value='${value.productUuid}' ${isSelected}>${value.specification}</option>
+        `);
+    });
+    let tr = selectProduct.closest('tr');
+    columnChangeFirst(tr);
+}
+
 function setSelect(){
     appendColumn();
-    let selectVendor = $('.add-vendor-name-select:last');
+    let selectVendor = $('.update-vendor-name-select:last');
     $.each(globalVendor, function(key, value) {
         selectVendor.append(`
             <option value='${value.vendorUuid}'>${value.name}</option>
         `);
     });
     let selectedVendorUuid = selectVendor.val();
-    let selectItem = $('.add-item-name-select:last');
+    let selectItem = $('.update-item-name-select:last');
     $.each(globalItem, function(key, value) {
         if(value.vendorUuid != selectedVendorUuid){
             return;
@@ -221,7 +288,7 @@ function setSelect(){
         `);
     });
     let selectedItemUuid = selectItem.val();
-    let selectProduct = $('.add-product-specification-select:last');
+    let selectProduct = $('.update-product-specification-select:last');
     $.each(globalProduct, function(key, value) {
         if(value.itemUuid != selectedItemUuid){
             return;
@@ -234,41 +301,84 @@ function setSelect(){
     columnChangeFirst(tr);
 }
 
+function appendColumnFirst(product){
+    $('#quote-tbody').append(`
+        <tr>
+            <td>
+                <button class="btn btn-danger btn-sm update-product-cancel">x</button>
+            </td>
+            <td class="update-product-uuid hide"></td>
+            <td class="update-product-index">${productIndex++}</td>
+            <td class="update-product-no"></td>
+            <td>
+                <select class="form-select select2 update-vendor-name-select">
+                </select>
+            </td>
+            <td>
+                <select class="form-select select2 update-item-name-select">
+                </select>
+            </td>
+            <td>
+                <select class="form-select select2 update-product-specification-select">
+                </select>
+            </td>
+            <td>
+                <input class="form-control form-control-sm update-product-quantity" value="${product.quantity}"/>
+            </td>
+            <td class="update-product-unit"></td>
+            <td class="update-product-unit-price">0</td>
+            <td class="update-product-amount">0</td>
+            <td>
+                <input class="form-control form-control-sm update-product-custom-unit-price red-text" value="${product.customUnitPrice.toLocaleString()}"/>
+            </td>
+            <td class="update-product-custom-amount" style="color: red;">0</td>
+            <td class="update-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="update-product-cost-amount"  style="color: green;">0</td>
+            <td>
+                <button class="btn btn-success btn-sm update-product-add">+</button>
+            </td>
+        </tr>
+    `);
+    buttonClick();
+    selectChange();
+    inputChange();
+}
+
 function appendColumn(){
     $('#quote-tbody').append(`
         <tr>
             <td>
-                <button class="btn btn-danger btn-sm add-product-cancel">x</button>
+                <button class="btn btn-danger btn-sm update-product-cancel">x</button>
             </td>
-            <td class="add-product-uuid hide"></td>
-            <td class="add-product-index">${productIndex}</td>
-            <td class="add-product-no"></td>
+            <td class="update-product-uuid hide"></td>
+            <td class="update-product-index">${productIndex}</td>
+            <td class="update-product-no"></td>
             <td>
-                <select class="form-select select2 add-vendor-name-select">
+                <select class="form-select select2 update-vendor-name-select">
                 </select>
             </td>
             <td>
-                <select class="form-select select2 add-item-name-select">
+                <select class="form-select select2 update-item-name-select">
                 </select>
             </td>
             <td>
-                <select class="form-select select2 add-product-specification-select">
+                <select class="form-select select2 update-product-specification-select">
                 </select>
             </td>
             <td>
-                <input class="form-control form-control-sm add-product-quantity" value="1"/>
+                <input class="form-control form-control-sm update-product-quantity" value="1"/>
             </td>
-            <td class="add-product-unit"></td>
-            <td class="add-product-unit-price">0</td>
-            <td class="add-product-amount">0</td>
+            <td class="update-product-unit"></td>
+            <td class="update-product-unit-price">0</td>
+            <td class="update-product-amount">0</td>
             <td>
-                <input class="form-control form-control-sm add-product-custom-unit-price red-text"/>
+                <input class="form-control form-control-sm update-product-custom-unit-price red-text"/>
             </td>
-            <td class="add-product-custom-amount" style="color: red;">0</td>
-            <td class="add-product-cost-unit-price"  style="color: green;">0</td>
-            <td class="add-product-cost-amount"  style="color: green;">0</td>
+            <td class="update-product-custom-amount" style="color: red;">0</td>
+            <td class="update-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="update-product-cost-amount"  style="color: green;">0</td>
             <td>
-                <button class="btn btn-success btn-sm add-product-add">+</button>
+                <button class="btn btn-success btn-sm update-product-add">+</button>
             </td>
         </tr>
     `);
@@ -279,11 +389,11 @@ function appendColumn(){
 }
 
 function buttonClick(){
-    $('.add-product-add').off('click').on('click', function() {
+    $('.update-product-add').off('click').on('click', function() {
         $(this).addClass('hide');
         setSelect();
     });
-    $('.add-product-cancel').off('click').on('click', function() {
+    $('.update-product-cancel').off('click').on('click', function() {
         let tr = $(this).closest('tr');
         let nextTr = tr.next('tr');
         let prevTr = tr.prev('tr');
@@ -294,7 +404,7 @@ function buttonClick(){
             productIndex--;
         }
         if (nextTr.length <= 0 && prevTr.length > 0) {
-            prevTr.find('.add-product-add').removeClass('hide');
+            prevTr.find('.update-product-add').removeClass('hide');
         }
     });
 }
@@ -302,31 +412,31 @@ function buttonClick(){
 function resetIndex(){
     let index = 1;
     $('#quote-tbody tr').each(function() {
-        $(this).find('td.add-product-index').text(index++);
+        $(this).find('td.update-product-index').text(index++);
     });
 }
 
 function selectChange(){
-    $('.add-vendor-name-select').change(function() {
+    $('.update-vendor-name-select').change(function() {
         let tr = $(this).closest('tr');
         selectVendorChange(tr);
         selectItemChange(tr);
-        columnChangeFirst(tr);
+        columnChange(tr);
     });
-    $('.add-item-name-select').change(function() {
+    $('.update-item-name-select').change(function() {
         let tr = $(this).closest('tr');
         selectItemChange(tr);
-        columnChangeFirst(tr);
+        columnChange(tr);
     });
-    $('.add-product-specification-select').change(function() {
+    $('.update-product-specification-select').change(function() {
         let tr = $(this).closest('tr');
-        columnChangeFirst(tr);
+        columnChange(tr);
     });
 }
 
 // 修改數量或客製單價
 function inputChange(){
-    $(".add-product-quantity").change(function() {
+    $(".update-product-quantity").change(function() {
         let tr = $(this).closest('tr');
         let inputValue = $(this).val();
         if(!/^\d+$/.test(inputValue)){
@@ -334,11 +444,11 @@ function inputChange(){
         }
         columnChange(tr);
     });
-    $(".add-product-custom-unit-price").change(function() {
+    $(".update-product-custom-unit-price").change(function() {
         let tr = $(this).closest('tr');
         let inputValue = $(this).val().replace(/,/g, '');
         if(!/^\d+$/.test(inputValue)){
-            let unitPrice = tr.find('.add-product-unit-price');
+            let unitPrice = tr.find('.update-product-unit-price');
             $(this).text(unitPrice);
         }
         columnChange(tr);
@@ -346,9 +456,9 @@ function inputChange(){
 }
 
 function selectVendorChange(tr){
-    let selectVendor = tr.find('.add-vendor-name-select');
+    let selectVendor = tr.find('.update-vendor-name-select');
     let selectedVendorUuid = selectVendor.val();
-    let selectItem = tr.find('.add-item-name-select');
+    let selectItem = tr.find('.update-item-name-select');
     selectItem.empty();
     $.each(globalItem, function(key, value) {
         if(value.vendorUuid != selectedVendorUuid){
@@ -361,9 +471,9 @@ function selectVendorChange(tr){
 }
 
 function selectItemChange(tr){
-    let selectItem = tr.find('.add-item-name-select');
+    let selectItem = tr.find('.update-item-name-select');
     let selectedItemUuid = selectItem.val();
-    let selectProduct = tr.find('.add-product-specification-select');
+    let selectProduct = tr.find('.update-product-specification-select');
     selectProduct.empty();
     $.each(globalProduct, function(key, value) {
         if(value.itemUuid != selectedItemUuid){
@@ -376,30 +486,29 @@ function selectItemChange(tr){
 }
 
 function columnChangeFirst(tr){
-    let selectProduct = tr.find('.add-product-specification-select');
+    let selectProduct = tr.find('.update-product-specification-select');
     let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.add-product-no');
-    let tdUnit = tr.find('.add-product-unit');
-    let inputQuantity = tr.find('.add-product-quantity');
-    let tdUnitPrice = tr.find('.add-product-unit-price');
-    let tdAmount = tr.find('.add-product-amount');
-    let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
-    let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
-    let tdCostAmount = tr.find('.add-product-cost-amount');
+    let tdNo = tr.find('.update-product-no');
+    let tdUnit = tr.find('.update-product-unit');
+    let inputQuantity = tr.find('.update-product-quantity');
+    let tdUnitPrice = tr.find('.update-product-unit-price');
+    let tdAmount = tr.find('.update-product-amount');
+    let inputCustomUnitPrice = tr.find('.update-product-custom-unit-price');
+    let tdCustomAmount = tr.find('.update-product-custom-amount');
+    let tdCostUnitPrice = tr.find('.update-product-cost-unit-price');
+    let tdCostAmount = tr.find('.update-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
             return;
         }
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
-        let customUnitPrice = unitPrice;
+        let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
         let costUnitPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
-        inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
         tdCostUnitPrice.text(costUnitPrice.toLocaleString());
         tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
@@ -408,17 +517,17 @@ function columnChangeFirst(tr){
 }
 
 function columnChange(tr){
-    let selectProduct = tr.find('.add-product-specification-select');
+    let selectProduct = tr.find('.update-product-specification-select');
     let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.add-product-no');
-    let tdUnit = tr.find('.add-product-unit');
-    let inputQuantity = tr.find('.add-product-quantity');
-    let tdUnitPrice = tr.find('.add-product-unit-price');
-    let tdAmount = tr.find('.add-product-amount');
-    let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
-    let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
-    let tdCostAmount = tr.find('.add-product-cost-amount');
+    let tdNo = tr.find('.update-product-no');
+    let tdUnit = tr.find('.update-product-unit');
+    let inputQuantity = tr.find('.update-product-quantity');
+    let tdUnitPrice = tr.find('.update-product-unit-price');
+    let tdAmount = tr.find('.update-product-amount');
+    let inputCustomUnitPrice = tr.find('.update-product-custom-unit-price');
+    let tdCustomAmount = tr.find('.update-product-custom-amount');
+    let tdCostUnitPrice = tr.find('.update-product-cost-unit-price');
+    let tdCostAmount = tr.find('.update-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
             return;
@@ -450,10 +559,10 @@ function countTotal(){
     let costTax = 0;
     let costTotalAmountWithTax = 0;
     $("#quote-tbody tr").each(function() {
-        let quantity = parseInt($(this).find('.add-product-quantity').val().replace(/,/g, ''));
-        let tdUnitPrice = parseInt($(this).find('.add-product-unit-price').text().replace(/,/g, ''));
-        let inputCustomUnitPrice = parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''));
-        let tdCustomUnitPrice = parseInt($(this).find('.add-product-cost-unit-price').text().replace(/,/g, ''));
+        let quantity = parseInt($(this).find('.update-product-quantity').val().replace(/,/g, ''));
+        let tdUnitPrice = parseInt($(this).find('.update-product-unit-price').text().replace(/,/g, ''));
+        let inputCustomUnitPrice = parseInt($(this).find('.update-product-custom-unit-price').val().replace(/,/g, ''));
+        let tdCustomUnitPrice = parseInt($(this).find('.update-product-cost-unit-price').text().replace(/,/g, ''));
         totalAmount += (tdUnitPrice * quantity);
         customTotalAmount += (inputCustomUnitPrice * quantity);
         costTotalAmount += (tdCustomUnitPrice * quantity);
@@ -464,29 +573,29 @@ function countTotal(){
     customTotalAmountWithTax = customTotalAmount + parseInt(customTax);
     costTax = (costTotalAmount * 0.05).toFixed(0);
     costTotalAmountWithTax = costTotalAmount + parseInt(costTax);
-    $("#add-quote-amount").text(totalAmount.toLocaleString());
-    $("#add-quote-tax").text(Number(tax).toLocaleString());
-    $("#add-quote-total-amount").text(totalAmountWithTax.toLocaleString());
-    $("#add-quote-custom-amount").text(customTotalAmount.toLocaleString());
-    $("#add-quote-custom-tax").text(Number(customTax).toLocaleString());
-    $("#add-quote-custom-total-amount").text(customTotalAmountWithTax.toLocaleString());
-    $("#add-quote-cost-amount").text(costTotalAmount.toLocaleString());
-    $("#add-quote-cost-tax").text(Number(costTax).toLocaleString());
-    $("#add-quote-cost-total-amount").text(costTotalAmountWithTax.toLocaleString());
+    $("#update-quote-amount").text(totalAmount.toLocaleString());
+    $("#update-quote-tax").text(Number(tax).toLocaleString());
+    $("#update-quote-total-amount").text(totalAmountWithTax.toLocaleString());
+    $("#update-quote-custom-amount").text(customTotalAmount.toLocaleString());
+    $("#update-quote-custom-tax").text(Number(customTax).toLocaleString());
+    $("#update-quote-custom-total-amount").text(customTotalAmountWithTax.toLocaleString());
+    $("#update-quote-cost-amount").text(costTotalAmount.toLocaleString());
+    $("#update-quote-cost-tax").text(Number(costTax).toLocaleString());
+    $("#update-quote-cost-total-amount").text(costTotalAmountWithTax.toLocaleString());
 }
 
 function addQuote(){
-    const userUuid = $('.add-product-user-name-select').val();
-    const customerUuid = $('.add-product-customer-name-select').val();
-    const underTakerName = $('.add-product-under-taker-name').val();
-    const underTakerTel = $('.add-product-under-taker-tel').val();
+    const userUuid = $('.update-product-user-name-select').val();
+    const customerUuid = $('.update-product-customer-name-select').val();
+    const underTakerName = $('.update-product-under-taker-name').val();
+    const underTakerTel = $('.update-product-under-taker-tel').val();
     let products = [];
     let product;
     $('#quote-tbody tr').each(function() {
         product = {
-            productUuid: $(this).find('.add-product-specification-select').val(),
-            quantity: parseInt($(this).find('.add-product-quantity').val().replace(/,/g, '')),
-            customUnitPrice: parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''))
+            productUuid: $(this).find('.update-product-specification-select').val(),
+            quantity: parseInt($(this).find('.update-product-quantity').val().replace(/,/g, '')),
+            customUnitPrice: parseInt($(this).find('.update-product-custom-unit-price').val().replace(/,/g, ''))
         };
         products.push(product);
     });
@@ -508,7 +617,7 @@ function addQuote(){
                 alertError('系統錯誤');
                 return;
             }
-            $('.add-product-success-modal').modal('show');
+            $('.update-product-success-modal').modal('show');
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

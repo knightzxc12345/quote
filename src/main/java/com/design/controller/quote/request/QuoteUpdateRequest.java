@@ -31,8 +31,8 @@ public record QuoteUpdateRequest(
             @NotNull(message = "產品數量")
             Integer quantity,
 
-            @NotNull(message = "單價")
-            BigDecimal unitPrice
+            @NotNull(message = "客製單價")
+            BigDecimal customUnitPrice
 
     ){
     }

@@ -43,6 +43,7 @@ public class IndexController {
     public String quoteUpdate(
             @PathVariable("quoteUuid") @NotNull final String quoteUuid,
             Model model) {
+        model.addAttribute("quoteUuid", quoteUuid);
         return "quote-update";
     }
 
