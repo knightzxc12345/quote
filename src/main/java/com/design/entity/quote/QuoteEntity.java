@@ -163,7 +163,7 @@ public class QuoteEntity extends BaseEntity {
     @NotNull
     private BigDecimal customerTotalAmount;
 
-    // 成本合計
+    // 成本
     @Column(
             name = "cost_amount",
             nullable = false,
@@ -172,6 +172,26 @@ public class QuoteEntity extends BaseEntity {
     )
     @NotNull
     private BigDecimal costAmount;
+
+    // 稅金
+    @Column(
+            name = "cost_tax",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal costTax;
+
+    // 成本總計
+    @Column(
+            name = "cost_total_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal costTotalAmount;
 
     // 報價單狀態
     @Column(

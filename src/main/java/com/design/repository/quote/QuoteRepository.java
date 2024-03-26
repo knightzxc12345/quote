@@ -24,16 +24,20 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
             WHERE 
                 q.isDeleted = false
                 AND (:userUuid IS NULL OR q.userUuid = :userUuid)
+                AND (:customerUuid IS NULL OR q.customerUuid = :customerUuid)
                 AND 
                 (
                     (:keyword IS NULL OR q.customerName LIKE CONCAT('%', :keyword, '%'))
                 )
             ORDER BY 
-                q.createTime
+                q.createTime DESC,
+                q.userUuid,
+                q.customerUuid
             """
     )
     List<QuoteEntity> findAll(
             @Param("userUuid") String userUuid,
+            @Param("customerUuid") String customerUuid,
             @Param("keyword") String keyword
     );
 
@@ -46,16 +50,16 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
             WHERE 
                 q.isDeleted = false
                 AND (:userUuid IS NULL OR q.userUuid = :userUuid)
+                AND (:customerUuid IS NULL OR q.customerUuid = :customerUuid)
                 AND 
                 (
                     (:keyword IS NULL OR q.customerName LIKE CONCAT('%', :keyword, '%'))
                 )
-            ORDER BY 
-                q.createTime
             """
     )
     Page<QuoteEntity> findAllByPage(
             @Param("userUuid") String userUuid,
+            @Param("customerUuid") String customerUuid,
             @Param("keyword") String keyword,
             Pageable pageable
     );

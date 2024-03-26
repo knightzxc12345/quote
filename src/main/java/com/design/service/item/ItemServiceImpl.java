@@ -52,8 +52,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(ItemEntity itemEntity, String userUuid) {
         itemEntity.setIsDeleted(true);
-        itemEntity.setModifiedTime(Instant.now());
-        itemEntity.setModifiedUser(userUuid);
+        itemEntity.setDeletedTime(Instant.now());
+        itemEntity.setDeletedUser(userUuid);
         itemRepository.save(itemEntity);
     }
 

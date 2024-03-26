@@ -142,6 +142,8 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal customTax = new BigDecimal(0);
         BigDecimal customTotalAmount = new BigDecimal(0);
         BigDecimal costAmount = new BigDecimal(0);
+        BigDecimal costTax = new BigDecimal(0);
+        BigDecimal costTotalAmount = new BigDecimal(0);
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             amount = amount.add(quoteDetailEntity.getProductAmount());
             customAmount = customAmount.add(quoteDetailEntity.getProductCustomAmount());
@@ -151,10 +153,17 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         tax = tax.setScale(0, RoundingMode.HALF_UP);
         totalAmount = totalAmount.add(amount);
         totalAmount = totalAmount.add(tax);
+
         customTax = customAmount.multiply(new BigDecimal(0.05));
         customTax = customTax.setScale(0, RoundingMode.HALF_UP);
         customTotalAmount = customTotalAmount.add(customAmount);
         customTotalAmount = customTotalAmount.add(tax);
+
+        costTax = costAmount.multiply(new BigDecimal(0.05));
+        costTax = costTax.setScale(0, RoundingMode.HALF_UP);
+        costTotalAmount = costTotalAmount.add(costAmount);
+        costTotalAmount = costTotalAmount.add(tax);
+
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);
         quoteEntity.setTotalAmount(totalAmount);
@@ -162,6 +171,8 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         quoteEntity.setCustomTax(customTax);
         quoteEntity.setCustomerTotalAmount(customTotalAmount);
         quoteEntity.setCostAmount(costAmount);
+        quoteEntity.setCostTax(costTax);
+        quoteEntity.setCostTotalAmount(costTotalAmount);
         return quoteEntity;
     }
 

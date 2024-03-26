@@ -22,6 +22,10 @@
                     </div>
                     <div>
                         <div class="input-group mb-3">
+                            <select class="form-select" id="user-name-select">
+                            </select>
+                            <select class="form-select" id="customer-name-select">
+                            </select>
                             <input type="text" class="form-control" id="quote-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search">
                             <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
                         </div>
@@ -33,7 +37,8 @@
                 <table class="table table-striped" id="quoteList">
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 10%;">建立日期</th>
+                        <th scope="col" style="width: 15%;">建立日期</th>
+                        <th scope="col" style="width: 10%;">業務名稱</th>
                         <th scope="col" style="width: 10%;">客戶名稱</th>
                         <th scope="col">總計</th>
                         <th scope="col">調整總計</th>

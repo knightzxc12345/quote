@@ -48,8 +48,8 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
         }
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             quoteDetailEntity.setIsDeleted(true);
-            quoteDetailEntity.setModifiedTime(Instant.now());
-            quoteDetailEntity.setModifiedUser(userUuid);
+            quoteDetailEntity.setDeletedTime(Instant.now());
+            quoteDetailEntity.setDeletedUser(userUuid);
         }
         quoteDetailRepository.saveAll(quoteDetailEntities);
     }

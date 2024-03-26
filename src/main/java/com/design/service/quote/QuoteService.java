@@ -18,11 +18,13 @@ public interface QuoteService {
 
     List<QuoteEntity> findAllLike(
             String userUuid,
+            String customerUuid,
             String keyword
     );
 
     Page<QuoteEntity> findAllLikeByPage(
             String userUuid,
+            String customerUuid,
             String keyword,
             Pageable pageable
     );

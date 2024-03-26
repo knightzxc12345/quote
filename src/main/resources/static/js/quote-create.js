@@ -262,10 +262,11 @@ function appendColumn(){
             <td class="add-product-unit-price">0</td>
             <td class="add-product-amount">0</td>
             <td>
-                <input class="form-control form-control-sm add-product-custom-cost success-text"/>
+                <input class="form-control form-control-sm add-product-custom-unit-price red-text"/>
             </td>
             <td class="add-product-custom-amount" style="color: red;">0</td>
-            <td class="add-product-amount">0</td>
+            <td class="add-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="add-product-cost-amount"  style="color: green;">0</td>
             <td>
                 <button class="btn btn-success btn-sm add-product-add">+</button>
             </td>
@@ -374,6 +375,8 @@ function columnChangeFirst(tr){
     let tdAmount = tr.find('.add-product-amount');
     let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
     let tdCustomAmount = tr.find('.add-product-custom-amount');
+    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
+    let tdCostAmount = tr.find('.add-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
             return;
@@ -381,12 +384,15 @@ function columnChangeFirst(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = unitPrice;
+        let costUnitPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
+        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
+        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
     });
     countTotal();
 }
@@ -401,6 +407,8 @@ function columnChange(tr){
     let tdAmount = tr.find('.add-product-amount');
     let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
     let tdCustomAmount = tr.find('.add-product-custom-amount');
+    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
+    let tdCostAmount = tr.find('.add-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
             return;
@@ -408,12 +416,15 @@ function columnChange(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
+        let costUnitPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
+        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
+        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
     });
     countTotal();
 }
@@ -425,23 +436,33 @@ function countTotal(){
     let customTotalAmount = 0;
     let customTax = 0;
     let customTotalAmountWithTax = 0;
+    let costTotalAmount = 0;
+    let costTax = 0;
+    let costTotalAmountWithTax = 0;
     $("#quote-tbody tr").each(function() {
         let quantity = parseInt($(this).find('.add-product-quantity').val().replace(/,/g, ''));
         let tdUnitPrice = parseInt($(this).find('.add-product-unit-price').text().replace(/,/g, ''));
         let inputCustomUnitPrice = parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''));
+        let tdCustomUnitPrice = parseInt($(this).find('.add-product-cost-unit-price').text().replace(/,/g, ''));
         totalAmount += (tdUnitPrice * quantity);
         customTotalAmount += (inputCustomUnitPrice * quantity);
+        costTotalAmount += (tdCustomUnitPrice * quantity);
     });
     tax = (totalAmount * 0.05).toFixed(0);
     totalAmountWithTax = totalAmount + parseInt(tax);
     customTax = (customTotalAmount * 0.05).toFixed(0);
     customTotalAmountWithTax = customTotalAmount + parseInt(customTax);
+    costTax = (costTotalAmount * 0.05).toFixed(0);
+    costTotalAmountWithTax = costTotalAmount + parseInt(costTax);
     $("#add-quote-amount").text(totalAmount.toLocaleString());
     $("#add-quote-tax").text(Number(tax).toLocaleString());
     $("#add-quote-total-amount").text(totalAmountWithTax.toLocaleString());
     $("#add-quote-custom-amount").text(customTotalAmount.toLocaleString());
     $("#add-quote-custom-tax").text(Number(customTax).toLocaleString());
     $("#add-quote-custom-total-amount").text(customTotalAmountWithTax.toLocaleString());
+    $("#add-quote-cost-amount").text(costTotalAmount.toLocaleString());
+    $("#add-quote-cost-tax").text(Number(costTax).toLocaleString());
+    $("#add-quote-cost-total-amount").text(costTotalAmountWithTax.toLocaleString());
 }
 
 function addQuote(){

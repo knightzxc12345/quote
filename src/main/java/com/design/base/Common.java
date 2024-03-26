@@ -1,5 +1,8 @@
 package com.design.base;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 public class Common {
 
     public static final long JWT_TOKEN_VALIDITY = 60 * 60 * 1000;
@@ -17,5 +20,17 @@ public class Common {
     public static final String ENCODING = "utf-8";
 
     public static final String CONTENT_TYPE = "application/json;charset=utf-8";
+
+    public static final DateTimeFormatter DATE_FORMAT_1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public static final DateTimeFormatter DATE_FORMAT_2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public static final ZoneId zoneId = ZoneId.of("Asia/Taipei");
+
+    public static final long DAYS = 24 * 60 * 60;
+
+    public static final long HOURS = 60 * 60;
+
+    public static final long MINUTES = 60;
 
 }

@@ -35,8 +35,8 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public void delete(QuoteEntity quoteEntity, String userUuid) {
         quoteEntity.setIsDeleted(true);
-        quoteEntity.setModifiedTime(Instant.now());
-        quoteEntity.setModifiedUser(userUuid);
+        quoteEntity.setDeletedTime(Instant.now());
+        quoteEntity.setDeletedUser(userUuid);
         quoteRepository.save(quoteEntity);
     }
 
@@ -48,9 +48,11 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public List<QuoteEntity> findAllLike(
             String userUuid,
+            String customerUuid,
             String keyword) {
         return quoteRepository.findAll(
                 userUuid,
+                customerUuid,
                 keyword
         );
     }
@@ -58,10 +60,12 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public Page<QuoteEntity> findAllLikeByPage(
             String userUuid,
+            String customerUuid,
             String keyword,
             Pageable pageable) {
         return quoteRepository.findAllByPage(
                 userUuid,
+                customerUuid,
                 keyword,
                 pageable
         );
