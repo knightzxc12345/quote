@@ -50,7 +50,6 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         UserEntity userEntity = userService.findByUuid(request.userUuid());
         CustomerEntity customerEntity = customerService.findByUuid(request.customerUuid());
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
-        quoteEntity.setUuid(UUID.randomUUID().toString());
         quoteEntity.setUserUuid(userEntity.getUuid());
         quoteEntity.setUserName(userEntity.getName());
         quoteEntity.setCustomerUuid(customerEntity.getUuid());
@@ -159,12 +158,12 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         customTax = customAmount.multiply(new BigDecimal(0.05));
         customTax = customTax.setScale(0, RoundingMode.HALF_UP);
         customTotalAmount = customTotalAmount.add(customAmount);
-        customTotalAmount = customTotalAmount.add(tax);
+        customTotalAmount = customTotalAmount.add(customTax);
 
         costTax = costAmount.multiply(new BigDecimal(0.05));
         costTax = costTax.setScale(0, RoundingMode.HALF_UP);
         costTotalAmount = costTotalAmount.add(costAmount);
-        costTotalAmount = costTotalAmount.add(tax);
+        costTotalAmount = costTotalAmount.add(costTax);
 
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);

@@ -23,8 +23,11 @@
                         <h3>編輯報價單</h3>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-outline-dark" onclick="backQuote();">返回報價單</button>
-                        <button type="button" class="btn btn-outline-dark" onclick="updateQuote();">送出</button>
+                        <button id="update-quote-back" type="button" class="btn btn-outline-dark" onclick="backQuote();">返回報價單</button>
+                        <button id="update-quote" class="btn btn-outline-dark" type="button" onclick="updateQuote();">
+                            <span id="update-quote-loading" class="spinner-border spinner-border-sm hide" aria-hidden="true"></span>
+                            <span id="update-quote-text" role="status">送出</span>
+                        </button>
                     </div>
                 </div>
                 <table class="table table-striped vertical-align-middle" id="quoteList">

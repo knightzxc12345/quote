@@ -231,7 +231,7 @@ function setSelect(){
         `);
     });
     let tr = selectProduct.closest('tr');
-    columnChangeFirst(tr);
+    addColumnChange(tr);
 }
 
 function appendColumn(){
@@ -311,16 +311,16 @@ function selectChange(){
         let tr = $(this).closest('tr');
         selectVendorChange(tr);
         selectItemChange(tr);
-        columnChangeFirst(tr);
+        addColumnChange(tr);
     });
     $('.add-item-name-select').change(function() {
         let tr = $(this).closest('tr');
         selectItemChange(tr);
-        columnChangeFirst(tr);
+        addColumnChange(tr);
     });
     $('.add-product-specification-select').change(function() {
         let tr = $(this).closest('tr');
-        columnChangeFirst(tr);
+        addColumnChange(tr);
     });
 }
 
@@ -375,7 +375,7 @@ function selectItemChange(tr){
     });
 }
 
-function columnChangeFirst(tr){
+function addColumnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();
     let tdNo = tr.find('.add-product-no');
@@ -476,6 +476,10 @@ function countTotal(){
 }
 
 function addQuote(){
+    $('#add-quote-back').prop('disabled', true);
+    $('#add-quote').prop('disabled', true);
+    $('#add-quote-loading').removeClass('hide');
+    $('#add-quote-text').text('建立中...');
     const userUuid = $('.add-product-user-name-select').val();
     const customerUuid = $('.add-product-customer-name-select').val();
     const underTakerName = $('.add-product-under-taker-name').val();
@@ -506,6 +510,10 @@ function addQuote(){
         success: function (response) {
             if (response.code != 'C00003') {
                 alertError('系統錯誤');
+                $('#add-quote-back').prop('disabled', false);
+                $('#add-quote').prop('disabled', false);
+                $('#add-quote-loading').addClass('hide');
+                $('#add-quote-text').text('送出');
                 return;
             }
             $('.add-product-success-modal').modal('show');
