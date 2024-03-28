@@ -1,8 +1,11 @@
 package com.design.usecase.quote;
 
 import com.design.base.eunms.AuthEnum;
+import com.design.controller.quote.response.QuotePreviewResponse;
+import com.design.entity.customer.CustomerEntity;
 import com.design.entity.quote.QuoteEntity;
 import com.design.entity.quote_detail.QuoteDetailEntity;
+import com.design.entity.user.UserEntity;
 import com.design.handler.BusinessException;
 import com.design.modle.QuoteDetail;
 import com.design.service.customer.CustomerService;
@@ -13,17 +16,11 @@ import com.design.utils.ExcelUtil;
 import com.design.utils.HttpUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +44,59 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     private final UserService userService;
 
     @Override
-    public void preview(String quoteUuid) {
+    public QuotePreviewResponse preview(String quoteUuid) {
+        QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
+        CustomerEntity customerEntity = customerService.findByUuid(quoteEntity.getCustomerUuid());
+        UserEntity userEntity = userService.findByUuid(quoteEntity.getUserUuid());
+        List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
+        List<QuotePreviewResponse.Product> products = getProducts(quoteDetailEntities);
+        return new QuotePreviewResponse(
+                userEntity.getName(),
+                customerEntity.getName(),
+                customerEntity.getAddress(),
+                quoteEntity.getUnderTakerName(),
+                quoteEntity.getUnderTakerTel(),
+                quoteEntity.getAmount(),
+                quoteEntity.getTax(),
+                quoteEntity.getTotalAmount(),
+                quoteEntity.getCustomAmount(),
+                quoteEntity.getCustomTax(),
+                quoteEntity.getCostTotalAmount(),
+                quoteEntity.getCostAmount(),
+                quoteEntity.getCostTax(),
+                quoteEntity.getCostTotalAmount(),
+                products
+        );
+    }
+
+    @Override
+    public void download(String quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
         List<QuoteDetail> quoteDetails = getQuoteDetails(quoteDetailEntities);
         InputStream originQuote01InputStream = getInputStream(quote01Resource);
         InputStream quoteInputStream = ExcelUtil.create(originQuote01InputStream, quoteDetails);
-//        writeExcelToFile(quoteInputStream);
         writeFile(quoteInputStream);
+    }
+
+    private List<QuotePreviewResponse.Product> getProducts(List<QuoteDetailEntity> quoteDetailEntities){
+        List<QuotePreviewResponse.Product> products = new ArrayList<>();
+        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
+            return products;
+        }
+        for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
+            products.add(new QuotePreviewResponse.Product(
+                    quoteDetailEntity.getVoteName(),
+                    quoteDetailEntity.getItemName(),
+                    quoteDetailEntity.getProductNo(),
+                    quoteDetailEntity.getProductSpecification(),
+                    quoteDetailEntity.getProductUnit(),
+                    quoteDetailEntity.getProductQuantity(),
+                    quoteDetailEntity.getProductCustomUnitPrice(),
+                    quoteDetailEntity.getProductCustomAmount()
+            ));
+        }
+        return products;
     }
 
     private List<QuoteDetail> getQuoteDetails(List<QuoteDetailEntity> quoteDetailEntities){
@@ -90,22 +132,6 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         }
     }
 
-    public static byte[] toByteArray(InputStream inputStream){
-        try{
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-            byte[] data = new byte[16384];
-            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-            buffer.flush();
-            return buffer.toByteArray();
-        }catch (Exception ex){
-            ex.printStackTrace();
-            throw new BusinessException(AuthEnum.A00005);
-        }
-    }
-
     private void writeFile(InputStream inputStream){
         try{
             HttpServletResponse response = HttpUtil.getResponse();
@@ -121,18 +147,6 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         }catch (Exception ex){
             ex.printStackTrace();
             throw new BusinessException(AuthEnum.A00005);
-        }
-    }
-
-    public static void writeExcelToFile(InputStream excelInputStream){
-        Path directory = Paths.get("D:\\Downloads");
-        Path filePath = directory.resolve("test.xlsx");
-        try{
-            Workbook workbook = new XSSFWorkbook(excelInputStream);
-            FileOutputStream outputStream = new FileOutputStream(filePath.toFile());
-            workbook.write(outputStream);
-        }catch (Exception ex){
-            ex.printStackTrace();
         }
     }
 

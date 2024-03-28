@@ -1,7 +1,11 @@
 package com.design.usecase.quote;
 
+import com.design.controller.quote.response.QuotePreviewResponse;
+
 public interface QuoteFileUseCase {
 
-    void preview(String quoteUuid);
+    QuotePreviewResponse preview(String quoteUuid);
+
+    void download(String quoteUuid);
 
 }

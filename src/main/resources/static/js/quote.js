@@ -268,15 +268,27 @@ function findStatusName(status) {
 
 // 預覽報價單
 function previewQuote(data){
+    $('.preview-quote-inner').addClass('hide');
+    $('.preview-quote').append(`
+        <div class="d-flex text-secondary justify-content-center preview-quote-loading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `);
     const quoteUuid = data.quoteUuid;
     $.ajax({
         url: '/quote/v1/preview/' + quoteUuid,
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
-        responseType: 'blob',
-        success: function (data) {
-
+        success: function (response) {
+            if (response.code != 'C00001') {
+                alertError('查無資料');
+                return;
+            }
+            $('.preview-quote-loading').remove();
+            $('.preview-quote-inner').removeClass();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -288,14 +300,6 @@ function previewQuote(data){
             alertError(message);
         }
     });
-}
-
-function displayExcelInDiv(excelData) {
-    let workbook = XLSX.read(excelData, { type: 'binary' });
-    let sheetName = workbook.SheetNames[0];
-    let sheet = workbook.Sheets[sheetName];
-    let htmlTable = XLSX.utils.sheet_to_html(sheet);
-    $('.preview-quote-excel').html(htmlTable);
 }
 
 // 刪除報價單

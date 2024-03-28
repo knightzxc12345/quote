@@ -8,6 +8,7 @@ import com.design.controller.quote.request.QuoteUpdateRequest;
 import com.design.controller.quote.response.QuoteFindAllResponse;
 import com.design.controller.quote.response.QuoteFindPageResponse;
 import com.design.controller.quote.response.QuoteFindResponse;
+import com.design.controller.quote.response.QuotePreviewResponse;
 import com.design.usecase.quote.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -72,9 +73,18 @@ public class QuoteController {
     @GetMapping(
             value = "v1/preview/{quoteUuid}"
     )
-    public void preview(
+    public ResponseBody preview(
             @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
-        quoteFileUseCase.preview(quoteUuid);
+        QuotePreviewResponse response = quoteFileUseCase.preview(quoteUuid);
+        return new ResponseBody(CommonEnum.C00001, response);
+    }
+
+    @GetMapping(
+            value = "v1/download/{quoteUuid}"
+    )
+    public void download(
+            @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
+        quoteFileUseCase.download(quoteUuid);
     }
 
     @GetMapping(
