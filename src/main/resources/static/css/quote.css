@@ -7,6 +7,10 @@
     text-align: right;
 }
 
+.text-blue{
+    color: #7D7DFF;
+}
+
 #preview-quote{
     width: 70%;
 }

@@ -287,6 +287,12 @@ function previewQuote(data){
                 alertError('查無資料');
                 return;
             }
+            let data = response.data;
+            $('.preview-quote-customer-name').text(data.customerName);
+            $('.preview-quote-user-name').text(data.userName);
+            $('.preview-quote-customer-address').text(data.customerAddress);
+            $('.preview-quote-undertaker-name').text(data.underTakerName);
+            $('.preview-quote-undertaker-tel').text(data.underTakerTel);
             $('.preview-quote-loading').remove();
             $('.preview-quote-inner').removeClass();
         },
