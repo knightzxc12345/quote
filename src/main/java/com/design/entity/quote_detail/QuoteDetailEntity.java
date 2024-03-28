@@ -54,16 +54,6 @@ public class QuoteDetailEntity extends BaseEntity {
     @NotBlank
     private String voteName;
 
-    // 產品編號
-    @Column(
-            name = "product_no",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 10
-    )
-    private String productNo;
-
     // 品項uuid
     @Column(
             name = "item_uuid",
@@ -96,6 +86,16 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotBlank
     private String productUuid;
+
+    // 產品編號
+    @Column(
+            name = "product_no",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 10
+    )
+    private String productNo;
 
     // 產品規格
     @Column(

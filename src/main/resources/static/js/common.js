@@ -24,7 +24,7 @@ function init(){
     if(window.location.pathname === '/quote/create'){
         $("#menu-quote").addClass('menu-active');
     }
-    if(window.location.pathname === '/quote/update'){
+    if(window.location.pathname.includes('/quote/update/')){
         $("#menu-quote").addClass('menu-active');
     }
 }

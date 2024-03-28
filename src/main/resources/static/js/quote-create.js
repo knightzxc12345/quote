@@ -23,6 +23,7 @@ function backQuote(){
     location.href = "/quote"
 }
 
+// 取得廠商
 function getVendors(){
     $.ajax({
         url: `/common/vendor/v1`,
@@ -52,6 +53,7 @@ function getVendors(){
     });
 }
 
+// 取得品項
 function getItems(){
     $.ajax({
         url: `/common/item/v1`,
@@ -81,6 +83,7 @@ function getItems(){
     });
 }
 
+// 取得產品
 function getProducts(){
     $.ajax({
         url: `/common/product/v1`,
@@ -110,6 +113,7 @@ function getProducts(){
     });
 }
 
+// 取得使用者
 function getCustomers(){
     $.ajax({
         url: `/common/customer/v1`,
@@ -139,6 +143,7 @@ function getCustomers(){
     });
 }
 
+// 設定使用者
 function setCustomer(){
     $.each(globalCustomer, function(key, value) {
         let selectCustomer = $(".add-product-customer-name-select");
@@ -152,6 +157,7 @@ function setCustomer(){
     customerChange();
 }
 
+// 客戶變化時
 function customerChange(){
     $(".add-product-customer-name-select").on("select2:select", function() {
         let selectedCustomer = $(".add-product-customer-name-select").val();
@@ -164,6 +170,7 @@ function customerChange(){
     });
 }
 
+// 取得使用者
 function getUsers(){
     $.ajax({
         url: `/common/user/v1/business`,
@@ -193,6 +200,7 @@ function getUsers(){
     });
 }
 
+// 設定使用者
 function setUser(){
     let selectUser = $(".add-product-user-name-select");
     $.each(globalUser, function(key, value) {
@@ -202,6 +210,7 @@ function setUser(){
     });
 }
 
+// 設定下拉選單
 function setSelect(){
     appendColumn();
     let selectVendor = $('.add-vendor-name-select:last');
@@ -234,6 +243,7 @@ function setSelect(){
     addColumnChange(tr);
 }
 
+// 寫入row
 function appendColumn(){
     $('#quote-tbody').append(`
         <tr>
@@ -278,6 +288,7 @@ function appendColumn(){
     inputChange();
 }
 
+// 按鈕事件
 function buttonClick(){
     $('.add-product-add').off('click').on('click', function() {
         $(this).addClass('hide');
@@ -299,6 +310,7 @@ function buttonClick(){
     });
 }
 
+// 重設index
 function resetIndex(){
     let index = 1;
     $('#quote-tbody tr').each(function() {
@@ -306,6 +318,7 @@ function resetIndex(){
     });
 }
 
+// 選項變化時
 function selectChange(){
     $('.add-vendor-name-select').change(function() {
         let tr = $(this).closest('tr');
@@ -345,6 +358,7 @@ function inputChange(){
     });
 }
 
+// 廠商變化時品項變動
 function selectVendorChange(tr){
     let selectVendor = tr.find('.add-vendor-name-select');
     let selectedVendorUuid = selectVendor.val();
@@ -360,6 +374,7 @@ function selectVendorChange(tr){
     });
 }
 
+// 品項變化時產品變動
 function selectItemChange(tr){
     let selectItem = tr.find('.add-item-name-select');
     let selectedItemUuid = selectItem.val();
@@ -375,6 +390,7 @@ function selectItemChange(tr){
     });
 }
 
+// 新增新的row
 function addColumnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();
@@ -407,6 +423,7 @@ function addColumnChange(tr){
     countTotal();
 }
 
+// 欄位變化時
 function columnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();

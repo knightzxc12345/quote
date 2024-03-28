@@ -6,6 +6,7 @@
     <th:block th:include="common/css.html"></th:block>
     <th:block th:include="common/js.html"></th:block>
     <script th:src="@{/js/quote.js}" type="text/javascript"></script>
+    <script th:src="@{/js/xlsx.full.min.js}" type="text/javascript"></script>
 </head>
 <body class="close-scroller">
 
@@ -60,6 +61,16 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" style="width: 50%;" data-bs-backdrop="static" tabindex="-1" id="preview-quote" aria-labelledby="preview-quote-label">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="preview-quote-label">預覽報價單</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="preview-quote-excel">
+
         </div>
     </div>
 

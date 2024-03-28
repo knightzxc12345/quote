@@ -51,9 +51,10 @@ function offcanvasEvent(){
             $('.offcanvas-body .form-control').removeClass('is-invalid');
         }
     });
-    $('#quoteList').on('click', '.get-review-quote-json', function() {
+    $('#quoteList').on('click', '.get-preview-quote-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
+        previewQuote(jsonData);
     });
     $('#quoteList').on('click', '.get-update-quote-json', function() {
         const row = $(this).closest('tr');
@@ -95,6 +96,7 @@ function pageEvent(){
     });
 }
 
+// 取得使用者
 function getUsers(){
     $.ajax({
         url: `/common/user/v1/business`,
@@ -132,6 +134,7 @@ function getUsers(){
     });
 }
 
+// 取得客戶
 function getCustomers(){
     $.ajax({
         url: `/common/customer/v1`,
@@ -169,6 +172,7 @@ function getCustomers(){
     });
 }
 
+// 取得報價單
 function getQuotes() {
     let url = `quote/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
     if(!isEmpty(globalUserSelect)){
@@ -206,7 +210,7 @@ function getQuotes() {
                         <td style="color: green;">${value.costTotalAmount.toLocaleString()}</td>
                         <td>${status}</td>
                         <td>
-                            <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-review-quote-json' data-bs-toggle='offcanvas' data-bs-target='#review-quote' aria-controls='review-quote'>預覽</button>
+                            <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-preview-quote-json' data-bs-toggle='offcanvas' data-bs-target='#preview-quote' aria-controls='preview-quote'>預覽</button>
                             <button type='button' class='btn btn-warning btn-sm margin-right-3 get-update-quote-json'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote-modal">刪除</button>
                         </td>
@@ -231,6 +235,7 @@ function getQuotes() {
     });
 }
 
+// 取得使用者名稱
 function findUserName(userUuid) {
     for (let i = 0; i < globalUser.length; i++) {
         if (globalUser[i].userUuid === userUuid) {
@@ -240,6 +245,7 @@ function findUserName(userUuid) {
     return null;
 }
 
+// 取得客戶名稱
 function findCustomerName(customerUuid) {
     for (let i = 0; i < globalCustomer.length; i++) {
         if (globalCustomer[i].customerUuid === customerUuid) {
@@ -249,6 +255,7 @@ function findCustomerName(customerUuid) {
     return null;
 }
 
+// 取得狀態名稱
 function findStatusName(status) {
     if(1 == status){
         return "已建立";
@@ -259,14 +266,39 @@ function findStatusName(status) {
     return null;
 }
 
-function addQuote(){
-    location.href = "/quote/create";
+// 預覽報價單
+function previewQuote(data){
+    const quoteUuid = data.quoteUuid;
+    $.ajax({
+        url: '/quote/v1/preview/' + quoteUuid,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        responseType: 'blob',
+        success: function (data) {
+
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            let message = xhr.responseJSON.message;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            alertError(message);
+        }
+    });
 }
 
-function updateQuote(quoteUuid){
-    location.href = "/quote/update/" + quoteUuid;
+function displayExcelInDiv(excelData) {
+    let workbook = XLSX.read(excelData, { type: 'binary' });
+    let sheetName = workbook.SheetNames[0];
+    let sheet = workbook.Sheets[sheetName];
+    let htmlTable = XLSX.utils.sheet_to_html(sheet);
+    $('.preview-quote-excel').html(htmlTable);
 }
 
+// 刪除報價單
 function deleteQuote(){
     const quoteUuid = $('#delete-quote-uuid').val();
     $.ajax({
@@ -291,4 +323,12 @@ function deleteQuote(){
             alertError(message);
         }
     });
+}
+
+function addQuote(){
+    location.href = "/quote/create";
+}
+
+function updateQuote(quoteUuid){
+    location.href = "/quote/update/" + quoteUuid;
 }

@@ -33,4 +33,6 @@ public class Common {
 
     public static final long MINUTES = 60;
 
+    public static final String EXCEL_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
 }
