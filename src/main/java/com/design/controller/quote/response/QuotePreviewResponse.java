@@ -42,6 +42,8 @@ public record QuotePreviewResponse(
 
         public record Product(
 
+                Integer index,
+
                 String vendorName,
 
                 String itemName,
@@ -54,9 +56,17 @@ public record QuotePreviewResponse(
 
                 Integer quantity,
 
+                BigDecimal unitPrice,
+
+                BigDecimal amount,
+
                 BigDecimal customUnitPrice,
 
-                BigDecimal customAmount
+                BigDecimal customAmount,
+
+                BigDecimal costPrice,
+
+                BigDecimal costAmount
 
         ){
         }

@@ -278,7 +278,7 @@ function appendColumnFirst(product){
                 <input class="form-control form-control-sm update-product-custom-unit-price red-text" value="${product.customUnitPrice.toLocaleString()}"/>
             </td>
             <td class="update-product-custom-amount" style="color: red;">0</td>
-            <td class="update-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="update-product-cost-price"  style="color: green;">0</td>
             <td class="update-product-cost-amount"  style="color: green;">0</td>
             <td>
                 <button class="btn btn-success btn-sm update-product-add hide">+</button>
@@ -322,7 +322,7 @@ function appendColumn(){
                 <input class="form-control form-control-sm update-product-custom-unit-price red-text"/>
             </td>
             <td class="update-product-custom-amount" style="color: red;">0</td>
-            <td class="update-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="update-product-cost-price"  style="color: green;">0</td>
             <td class="update-product-cost-amount"  style="color: green;">0</td>
             <td>
                 <button class="btn btn-success btn-sm update-product-add">+</button>
@@ -483,7 +483,7 @@ function columnChangeFirst(tr){
     let tdAmount = tr.find('.update-product-amount');
     let inputCustomUnitPrice = tr.find('.update-product-custom-unit-price');
     let tdCustomAmount = tr.find('.update-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.update-product-cost-unit-price');
+    let tdCostPrice = tr.find('.update-product-cost-price');
     let tdCostAmount = tr.find('.update-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
@@ -492,14 +492,14 @@ function columnChangeFirst(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
-        let costUnitPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
-        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
-        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
+        tdCostPrice.text(costPrice.toLocaleString());
+        tdCostAmount.text((quantity * costPrice).toLocaleString());
     });
     countTotal();
 }
@@ -515,7 +515,7 @@ function addColumnChange(tr){
     let tdAmount = tr.find('.update-product-amount');
     let inputCustomUnitPrice = tr.find('.update-product-custom-unit-price');
     let tdCustomAmount = tr.find('.update-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.update-product-cost-unit-price');
+    let tdCostPrice = tr.find('.update-product-cost-price');
     let tdCostAmount = tr.find('.update-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
@@ -524,15 +524,15 @@ function addColumnChange(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = unitPrice;
-        let costUnitPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
-        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
-        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
+        tdCostPrice.text(costPrice.toLocaleString());
+        tdCostAmount.text((quantity * costPrice).toLocaleString());
     });
     countTotal();
 }
@@ -548,7 +548,7 @@ function columnChange(tr){
     let tdAmount = tr.find('.update-product-amount');
     let inputCustomUnitPrice = tr.find('.update-product-custom-unit-price');
     let tdCustomAmount = tr.find('.update-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.update-product-cost-unit-price');
+    let tdCostPrice = tr.find('.update-product-cost-price');
     let tdCostAmount = tr.find('.update-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
@@ -557,15 +557,15 @@ function columnChange(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
-        let costUnitPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
-        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
-        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
+        tdCostPrice.text(costPrice.toLocaleString());
+        tdCostAmount.text((quantity * costPrice).toLocaleString());
     });
     countTotal();
 }
@@ -669,7 +669,7 @@ function countTotal(){
         let quantity = parseInt($(this).find('.update-product-quantity').val().replace(/,/g, ''));
         let tdUnitPrice = parseInt($(this).find('.update-product-unit-price').text().replace(/,/g, ''));
         let inputCustomUnitPrice = parseInt($(this).find('.update-product-custom-unit-price').val().replace(/,/g, ''));
-        let tdCustomUnitPrice = parseInt($(this).find('.update-product-cost-unit-price').text().replace(/,/g, ''));
+        let tdCustomUnitPrice = parseInt($(this).find('.update-product-cost-price').text().replace(/,/g, ''));
         totalAmount += (tdUnitPrice * quantity);
         customTotalAmount += (inputCustomUnitPrice * quantity);
         costTotalAmount += (tdCustomUnitPrice * quantity);

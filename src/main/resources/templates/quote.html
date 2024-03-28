@@ -77,13 +77,13 @@
                     <div class="p-2 col-1 title-name">
                         單位名稱
                     </div>
-                    <div class="p-2 col-1 preview-quote-customer-name text-blue">
+                    <div class="p-2 col-1 text-blue" id="preview-quote-customer-name">
 
                     </div>
                     <div class="p-2 col-1 title-name">
                         承辦業務
                     </div>
-                    <div class="p-2 col-1 preview-quote-user-name text-blue">
+                    <div class="p-2 col-1 text-blue" id="preview-quote-user-name">
 
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                     <div class="p-2 col-1 title-name">
                         單位地址
                     </div>
-                    <div class="p-2 col-3 preview-quote-customer-address text-blue">
+                    <div class="p-2 col-3 text-blue" id="preview-quote-customer-address">
 
                     </div>
                 </div>
@@ -101,13 +101,13 @@
                     <div class="p-2 col-1 title-name">
                         分行承辦
                     </div>
-                    <div class="p-2 col-1 preview-quote-undertaker-name text-blue">
+                    <div class="p-2 col-1 text-blue" id="preview-quote-undertaker-name">
 
                     </div>
                     <div class="p-2 col-1 title-name">
                         承辦電話
                     </div>
-                    <div class="p-2 col-1 preview-quote-undertaker-tel text-blue">
+                    <div class="p-2 col-1 text-blue" id="preview-quote-undertaker-tel">
 
                     </div>
                 </div>
@@ -130,8 +130,63 @@
                     </tr>
                     </thead>
                     <tbody id="preview-quote-tbody">
+
                     </tbody>
                 </table>
+                <div class="d-flex total">
+                    <div class="p-2 col-6"></div>
+                    <div class="p-2 col-1 total-title">合計</div>
+                    <div class="p-2 col-1">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-amount"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">調整合計</div>
+                    <div class="p-2 col-1 red-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-custom-amount"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">成本合計</div>
+                    <div class="p-2 col-1 success-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-cost-amount"></span>
+                    </div>
+                </div>
+                <div class="d-flex total">
+                    <div class="p-2 col-6"></div>
+                    <div class="p-2 col-1 total-title">5%稅</div>
+                    <div class="p-2 col-1">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-tax"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">5%稅</div>
+                    <div class="p-2 col-1 red-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-custom-tax"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">5%稅</div>
+                    <div class="p-2 col-1 success-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-cost-tax"></span>
+                    </div>
+                </div>
+                <div class="d-flex total">
+                    <div class="p-2 flex-grow-1 col-6"></div>
+                    <div class="p-2 col-1 total-title">總計</div>
+                    <div class="p-2 col-1">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-total-amount"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">調整合計</div>
+                    <div class="p-2 col-1 red-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-custom-total-amount"></span>
+                    </div>
+                    <div class="p-2 col-1 total-title">成本合計</div>
+                    <div class="p-2 col-1 success-text">
+                        <span class="text-blue">$</span>
+                        <span class="text-blue" id="preview-quote-cost-total-amount"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

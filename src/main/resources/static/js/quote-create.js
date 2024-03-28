@@ -401,7 +401,7 @@ function addColumnChange(tr){
     let tdAmount = tr.find('.add-product-amount');
     let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
     let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
+    let tdCostPrice = tr.find('.add-product-cost-price');
     let tdCostAmount = tr.find('.add-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
@@ -410,15 +410,15 @@ function addColumnChange(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = unitPrice;
-        let costUnitPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
-        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
-        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
+        tdCostPrice.text(costPrice.toLocaleString());
+        tdCostAmount.text((quantity * costPrice).toLocaleString());
     });
     countTotal();
 }
@@ -434,7 +434,7 @@ function columnChange(tr){
     let tdAmount = tr.find('.add-product-amount');
     let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
     let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostUnitPrice = tr.find('.add-product-cost-unit-price');
+    let tdCostPrice = tr.find('.add-product-cost-price');
     let tdCostAmount = tr.find('.add-product-cost-amount');
     $.each(globalProduct, function(key, value) {
         if(value.productUuid != selectedProductUuid){
@@ -443,15 +443,15 @@ function columnChange(tr){
         let quantity = parseInt(inputQuantity.val());
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
-        let costUnitPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.costPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
-        tdCostUnitPrice.text(costUnitPrice.toLocaleString());
-        tdCostAmount.text((quantity * costUnitPrice).toLocaleString());
+        tdCostPrice.text(costPrice.toLocaleString());
+        tdCostAmount.text((quantity * costPrice).toLocaleString());
     });
     countTotal();
 }

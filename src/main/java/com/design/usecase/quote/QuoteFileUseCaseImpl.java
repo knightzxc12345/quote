@@ -84,16 +84,22 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return products;
         }
+        Integer index = 1;
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             products.add(new QuotePreviewResponse.Product(
+                    index++,
                     quoteDetailEntity.getVoteName(),
                     quoteDetailEntity.getItemName(),
                     quoteDetailEntity.getProductNo(),
                     quoteDetailEntity.getProductSpecification(),
                     quoteDetailEntity.getProductUnit(),
                     quoteDetailEntity.getProductQuantity(),
+                    quoteDetailEntity.getProductUnitPrice(),
+                    quoteDetailEntity.getProductAmount(),
                     quoteDetailEntity.getProductCustomUnitPrice(),
-                    quoteDetailEntity.getProductCustomAmount()
+                    quoteDetailEntity.getProductCustomAmount(),
+                    quoteDetailEntity.getProductCostPrice(),
+                    quoteDetailEntity.getProductCostAmount()
             ));
         }
         return products;

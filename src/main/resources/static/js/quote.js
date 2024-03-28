@@ -288,11 +288,40 @@ function previewQuote(data){
                 return;
             }
             let data = response.data;
-            $('.preview-quote-customer-name').text(data.customerName);
-            $('.preview-quote-user-name').text(data.userName);
-            $('.preview-quote-customer-address').text(data.customerAddress);
-            $('.preview-quote-undertaker-name').text(data.underTakerName);
-            $('.preview-quote-undertaker-tel').text(data.underTakerTel);
+            $('#preview-quote-customer-name').text(data.customerName);
+            $('#preview-quote-user-name').text(data.userName);
+            $('#preview-quote-customer-address').text(data.customerAddress);
+            $('#preview-quote-undertaker-name').text(data.underTakerName);
+            $('#preview-quote-undertaker-tel').text(data.underTakerTel);
+            $('#preview-quote-tbody').empty();
+            $.each(data.products, function(index, value) {
+                $('#preview-quote-tbody').append(`
+                    <tr>
+                        <td class="preview-quote-index">${value.index}</td>
+                        <td class="preview-quote-product-no">${value.no}</td>
+                        <td class="preview-quote-vendor-name">${value.vendorName}</td>
+                        <td class="preview-quote-item-name">${value.itemName}</td>
+                        <td class="preview-quote-product-specification">${value.specification}</td>
+                        <td class="preview-quote-product-quantity">${value.quantity}</td>
+                        <td class="preview-quote-product-unit">${value.unit}</td>
+                        <td class="preview-quote-product-unit-price">${value.unitPrice.toLocaleString()}</td>
+                        <td class="preview-quote-product-amount">${value.amount.toLocaleString()}</td>
+                        <td class="preview-quote-product-custom-unit-price">${value.customUnitPrice.toLocaleString()}</td>
+                        <td class="preview-quote-product-custom-amount">${value.customAmount.toLocaleString()}</td>
+                        <td class="preview-quote-product-cost-price">${value.costPrice.toLocaleString()}</td>
+                        <td class="preview-quote-product-cost-amount">${value.costAmount.toLocaleString()}</td>
+                    </tr>
+                `);
+            });
+            $('#preview-quote-amount').text(data.amount.toLocaleString());
+            $('#preview-quote-tax').text(data.tax.toLocaleString());
+            $('#preview-quote-total-amount').text(data.totalAmount.toLocaleString());
+            $('#preview-quote-custom-amount').text(data.customAmount.toLocaleString());
+            $('#preview-quote-custom-tax').text(data.customTax.toLocaleString());
+            $('#preview-quote-custom-total-amount').text(data.customTotalAmount.toLocaleString());
+            $('#preview-quote-cost-amount').text(data.costAmount.toLocaleString());
+            $('#preview-quote-cost-tax').text(data.costTax.toLocaleString());
+            $('#preview-quote-cost-total-amount').text(data.costTotalAmount.toLocaleString());
             $('.preview-quote-loading').remove();
             $('.preview-quote-inner').removeClass();
         },
