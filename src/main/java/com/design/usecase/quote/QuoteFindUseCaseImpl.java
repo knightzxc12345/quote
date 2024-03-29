@@ -104,7 +104,7 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
                     quoteEntity.getUserUuid(),
                     quoteEntity.getCustomerUuid(),
                     quoteEntity.getTotalAmount(),
-                    quoteEntity.getCustomerTotalAmount(),
+                    quoteEntity.getCustomTotalAmount(),
                     quoteEntity.getCostTotalAmount(),
                     InstantUtil.to(quoteEntity.getCreateTime()),
                     quoteEntity.getQuoteStatus().get()

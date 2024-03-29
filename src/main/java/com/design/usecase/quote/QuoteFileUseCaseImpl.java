@@ -1,5 +1,6 @@
 package com.design.usecase.quote;
 
+import com.design.base.Common;
 import com.design.base.eunms.AuthEnum;
 import com.design.controller.quote.response.QuotePreviewResponse;
 import com.design.entity.customer.CustomerEntity;
@@ -14,6 +15,8 @@ import com.design.service.quote_detail.QuoteDetailService;
 import com.design.service.user.UserService;
 import com.design.utils.ExcelUtil;
 import com.design.utils.HttpUtil;
+import com.design.utils.InstantUtil;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +24,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +35,6 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
 
     @Value("classpath:files/quote-01.xlsx")
     private Resource quote01Resource;
-
-    @Value("classpath:files/quote-02.xlsx")
-    private Resource quote02Resource;
 
     private final QuoteService quoteService;
 
@@ -61,7 +62,7 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
                 quoteEntity.getTotalAmount(),
                 quoteEntity.getCustomAmount(),
                 quoteEntity.getCustomTax(),
-                quoteEntity.getCostTotalAmount(),
+                quoteEntity.getCustomTotalAmount(),
                 quoteEntity.getCostAmount(),
                 quoteEntity.getCostTax(),
                 quoteEntity.getCostTotalAmount(),
@@ -73,10 +74,31 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     public void download(String quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
+        // 取得寫入excel陣列資料
         List<QuoteDetail> quoteDetails = getQuoteDetails(quoteDetailEntities);
+        // 取得寫入資料
+        Map<String, String> params = getParams(quoteEntity);
+        // 取得excel原始檔
         InputStream originQuote01InputStream = getInputStream(quote01Resource);
-        InputStream quoteInputStream = ExcelUtil.create(originQuote01InputStream, quoteDetails);
+        // 寫入excel
+        InputStream quoteInputStream = ExcelUtil.create(originQuote01InputStream, quoteDetails, params);
         writeFile(quoteInputStream);
+    }
+
+    private Map<String, String> getParams(QuoteEntity quoteEntity){
+        UserEntity userEntity = userService.findByUuid(quoteEntity.getUserUuid());
+        Map<String, String> params = new HashMap<>();
+        params.put("userName", quoteEntity.getUserName());
+        params.put("userMobile", userEntity.getMobile());
+        params.put("customerName", quoteEntity.getCustomerName());
+        params.put("customerAddress", quoteEntity.getCustomerAddress());
+        params.put("underTakerName", quoteEntity.getUnderTakerName());
+        params.put("createTime", InstantUtil.to(quoteEntity.getCreateTime(), Common.DATE_FORMAT_2));
+        params.put("underTakerTel", quoteEntity.getUnderTakerTel());
+        params.put("customAmount", Common.DECIMAL_FORMAT.format(quoteEntity.getCustomAmount()));
+        params.put("customTax", Common.DECIMAL_FORMAT.format(quoteEntity.getCustomTax()));
+        params.put("customTotalAmount", Common.DECIMAL_FORMAT.format(quoteEntity.getCustomTotalAmount()));
+        return params;
     }
 
     private List<QuotePreviewResponse.Product> getProducts(List<QuoteDetailEntity> quoteDetailEntities){
@@ -107,10 +129,9 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
 
     private List<QuoteDetail> getQuoteDetails(List<QuoteDetailEntity> quoteDetailEntities){
         List<QuoteDetail> quoteDetails = new ArrayList<>();
-        if(null == quoteDetails || quoteDetails.isEmpty()){
+        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return quoteDetails;
         }
-        DecimalFormat formatter = new DecimalFormat("#,###");
         QuoteDetail quoteDetail;
         Integer index = 1;
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
@@ -121,8 +142,8 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
             quoteDetail.setProductSpecification(quoteDetailEntity.getProductSpecification());
             quoteDetail.setProductQuantity(quoteDetailEntity.getProductQuantity().toString());
             quoteDetail.setProductUnit(quoteDetailEntity.getProductUnit());
-            quoteDetail.setProductCustomUnitPrice(formatter.format(quoteDetailEntity.getProductCustomUnitPrice()));
-            quoteDetail.setProductCustomAmount(formatter.format(quoteDetailEntity.getProductCustomAmount()));
+            quoteDetail.setProductCustomUnitPrice(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getProductCustomUnitPrice()));
+            quoteDetail.setProductCustomAmount(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getProductCustomAmount()));
             quoteDetails.add(quoteDetail);
         }
         return quoteDetails;
@@ -141,15 +162,17 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     private void writeFile(InputStream inputStream){
         try{
             HttpServletResponse response = HttpUtil.getResponse();
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment; filename=test.xlsx");
+            response.setContentType(Common.EXCEL_CONTENT_TYPE);
+            response.setHeader("Content-Disposition", "attachment;");
             byte[] buffer = new byte[1024];
             int bytesRead;
+            ServletOutputStream outputStream = response.getOutputStream();
             while ((bytesRead = inputStream.read(buffer)) != -1) {
-                response.getOutputStream().write(buffer, 0, bytesRead);
+                outputStream.write(buffer, 0, bytesRead);
             }
             inputStream.close();
-            response.getOutputStream().flush();
+            outputStream.flush();
+            outputStream.close();
         }catch (Exception ex){
             ex.printStackTrace();
             throw new BusinessException(AuthEnum.A00005);

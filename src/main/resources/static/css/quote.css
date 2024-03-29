@@ -3,6 +3,10 @@
     align-items: center;
 }
 
+.total-title {
+    text-align: right;
+}
+
 .title-name{
     text-align: right;
 }

@@ -161,7 +161,7 @@ public class QuoteEntity extends BaseEntity {
             unique = false
     )
     @NotNull
-    private BigDecimal customerTotalAmount;
+    private BigDecimal customTotalAmount;
 
     // 成本
     @Column(

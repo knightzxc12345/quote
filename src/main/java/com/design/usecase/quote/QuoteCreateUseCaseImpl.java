@@ -169,7 +169,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         quoteEntity.setTotalAmount(totalAmount);
         quoteEntity.setCustomAmount(customAmount);
         quoteEntity.setCustomTax(customTax);
-        quoteEntity.setCustomerTotalAmount(customTotalAmount);
+        quoteEntity.setCustomTotalAmount(customTotalAmount);
         quoteEntity.setCostAmount(costAmount);
         quoteEntity.setCostTax(costTax);
         quoteEntity.setCostTotalAmount(costTotalAmount);

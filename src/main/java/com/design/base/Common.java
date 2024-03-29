@@ -1,5 +1,6 @@
 package com.design.base;
 
+import java.text.DecimalFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -34,5 +35,7 @@ public class Common {
     public static final long MINUTES = 60;
 
     public static final String EXCEL_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###");
 
 }

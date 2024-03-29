@@ -56,6 +56,11 @@ function offcanvasEvent(){
         const jsonData = row.data('json');
         previewQuote(jsonData);
     });
+    $('#quoteList').on('click', '.get-download-quote-json', function() {
+        const row = $(this).closest('tr');
+        const jsonData = row.data('json');
+        downloadQuote(row, jsonData);
+    });
     $('#quoteList').on('click', '.get-update-quote-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
@@ -211,6 +216,10 @@ function getQuotes() {
                         <td>${status}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-preview-quote-json' data-bs-toggle='offcanvas' data-bs-target='#preview-quote' aria-controls='preview-quote'>預覽</button>
+                            <button type='button' class='btn btn-primary btn-sm margin-right-3 get-download-quote-json'>
+                                <span class="spinner-border spinner-border-sm hide download-quote-loading" aria-hidden="true"></span>
+                                <span class="download-quote-text" role="status">下載</span>
+                            </button>
                             <button type='button' class='btn btn-warning btn-sm margin-right-3 get-update-quote-json'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote-modal">刪除</button>
                         </td>
@@ -306,10 +315,10 @@ function previewQuote(data){
                         <td class="preview-quote-product-unit">${value.unit}</td>
                         <td class="preview-quote-product-unit-price">${value.unitPrice.toLocaleString()}</td>
                         <td class="preview-quote-product-amount">${value.amount.toLocaleString()}</td>
-                        <td class="preview-quote-product-custom-unit-price">${value.customUnitPrice.toLocaleString()}</td>
-                        <td class="preview-quote-product-custom-amount">${value.customAmount.toLocaleString()}</td>
-                        <td class="preview-quote-product-cost-price">${value.costPrice.toLocaleString()}</td>
-                        <td class="preview-quote-product-cost-amount">${value.costAmount.toLocaleString()}</td>
+                        <td class="preview-quote-product-custom-unit-price" style="color: red;">${value.customUnitPrice.toLocaleString()}</td>
+                        <td class="preview-quote-product-custom-amount" style="color: red;">${value.customAmount.toLocaleString()}</td>
+                        <td class="preview-quote-product-cost-price" style="color: green;">${value.costPrice.toLocaleString()}</td>
+                        <td class="preview-quote-product-cost-amount" style="color: green;">${value.costAmount.toLocaleString()}</td>
                     </tr>
                 `);
             });
@@ -332,6 +341,39 @@ function previewQuote(data){
                 goBack();
                 return;
             }
+            alertError(message);
+        }
+    });
+}
+
+// 下載報價單
+function downloadQuote(row, data){
+    let loading = row.find('.download-quote-loading');
+    loading.removeClass('hide');
+    let loadingText = row.find('.download-quote-text');
+    loadingText.text('下載中...');
+    const quoteUuid = data.quoteUuid;
+    const customerName = findCustomerName(data.customerUuid);
+    $.ajax({
+        url: '/quote/v1/download/' + quoteUuid,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (data) {
+            var a = document.createElement('a');
+            a.href = window.URL.createObjectURL(data);
+            a.download = '報價單-' + customerName + '.xlsx';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            loading.addClass('hide');
+            loadingText.text('下載');
+        },
+        error: function (xhr, status, error) {
             alertError(message);
         }
     });

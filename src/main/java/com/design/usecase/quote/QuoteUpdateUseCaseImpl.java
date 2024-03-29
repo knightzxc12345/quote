@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -170,7 +169,7 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         quoteEntity.setTotalAmount(totalAmount);
         quoteEntity.setCustomAmount(customAmount);
         quoteEntity.setCustomTax(customTax);
-        quoteEntity.setCustomerTotalAmount(customTotalAmount);
+        quoteEntity.setCustomTotalAmount(customTotalAmount);
         quoteEntity.setCostAmount(costAmount);
         quoteEntity.setCostTax(costTax);
         quoteEntity.setCostTotalAmount(costTotalAmount);

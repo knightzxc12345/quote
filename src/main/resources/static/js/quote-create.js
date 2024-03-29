@@ -275,7 +275,7 @@ function appendColumn(){
                 <input class="form-control form-control-sm add-product-custom-unit-price red-text"/>
             </td>
             <td class="add-product-custom-amount" style="color: red;">0</td>
-            <td class="add-product-cost-unit-price"  style="color: green;">0</td>
+            <td class="add-product-cost-price"  style="color: green;">0</td>
             <td class="add-product-cost-amount"  style="color: green;">0</td>
             <td>
                 <button class="btn btn-success btn-sm add-product-add">+</button>
@@ -470,7 +470,7 @@ function countTotal(){
         let quantity = parseInt($(this).find('.add-product-quantity').val().replace(/,/g, ''));
         let tdUnitPrice = parseInt($(this).find('.add-product-unit-price').text().replace(/,/g, ''));
         let inputCustomUnitPrice = parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''));
-        let tdCustomUnitPrice = parseInt($(this).find('.add-product-cost-unit-price').text().replace(/,/g, ''));
+        let tdCustomUnitPrice = parseInt($(this).find('.add-product-cost-price').text().replace(/,/g, ''));
         totalAmount += (tdUnitPrice * quantity);
         customTotalAmount += (inputCustomUnitPrice * quantity);
         costTotalAmount += (tdCustomUnitPrice * quantity);
