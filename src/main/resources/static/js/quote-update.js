@@ -7,9 +7,9 @@ let productIndex = 1;
 
 window.onload = function () {
     init();
-    select2Init();
     getCustomers();
     inputChange();
+    select2Init();
 };
 
 function select2Init(){

@@ -7,12 +7,12 @@ let productIndex = 1;
 
 window.onload = function () {
     init();
-    select2Init();
     getVendors();
     getCustomers();
     getUsers();
     selectChange();
     inputChange();
+    select2Init();
 };
 
 function select2Init(){

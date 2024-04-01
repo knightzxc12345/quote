@@ -19,6 +19,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findByIsDeletedFalseOrderByItemUuidAscSpecificationAsc();
 
+    List<ProductEntity> findByIsDeletedFalseAndItemUuid(String itemUuid);
+
     @Query(value =
             """
             SELECT

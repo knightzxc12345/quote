@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ProductUpdateRequest(
 
@@ -20,7 +21,10 @@ public record ProductUpdateRequest(
         BigDecimal unitPrice,
 
         @NotNull(message = "成本不得為空")
-        BigDecimal costPrice
+        BigDecimal costPrice,
+
+        @NotNull(message = "廠商清單不得為空")
+        List<String> vendors
 
 ) {
 }

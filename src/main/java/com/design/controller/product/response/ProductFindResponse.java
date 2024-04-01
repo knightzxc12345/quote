@@ -8,6 +8,8 @@ public record ProductFindResponse(
 
         String itemUuid,
 
+        String itemNo,
+
         String specification,
 
         String unit,

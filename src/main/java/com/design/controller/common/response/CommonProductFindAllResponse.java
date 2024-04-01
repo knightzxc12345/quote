@@ -8,7 +8,7 @@ public record CommonProductFindAllResponse(
 
         String itemUuid,
 
-        String name,
+        String itemNo,
 
         String specification,
 

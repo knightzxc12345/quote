@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public void create(ProductEntity productEntity, String userUuid) {
+    public ProductEntity create(ProductEntity productEntity, String userUuid) {
         ProductEntity isExists = productRepository.findByItemUuidAndSpecification(
                 productEntity.getItemUuid(),
                 productEntity.getSpecification()
@@ -28,11 +27,10 @@ public class ProductServiceImpl implements ProductService {
         if(null != isExists){
             throw new BusinessException(ProductEnum.PR0001);
         }
-        productEntity.setUuid(UUID.randomUUID().toString());
         productEntity.setIsDeleted(false);
         productEntity.setCreateTime(Instant.now());
         productEntity.setCreateUser(userUuid);
-        productRepository.save(productEntity);
+        return productRepository.save(productEntity);
     }
 
     @Override
@@ -58,6 +56,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void deleteAll(List<ProductEntity> productEntities, String userUuid) {
+        if(null == productEntities || productEntities.isEmpty()){
+            return;
+        }
+        for(ProductEntity productEntity : productEntities){
+            productEntity.setIsDeleted(true);
+            productEntity.setDeletedTime(Instant.now());
+            productEntity.setDeletedUser(userUuid);
+        }
+        productRepository.saveAll(productEntities);
+    }
+
+    @Override
     public ProductEntity findByUuid(String productUuid) {
         return productRepository.findByIsDeletedFalseAndUuid(productUuid);
     }
@@ -65,6 +76,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductEntity> findAll() {
         return productRepository.findByIsDeletedFalseOrderByItemUuidAscSpecificationAsc();
+    }
+
+    @Override
+    public List<ProductEntity> findAllByItemUuid(String itemUuid) {
+        return productRepository.findByIsDeletedFalseAndItemUuid(itemUuid);
     }
 
     @Override

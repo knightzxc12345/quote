@@ -94,6 +94,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         }
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new CommonItemFindAllResponse(
+                    itemEntity.getUuid(),
                     itemEntity.getNo(),
                     itemEntity.getName()
             ));

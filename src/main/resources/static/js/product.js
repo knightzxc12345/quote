@@ -2,18 +2,20 @@ let globalPageNow = 0;
 let globalPageSize = 12;
 let globalPageTotal = 0;
 let globalKeyword = '';
-let globalVendor = '';
 let globalItem = '';
+let globalVendor = '';
 let globalVendorSelect;
 
 window.onload = function () {
     init();
-    getVendors();
+    getItems();
     offcanvasEvent();
     pageEvent();
     searchEnter();
     selectChange();
     inputChange();
+    getVendors();
+    $('.selectpicker').selectpicker();
 };
 
 function searchEnter(){
@@ -25,13 +27,7 @@ function searchEnter(){
 }
 
 function selectChange(){
-    $("#add-product-vendor").off().change(function() {
-        changeAddProductItem();
-    });
-    $("#update-product-vendor").off().change(function() {
-        changeUpdateProductItem();
-    });
-    $('#vendor-name-select').off().change(function() {
+    $('#vendor-name-select').change(function() {
         let value = $(this).val();
         globalVendorSelect = 'all' == value ? null : value;
         getProducts();
@@ -77,21 +73,21 @@ function offcanvasEvent(){
     $('#productList').on('click', '.get-update-product-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
-        const vendorUuid = jsonData.vendorUuid;
         const itemUuid = jsonData.itemUuid;
-        $('#update-product-vendor option').each(function() {
-            if($(this).val() == vendorUuid) {
-                $(this).prop('selected', true);
-            }
-        });
-        changeUpdateProductItem();
+        const vendorUuids = jsonData.vendorUuids;
         $('#update-product-item option').each(function() {
             if($(this).val() == itemUuid) {
                 $(this).prop('selected', true);
             }
         });
+        $('#update-product-vendor option').each(function() {
+            $.each(vendorUuids, function (key, value){
+                if($(this).val() == value) {
+                    $(this).prop('selected', true);
+                }
+            });
+        });
         $('#update-product-uuid').val(jsonData.productUuid);
-        $('#update-product-no').val(jsonData.no);
         $('#update-product-name').val(jsonData.name);
         $('#update-product-specification').val(jsonData.specification);
         $('#update-product-unit').val(jsonData.unit);
@@ -150,20 +146,26 @@ function getVendors(){
             }
             globalVendor = response.data;
             $('#vendor-name-select').append(`
-                <option value='all'>全部</option>
+                <option value='all' selected>全部</option>
             `);
             $.each(response.data, function(key, value) {
+                let selected = key == 0 ? 'selected' : '';
                 $('#vendor-name-select').append(`
                     <option value='${value.vendorUuid}'>${value.name}</option>
                 `);
                 $('#add-product-vendor').append(`
-                    <option value='${value.vendorUuid}'>${value.name}</option>
+                    <option value='${value.vendorUuid}' ${selected}>${value.name}</option>
                 `);
                 $('#update-product-vendor').append(`
-                    <option value='${value.vendorUuid}'>${value.name}</option>
+                    <option value='${value.vendorUuid}' ${selected}>${value.name}</option>
                 `);
             });
-            getItems();
+            $('#vendor-name-select').selectpicker('refresh');
+            $('#vendor-name-select').selectpicker('render');
+            $('#add-product-vendor').selectpicker('refresh');
+            $('#add-product-vendor').selectpicker('render');
+            $('#update-product-vendor').selectpicker('refresh');
+            $('#update-product-vendor').selectpicker('render');
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -192,8 +194,8 @@ function getItems(){
                 return;
             }
             globalItem = response.data;
-            changeAddProductItem();
-            changeUpdateProductItem();
+            addProductItem();
+            updateProductItem();
             getProducts(globalPageNow, globalPageSize);
         },
         error: function (xhr, status, error) {
@@ -228,19 +230,18 @@ function getProducts() {
             }
             $("#product-tbody").empty();
             $.each(response.data.responses, function (key, value) {
-                let vendorName = findVendorName(value.vendorUuid);
                 let itemName = findItemName(value.itemUuid);
                 let unitPriceFormatted = value.unitPrice.toLocaleString();
                 let costPriceFormatted = value.costPrice.toLocaleString();
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
-                        <td>${vendorName}</td>
-                        <td>${value.no}</td>
+                        <td>${value.itemNo}</td>
                         <td>${itemName}</td>
                         <td>${value.specification}</td>
                         <td>${value.unit}</td>
                         <td>${unitPriceFormatted}</td>
                         <td>${costPriceFormatted}</td>
+                        <td>${value.vendors}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-product' aria-controls='update-product'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product-modal">刪除</button>
@@ -266,41 +267,28 @@ function getProducts() {
     });
 }
 
-function changeAddProductItem(){
-    let vendorUuid = $('#add-product-vendor').val();
+function addProductItem(){
     let item = $('#add-product-item');
     item.empty();
     $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != vendorUuid){
-            return;
-        }
         item.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
+            <option value='${value.itemUuid}'>${value.no}-${value.name}</option>
         `);
     });
+    $('#add-product-item').selectpicker('refresh');
+    $('#add-product-item').selectpicker('render');
 }
 
-function changeUpdateProductItem(){
-    let vendorUuid = $('#update-product-vendor').val();
+function updateProductItem(){
     let item = $('#update-product-item');
     item.empty();
     $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != vendorUuid){
-            return;
-        }
         item.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
+            <option value='${value.itemUuid}'>${value.no}-${value.name}</option>
         `);
     });
-}
-
-function findVendorName(vendorUuid) {
-    for (let i = 0; i < globalVendor.length; i++) {
-        if (globalVendor[i].vendorUuid === vendorUuid) {
-            return globalVendor[i].name;
-        }
-    }
-    return null;
+    $('#update-product-item').selectpicker('refresh');
+    $('#update-product-item').selectpicker('render');
 }
 
 function findItemName(itemUuid) {
@@ -313,31 +301,27 @@ function findItemName(itemUuid) {
 }
 
 function addProduct() {
-    const vendorUuid = $("#add-product-vendor").val();
-    const no = $("#add-product-no").val();
     const itemUuid = $("#add-product-item").val();
     const specification = $("#add-product-specification").val();
     const unit = $("#add-product-unit").val();
     const unitPrice = $("#add-product-unit-price").val().replace(/,/g, '');
     const costPrice = $("#add-product-cost-price").val().replace(/,/g, '');
+    const vendors = $('#add-product-vendor').val();
     // 驗證
-    const vendorUuidValid = validateInput(vendorUuid, "#add-product-vendor-uuid");
-    const noValid = validateInput(no, "#add-product-no");
     const specificationValid = validateInput(specification, "#add-product-specification");
     const unitValid = validateInput(unit, "#add-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#add-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#add-product-cost-price");
-    if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     let data = {
-        vendorUuid: vendorUuid,
-        no: no,
         itemUuid: itemUuid,
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,
-        costPrice: costPrice
+        costPrice: costPrice,
+        vendors: vendors
     };
     $.ajax({
         url: '/product/v1',
@@ -366,26 +350,20 @@ function addProduct() {
 
 function updateProduct() {
     const productUuid = $('#update-product-uuid').val();
-    const vendorUuid = $("#update-product-vendor").val();
-    const no = $("#update-product-no").val();
-    const itemUuid = $("#add-product-item").val();
+    const itemUuid = $("#update-product-item").val();
     const specification = $("#update-product-specification").val();
     const unit = $("#update-product-unit").val();
     const unitPrice = $("#update-product-unit-price").val().replace(/,/g, '');
     const costPrice = $("#update-product-cost-price").val().replace(/,/g, '');
     // 驗證
-    const vendorUuidValid = validateInput(vendorUuid, "#update-product-vendor-uuid");
-    const noValid = validateInput(no, "#update-product-no");
     const specificationValid = validateInput(specification, "#update-product-specification");
     const unitValid = validateInput(unit, "#update-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#update-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#update-product-cost-price");
-    if (!vendorUuidValid || !noValid || !specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
         return;
     }
     let data = {
-        vendorUuid: vendorUuid,
-        no: no,
         itemUuid: itemUuid,
         specification: specification,
         unit: unit,

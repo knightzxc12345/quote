@@ -1,6 +1,7 @@
 package com.design.controller.product.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ProductFindAllResponse(
 
@@ -8,13 +9,17 @@ public record ProductFindAllResponse(
 
         String itemUuid,
 
+        String itemNo,
+
         String specification,
 
         String unit,
 
         BigDecimal unitPrice,
 
-        BigDecimal costPrice
+        BigDecimal costPrice,
+
+        List<String> vendorUuids
 
 ) {
 }

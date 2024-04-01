@@ -8,15 +8,19 @@ import java.util.List;
 
 public interface ProductService {
 
-    void create(ProductEntity productEntity, String userUuid);
+    ProductEntity create(ProductEntity productEntity, String userUuid);
 
     void update(ProductEntity productEntity, String userUuid);
 
     void delete(ProductEntity productEntity, String userUuid);
 
+    void deleteAll(List<ProductEntity> productEntities, String userUuid);
+
     ProductEntity findByUuid(String productUuid);
 
     List<ProductEntity> findAll();
+
+    List<ProductEntity> findAllByItemUuid(String itemUuid);
 
     List<ProductEntity> findAllLike(
             String keyword
