@@ -21,8 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void create(ProductEntity productEntity, String userUuid) {
-        ProductEntity isExists = productRepository.findByVendorUuidAndItemUuidAndSpecification(
-                productEntity.getVendorUuid(),
+        ProductEntity isExists = productRepository.findByItemUuidAndSpecification(
                 productEntity.getItemUuid(),
                 productEntity.getSpecification()
         );
@@ -38,8 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(ProductEntity productEntity, String userUuid) {
-        ProductEntity isExists = productRepository.findByVendorUuidAndItemUuidAndSpecification(
-                productEntity.getVendorUuid(),
+        ProductEntity isExists = productRepository.findByItemUuidAndSpecification(
                 productEntity.getItemUuid(),
                 productEntity.getSpecification()
         );
@@ -66,26 +64,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> findAll() {
-        return productRepository.findByIsDeletedFalseOrderByVendorUuidAscItemUuidAscSpecificationAsc();
+        return productRepository.findByIsDeletedFalseOrderByItemUuidAscSpecificationAsc();
     }
 
     @Override
     public List<ProductEntity> findAllLike(
-            String vendorUuid,
             String keyword) {
         return productRepository.findAll(
-                vendorUuid,
                 keyword
         );
     }
 
     @Override
     public Page<ProductEntity> findAllLikeByPage(
-            String vendorUuid,
             String keyword,
             Pageable pageable) {
         return productRepository.findAllByPage(
-                vendorUuid,
                 keyword,
                 pageable
         );

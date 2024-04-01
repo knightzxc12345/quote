@@ -6,11 +6,7 @@ public record CommonProductFindAllResponse(
 
         String productUuid,
 
-        String vendorUuid,
-
         String itemUuid,
-
-        String no,
 
         String name,
 

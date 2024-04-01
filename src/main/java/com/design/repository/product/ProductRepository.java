@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    ProductEntity findByVendorUuidAndItemUuidAndSpecification(String vendorUuid, String itemUuid, String specification);
+    ProductEntity findByItemUuidAndSpecification(String itemUuid, String specification);
 
     ProductEntity findByIsDeletedFalseAndUuid(String productUuid);
 
-    List<ProductEntity> findByIsDeletedFalseOrderByVendorUuidAscItemUuidAscSpecificationAsc();
+    List<ProductEntity> findByIsDeletedFalseOrderByItemUuidAscSpecificationAsc();
 
     @Query(value =
             """
@@ -27,20 +27,16 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
                 ProductEntity p
             WHERE 
                 p.isDeleted = false
-                AND (:vendorUuid IS NULL OR p.vendorUuid = :vendorUuid)
                 AND 
                 (
                     (:keyword IS NULL OR p.specification LIKE CONCAT('%', :keyword, '%'))
                 )
             ORDER BY 
-                p.vendorUuid,
                 p.itemUuid,
-                p.no,
                 p.specification
             """
     )
     List<ProductEntity> findAll(
-            @Param("vendorUuid") String vendorUuid,
             @Param("keyword") String keyword
     );
 
@@ -52,7 +48,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
                 ProductEntity p 
             WHERE 
                 p.isDeleted = false
-                AND (:vendorUuid IS NULL OR p.vendorUuid = :vendorUuid)
                 AND 
                 (
                     (:keyword IS NULL OR p.specification LIKE CONCAT('%', :keyword, '%'))
@@ -60,7 +55,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             """
     )
     Page<ProductEntity> findAllByPage(
-            @Param("vendorUuid") String vendorUuid,
             @Param("keyword") String keyword, Pageable pageable
     );
 

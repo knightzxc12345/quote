@@ -6,11 +6,7 @@ public record ProductFindResponse(
 
         String productUuid,
 
-        String vendorUuid,
-
         String itemUuid,
-
-        String no,
 
         String specification,
 

@@ -16,7 +16,7 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
     @Override
     public void create(ItemCreateRequest request) {
         ItemEntity itemEntity = new ItemEntity();
-        itemEntity.setVendorUuid(request.vendorUuid());
+        itemEntity.setNo(request.no());
         itemEntity.setName(request.name());
         itemService.create(itemEntity, JwtUtil.extractUsername());
     }

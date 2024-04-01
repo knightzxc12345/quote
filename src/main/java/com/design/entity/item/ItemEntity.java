@@ -15,21 +15,20 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "item", indexes = {
-        @Index(name = "item_find_all", columnList = "is_deleted, vendor_uuid, name")
+        @Index(name = "item_find_all", columnList = "is_deleted, name")
 })
 @Entity
 public class ItemEntity extends BaseEntity {
 
-    // 廠商uuid
+    // 編號
     @Column(
-            name = "vendor_uuid",
-            nullable = false,
+            name = "no",
+            nullable = true,
             updatable = true,
             unique = false,
-            length = 36
+            length = 10
     )
-    @NotBlank
-    private String vendorUuid;
+    private String no;
 
     // 品名
     @Column(

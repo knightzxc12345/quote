@@ -7,12 +7,6 @@ import java.math.BigDecimal;
 
 public record ProductCreateRequest(
 
-        @NotBlank(message = "廠商不得為空")
-        String vendorUuid,
-
-        @NotBlank(message = "編號不得為空")
-        String no,
-
         @NotBlank(message = "品項uuid不得為空")
         String itemUuid,
 

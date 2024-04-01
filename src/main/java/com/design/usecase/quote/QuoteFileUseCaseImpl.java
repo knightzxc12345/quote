@@ -110,9 +110,8 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             products.add(new QuotePreviewResponse.Product(
                     index++,
-                    quoteDetailEntity.getVoteName(),
+                    quoteDetailEntity.getItemNo(),
                     quoteDetailEntity.getItemName(),
-                    quoteDetailEntity.getProductNo(),
                     quoteDetailEntity.getProductSpecification(),
                     quoteDetailEntity.getProductUnit(),
                     quoteDetailEntity.getProductQuantity(),
@@ -137,7 +136,7 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             quoteDetail = new QuoteDetail();
             quoteDetail.setIndex(index++);
-            quoteDetail.setProductNo(quoteDetailEntity.getProductNo());
+            quoteDetail.setProductItemNo(quoteDetailEntity.getItemNo());
             quoteDetail.setProductItemName(quoteDetailEntity.getItemName());
             quoteDetail.setProductSpecification(quoteDetailEntity.getProductSpecification());
             quoteDetail.setProductQuantity(quoteDetailEntity.getProductQuantity().toString());

@@ -44,11 +44,9 @@ public record QuotePreviewResponse(
 
                 Integer index,
 
-                String vendorName,
+                String itemNo,
 
                 String itemName,
-
-                String no,
 
                 String specification,
 

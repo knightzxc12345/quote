@@ -34,7 +34,7 @@
                 <table class="table table-striped" id="itemList">
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 40%;">廠商</th>
+                        <th scope="col" style="width: 40%;">編號</th>
                         <th scope="col" style="width: 50%;">品名</th>
                         <th scope="col" style="width: 10%;"></th>
                     </tr>
@@ -62,14 +62,15 @@
         </div>
         <div class="offcanvas-body">
             <div class="input-group mb-3">
-                <label class="input-group-text" for="add-item-vendor">廠商</label>
-                <select class="form-select" id="add-item-vendor">
-
-                </select>
+                <span class="input-group-text">編號</span>
+                <input type="text" class="form-control" id="add-item-no">
+                <div class="invalid-feedback">
+                    編號不得為空!
+                </div>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text">品名</span>
-                <input type="text" class="form-control" id="add-item-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <input type="text" class="form-control" id="add-item-name">
                 <div class="invalid-feedback">
                     品名不得為空!
                 </div>
@@ -89,14 +90,15 @@
         <div class="offcanvas-body">
             <div class="hide" id="update-item-uuid"></div>
             <div class="input-group mb-3">
-                <label class="input-group-text" for="update-item-vendor">廠商</label>
-                <select class="form-select" id="update-item-vendor">
-
-                </select>
+                <span class="input-group-text">編號</span>
+                <input type="text" class="form-control" id="update-item-no">
+                <div class="invalid-feedback">
+                    編號不得為空!
+                </div>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text">品名</span>
-                <input type="text" class="form-control" id="update-item-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <input type="text" class="form-control" id="update-item-name">
                 <div class="invalid-feedback">
                     品名不得為空!
                 </div>
@@ -108,7 +110,7 @@
         </div>
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static" id="item-item-modal" tabindex="-1" aria-labelledby="item-item-label" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" id="delete-item-modal" tabindex="-1" aria-labelledby="item-item-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

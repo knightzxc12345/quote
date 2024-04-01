@@ -7,7 +7,7 @@ public class QuoteDetail {
 
     private Integer index;
 
-    private String productNo;
+    private String productItemNo;
 
     private String productItemName;
 

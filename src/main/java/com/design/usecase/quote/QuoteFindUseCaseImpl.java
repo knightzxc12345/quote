@@ -83,7 +83,6 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
         }
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             products.add(new QuoteFindResponse.Product(
-                    quoteDetailEntity.getVoteUuid(),
                     quoteDetailEntity.getItemUuid(),
                     quoteDetailEntity.getProductUuid(),
                     quoteDetailEntity.getProductQuantity(),

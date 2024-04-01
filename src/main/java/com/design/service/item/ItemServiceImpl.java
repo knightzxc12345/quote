@@ -21,8 +21,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemEntity create(ItemEntity itemEntity, String userUuid) {
-        ItemEntity isExists = itemRepository.findByIsDeletedFalseAndVendorUuidAndName(
-                itemEntity.getVendorUuid(),
+        ItemEntity isExists = itemRepository.findByIsDeletedFalseAndNoAndName(
+                itemEntity.getNo(),
                 itemEntity.getName()
         );
         if(null != isExists){
@@ -37,8 +37,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void update(ItemEntity itemEntity, String userUuid) {
-        ItemEntity isExists = itemRepository.findByIsDeletedFalseAndVendorUuidAndName(
-                itemEntity.getVendorUuid(),
+        ItemEntity isExists = itemRepository.findByIsDeletedFalseAndNoAndName(
+                itemEntity.getNo(),
                 itemEntity.getName()
         );
         if(null != isExists && !itemEntity.getUuid().equals(isExists.getUuid())){
@@ -64,26 +64,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemEntity> findAll() {
-        return itemRepository.findAll();
+        return itemRepository.findByIsDeletedFalseOrderByNoAscNameAsc();
     }
 
     @Override
     public List<ItemEntity> findAllLike(
-            String vendorUuid,
             String keyword) {
         return itemRepository.findAll(
-                vendorUuid,
                 keyword
         );
     }
 
     @Override
     public Page<ItemEntity> findAllLikeByPage(
-            String vendorUuid,
             String keyword,
             Pageable pageable) {
         return itemRepository.findAllByPage(
-                vendorUuid,
                 keyword,
                 pageable
         );

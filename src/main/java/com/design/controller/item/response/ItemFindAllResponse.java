@@ -4,7 +4,7 @@ public record ItemFindAllResponse(
 
         String itemUuid,
 
-        String vendorUuid,
+        String no,
 
         String name
 

@@ -32,28 +32,6 @@ public class QuoteDetailEntity extends BaseEntity {
     @NotBlank
     private String quoteUuid;
 
-    // 廠商uuid
-    @Column(
-            name = "vote_uuid",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotBlank
-    private String voteUuid;
-
-    // 廠商名稱
-    @Column(
-            name = "vote_name",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotBlank
-    private String voteName;
-
     // 品項uuid
     @Column(
             name = "item_uuid",
@@ -64,6 +42,16 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotBlank
     private String itemUuid;
+
+    // 品項編號
+    @Column(
+            name = "item_no",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 10
+    )
+    private String itemNo;
 
     // 品項名稱
     @Column(
@@ -86,16 +74,6 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotBlank
     private String productUuid;
-
-    // 產品編號
-    @Column(
-            name = "product_no",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 10
-    )
-    private String productNo;
 
     // 產品規格
     @Column(

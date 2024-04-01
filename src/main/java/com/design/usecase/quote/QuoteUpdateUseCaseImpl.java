@@ -94,13 +94,10 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
             costAmount = productEntity.getCostPrice();
             costAmount = costAmount.multiply(new BigDecimal(product.quantity()));
             itemEntity = itemService.findByUuid(productEntity.getItemUuid());
-            vendorEntity = getVendor(productEntity.getVendorUuid(), vendorEntities);
             quoteDetailEntity = new QuoteDetailEntity();
             quoteDetailEntity.setQuoteUuid(quoteEntity.getUuid());
-            quoteDetailEntity.setVoteUuid(vendorEntity.getUuid());
-            quoteDetailEntity.setVoteName(vendorEntity.getName());
-            quoteDetailEntity.setProductNo(productEntity.getNo());
             quoteDetailEntity.setItemUuid(itemEntity.getUuid());
+            quoteDetailEntity.setItemNo(itemEntity.getNo());
             quoteDetailEntity.setItemName(itemEntity.getName());
             quoteDetailEntity.setProductUuid(productEntity.getUuid());
             quoteDetailEntity.setProductUnit(productEntity.getUnit());

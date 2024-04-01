@@ -16,21 +16,10 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "product", indexes = {
-        @Index(name = "product_find_all", columnList = "is_deleted, vendor_uuid, item_uuid, specification")
+        @Index(name = "product_find_all", columnList = "is_deleted, item_uuid, specification")
 })
 @Entity
 public class ProductEntity extends BaseEntity {
-
-    // 廠商uuid
-    @Column(
-            name = "vendor_uuid",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotBlank
-    private String vendorUuid;
 
     // 品項uuid
     @Column(
@@ -42,16 +31,6 @@ public class ProductEntity extends BaseEntity {
     )
     @NotBlank
     private String itemUuid;
-
-    // 編號
-    @Column(
-            name = "no",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 10
-    )
-    private String no;
 
     // 規格
     @Column(

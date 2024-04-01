@@ -24,8 +24,6 @@ public record QuoteFindResponse(
 
         public record Product(
 
-                String vendorUuid,
-
                 String itemUuid,
 
                 String productUuid,

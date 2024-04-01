@@ -19,12 +19,10 @@ public interface ItemService {
     List<ItemEntity> findAll();
 
     List<ItemEntity> findAllLike(
-            String vendorUuid,
             String keyword
     );
 
     Page<ItemEntity> findAllLikeByPage(
-            String vendorUuid,
             String keyword,
             Pageable pageable
     );

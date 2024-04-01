@@ -16,7 +16,7 @@ public class ItemUpdateUseCaseImpl implements ItemUpdateUseCase {
     @Override
     public void update(ItemUpdateRequest request, String itemUuid) {
         ItemEntity itemEntity = itemService.findByUuid(itemUuid);
-        itemEntity.setVendorUuid(request.vendorUuid());
+        itemEntity.setNo(request.no());
         itemEntity.setName(request.name());
         itemService.update(itemEntity, JwtUtil.extractUsername());
     }

@@ -16,8 +16,6 @@ public class ProductUpdateUseCaseImpl implements ProductUpdateUseCase {
     @Override
     public void update(ProductUpdateRequest request, String productUuid) {
         ProductEntity productEntity = productService.findByUuid(productUuid);
-        productEntity.setVendorUuid(request.vendorUuid());
-        productEntity.setNo(request.no());
         productEntity.setItemUuid(request.itemUuid());
         productEntity.setSpecification(request.specification());
         productEntity.setUnit(request.unit());

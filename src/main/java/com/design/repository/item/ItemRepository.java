@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 
-    ItemEntity findByIsDeletedFalseAndVendorUuidAndName(String vendorUuid, String name);
+    ItemEntity findByIsDeletedFalseAndNoAndName(String no, String name);
 
     ItemEntity findByIsDeletedFalseAndUuid(String itemUuid);
 
-    List<ItemEntity> findAll();
+    List<ItemEntity> findByIsDeletedFalseOrderByNoAscNameAsc();
 
     @Query(value =
             """
@@ -27,18 +27,16 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
                 ItemEntity i
             WHERE 
                 i.isDeleted = false
-                AND (:vendorUuid IS NULL OR i.vendorUuid = :vendorUuid)
                 AND 
                 (
                     (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%'))
                 )
             ORDER BY 
-                i.vendorUuid,
+                i.no,
                 i.name
             """
     )
     List<ItemEntity> findAll(
-            @Param("vendorUuid") String vendorUuid,
             @Param("keyword") String keyword
     );
 
@@ -50,7 +48,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
                 ItemEntity i 
             WHERE 
                 i.isDeleted = false
-                AND (:vendorUuid IS NULL OR i.vendorUuid = :vendorUuid)
                 AND 
                 (
                     (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%'))
@@ -58,7 +55,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
             """
     )
     Page<ItemEntity> findAllByPage(
-            @Param("vendorUuid") String vendorUuid,
             @Param("keyword") String keyword,
             Pageable pageable
     );

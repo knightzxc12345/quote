@@ -32,7 +32,6 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
     @Override
     public List<ItemFindAllResponse> findAll(ItemFindRequest request) {
         List<ItemEntity> itemEntities = itemService.findAllLike(
-                request.vendorUuid(),
                 request.keyword()
         );
         return format(itemEntities);
@@ -42,12 +41,11 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
     public ItemFindPageResponse findAllByPage(ItemFindRequest request) {
         Integer page = request.page();
         Integer size = null == request.size() ? 10 : request.size();
-        Sort.Order vendorUuid = new Sort.Order(Sort.Direction.ASC, "vendorUuid");
+        Sort.Order orderNo = new Sort.Order(Sort.Direction.ASC, "no");
         Sort.Order orderName = new Sort.Order(Sort.Direction.ASC, "name");
-        Sort sort = Sort.by(vendorUuid, orderName);
+        Sort sort = Sort.by(orderNo, orderName);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<ItemEntity> itemEntityPage = itemService.findAllLikeByPage(
-                request.vendorUuid(),
                 request.keyword(),
                 pageable
         );
@@ -69,7 +67,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
     private ItemFindResponse format(ItemEntity itemEntity){
         return new ItemFindResponse(
                 itemEntity.getUuid(),
-                itemEntity.getVendorUuid(),
+                itemEntity.getNo(),
                 itemEntity.getName()
         );
     }
@@ -82,7 +80,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new ItemFindAllResponse(
                     itemEntity.getUuid(),
-                    itemEntity.getVendorUuid(),
+                    itemEntity.getNo(),
                     itemEntity.getName()
             ));
         }
@@ -96,8 +94,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         }
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new CommonItemFindAllResponse(
-                    itemEntity.getUuid(),
-                    itemEntity.getVendorUuid(),
+                    itemEntity.getNo(),
                     itemEntity.getName()
             ));
         }
