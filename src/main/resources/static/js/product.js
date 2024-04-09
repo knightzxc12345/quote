@@ -233,6 +233,7 @@ function getProducts() {
                 let itemName = findItemName(value.itemUuid);
                 let unitPriceFormatted = value.unitPrice.toLocaleString();
                 let costPriceFormatted = value.costPrice.toLocaleString();
+                let vendorName = getVendorName(value.vendorUuids);
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${value.itemNo}</td>
@@ -241,7 +242,7 @@ function getProducts() {
                         <td>${value.unit}</td>
                         <td>${unitPriceFormatted}</td>
                         <td>${costPriceFormatted}</td>
-                        <td>${value.vendors}</td>
+                        <td>${vendorName}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-product' aria-controls='update-product'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product-modal">刪除</button>
@@ -265,6 +266,19 @@ function getProducts() {
             console.log(jsonResponse);
         }
     });
+}
+
+function getVendorName(vendorUuids) {
+    let vendorNames = [];
+    vendorUuids.forEach(function(vendorUuid) {
+        let vendor = globalVendor.find(function(vendor) {
+            return vendor.vendorUuid === vendorUuid;
+        });
+        if (vendor) {
+            vendorNames.push(vendor.name);
+        }
+    });
+    return vendorNames.join(",");
 }
 
 function addProductItem(){
