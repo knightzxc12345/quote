@@ -22,8 +22,6 @@ public interface ProductService {
 
     List<ProductEntity> findAllByItemUuid(String itemUuid);
 
-    List<ProductEntity> findAllByItemUuids(List<String> itemUuid);
-
     List<ProductEntity> findAllLike(
             String keyword
     );

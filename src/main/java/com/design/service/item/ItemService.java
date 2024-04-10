@@ -18,6 +18,8 @@ public interface ItemService {
 
     List<ItemEntity> findAll();
 
+    List<ItemEntity> findAllCommon();
+
     List<ItemEntity> findAllLike(
             String keyword
     );

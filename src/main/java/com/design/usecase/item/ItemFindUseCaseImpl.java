@@ -6,7 +6,6 @@ import com.design.controller.item.response.ItemFindAllResponse;
 import com.design.controller.item.response.ItemFindPageResponse;
 import com.design.controller.item.response.ItemFindResponse;
 import com.design.entity.item.ItemEntity;
-import com.design.entity.product.ProductEntity;
 import com.design.service.item.ItemService;
 import com.design.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +63,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
 
     @Override
     public List<CommonItemFindAllResponse> findAllCommon() {
-        List<ItemEntity> itemEntities = itemService.findAll();
+        List<ItemEntity> itemEntities = itemService.findAllCommon();
         return formatCommon(itemEntities);
     }
 
@@ -96,8 +95,6 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         if(null == itemEntities || itemEntities.isEmpty()){
             return responses;
         }
-        List<String> itemUuids = getItemUuids(itemEntities);
-        List<ProductEntity> productEntities = productService.findAllByItemUuids(itemUuids);
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new CommonItemFindAllResponse(
                     itemEntity.getUuid(),
@@ -106,17 +103,6 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
             ));
         }
         return responses;
-    }
-
-    private List<String> getItemUuids(List<ItemEntity> itemEntities){
-        List<String> itemUuids = new ArrayList<>();
-        if(null == itemEntities || itemEntities.isEmpty()){
-            return itemUuids;
-        }
-        for(ItemEntity itemEntity : itemEntities){
-            itemUuids.add(itemEntity.getUuid());
-        }
-        return itemUuids;
     }
 
 }

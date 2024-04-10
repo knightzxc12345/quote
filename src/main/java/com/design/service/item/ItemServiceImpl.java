@@ -68,6 +68,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<ItemEntity> findAllCommon() {
+        return itemRepository.findAllCommon();
+    }
+
+    @Override
     public List<ItemEntity> findAllLike(
             String keyword) {
         return itemRepository.findAll(

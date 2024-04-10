@@ -21,8 +21,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findByIsDeletedFalseAndItemUuid(String itemUuid);
 
-    List<ProductEntity> findByIsDeletedFalseAndItemUuidIn(List<String> itemUuids);
-
     @Query(value =
             """
             SELECT
