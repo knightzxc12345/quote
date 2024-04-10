@@ -75,18 +75,8 @@ function offcanvasEvent(){
         const jsonData = row.data('json');
         const itemUuid = jsonData.itemUuid;
         const vendorUuids = jsonData.vendorUuids;
-        $('#update-product-item option').each(function() {
-            if($(this).val() == itemUuid) {
-                $(this).prop('selected', true);
-            }
-        });
-        $('#update-product-vendor option').each(function() {
-            $.each(vendorUuids, function (key, value){
-                if($(this).val() == value) {
-                    $(this).prop('selected', true);
-                }
-            });
-        });
+        $('#update-product-item').selectpicker('val', itemUuid);
+        $('#update-product-vendor').selectpicker('val', vendorUuids);
         $('#update-product-uuid').val(jsonData.productUuid);
         $('#update-product-name').val(jsonData.name);
         $('#update-product-specification').val(jsonData.specification);
@@ -326,7 +316,8 @@ function addProduct() {
     const unitValid = validateInput(unit, "#add-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#add-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#add-product-cost-price");
-    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    const vendorValid = validateSelect(vendors, "#add-product-vendor");
+    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid || !vendorValid) {
         return;
     }
     let data = {
@@ -369,12 +360,14 @@ function updateProduct() {
     const unit = $("#update-product-unit").val();
     const unitPrice = $("#update-product-unit-price").val().replace(/,/g, '');
     const costPrice = $("#update-product-cost-price").val().replace(/,/g, '');
+    const vendors = $('#update-product-vendor').val();
     // 驗證
     const specificationValid = validateInput(specification, "#update-product-specification");
     const unitValid = validateInput(unit, "#update-product-unit");
     const unitPriceValid = validateNumberInput(unitPrice, "#update-product-unit-price");
     const costPriceValid = validateNumberInput(costPrice, "#update-product-cost-price");
-    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid) {
+    const vendorValid = validateSelect(vendors, "#update-product-vendor");
+    if (!specificationValid || !unitValid || !unitPriceValid || !costPriceValid || !vendorValid) {
         return;
     }
     let data = {
@@ -382,7 +375,8 @@ function updateProduct() {
         specification: specification,
         unit: unit,
         unitPrice: unitPrice,
-        costPrice: costPrice
+        costPrice: costPrice,
+        vendors: vendors
     };
     $.ajax({
         url: '/product/v1/' + productUuid,
@@ -456,5 +450,15 @@ function validateNumberInput(value, elementId) {
         return false;
     }
     element.removeClass("is-invalid").addClass("is-valid");
+    return true;
+}
+
+function validateSelect(value, elementId) {
+    const element = $(elementId);
+    if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        alertWarning("廠商至少要選一個");
+        return false;
+    }
     return true;
 }

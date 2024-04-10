@@ -43,7 +43,7 @@ function valid(){
 }
 
 function isEmpty(value) {
-    return value === null || value === undefined || value === '';
+    return value === null || value === undefined || value === '' || value.length == 0;
 }
 
 function alertSuccess(message){
@@ -59,6 +59,14 @@ function alertError(message){
     $(".alert-danger").css("display", "block");
     window.setTimeout(function(){
         $(".alert-danger").css("display", "none");
+    }, 5000);
+}
+
+function alertWarning(message){
+    $(".alert-warning-message").text(message);
+    $(".alert-warning").css("display", "block");
+    window.setTimeout(function(){
+        $(".alert-warning").css("display", "none");
     }, 5000);
 }
 
