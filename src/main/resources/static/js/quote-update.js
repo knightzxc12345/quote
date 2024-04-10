@@ -325,7 +325,7 @@ function setFirstSelect(product){
     $.each(globalItem, function(key, value) {
         let isSelected = value.itemUuid == product.itemUuid ? 'selected' : '';
         selectItem.append(`
-            <option value='${value.itemUuid}' ${isSelected}>${value.name}</option>
+            <option value='${value.itemUuid}' ${isSelected}>${value.itemNo}-${value.name}</option>
         `);
     });
     let selectedItemUuid = selectItem.val();
@@ -407,7 +407,6 @@ function selectItemChange(tr){
 function columnChangeFirst(tr){
     let selectProduct = tr.find('.update-product-specification-select');
     let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.update-product-no');
     let tdUnit = tr.find('.update-product-unit');
     let inputQuantity = tr.find('.update-product-quantity');
     let tdUnitPrice = tr.find('.update-product-unit-price');
@@ -424,7 +423,6 @@ function columnChangeFirst(tr){
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
         let costPrice = parseInt(value.costPrice);
-        tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());

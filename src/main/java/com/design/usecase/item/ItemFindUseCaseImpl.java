@@ -6,7 +6,9 @@ import com.design.controller.item.response.ItemFindAllResponse;
 import com.design.controller.item.response.ItemFindPageResponse;
 import com.design.controller.item.response.ItemFindResponse;
 import com.design.entity.item.ItemEntity;
+import com.design.entity.product.ProductEntity;
 import com.design.service.item.ItemService;
+import com.design.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import java.util.List;
 public class ItemFindUseCaseImpl implements ItemFindUseCase {
 
     private final ItemService itemService;
+
+    private final ProductService productService;
 
     @Override
     public ItemFindResponse findByUuid(String itemUuid) {
@@ -92,6 +96,8 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         if(null == itemEntities || itemEntities.isEmpty()){
             return responses;
         }
+        List<String> itemUuids = getItemUuids(itemEntities);
+        List<ProductEntity> productEntities = productService.findAllByItemUuids(itemUuids);
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new CommonItemFindAllResponse(
                     itemEntity.getUuid(),
@@ -100,6 +106,17 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
             ));
         }
         return responses;
+    }
+
+    private List<String> getItemUuids(List<ItemEntity> itemEntities){
+        List<String> itemUuids = new ArrayList<>();
+        if(null == itemEntities || itemEntities.isEmpty()){
+            return itemUuids;
+        }
+        for(ItemEntity itemEntity : itemEntities){
+            itemUuids.add(itemEntity.getUuid());
+        }
+        return itemUuids;
     }
 
 }

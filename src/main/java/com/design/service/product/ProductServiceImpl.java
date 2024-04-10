@@ -84,6 +84,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductEntity> findAllByItemUuids(List<String> itemUuid) {
+        return productRepository.findByIsDeletedFalseAndItemUuidIn(itemUuid);
+    }
+
+    @Override
     public List<ProductEntity> findAllLike(
             String keyword) {
         return productRepository.findAll(
