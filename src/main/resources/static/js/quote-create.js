@@ -1,4 +1,3 @@
-let globalVendor = '';
 let globalItem = '';
 let globalProduct = '';
 let globalCustomer = '';
@@ -7,7 +6,7 @@ let productIndex = 1;
 
 window.onload = function () {
     init();
-    getVendors();
+    getItems();
     getCustomers();
     getUsers();
     selectChange();
@@ -21,36 +20,6 @@ function select2Init(){
 
 function backQuote(){
     location.href = "/quote"
-}
-
-// 取得廠商
-function getVendors(){
-    $.ajax({
-        url: `/common/vendor/v1`,
-        contentType: 'application/json',
-        type: 'GET',
-        headers: headers,
-        success: function (response) {
-            if (response.code != 'C00002') {
-                alertError('系統錯誤');
-                return;
-            }
-            // 空陣列
-            if ($.isEmptyObject(response.data)) {
-                return;
-            }
-            globalVendor = response.data;
-            getItems();
-        },
-        error: function (xhr, status, error) {
-            let code = xhr.responseJSON.code;
-            if (code == 'A00006') {
-                goBack();
-                return;
-            }
-            console.log(jsonResponse);
-        }
-    });
 }
 
 // 取得品項
@@ -213,20 +182,10 @@ function setUser(){
 // 設定下拉選單
 function setSelect(){
     appendColumn();
-    let selectVendor = $('.add-vendor-name-select:last');
-    $.each(globalVendor, function(key, value) {
-        selectVendor.append(`
-            <option value='${value.vendorUuid}'>${value.name}</option>
-        `);
-    });
-    let selectedVendorUuid = selectVendor.val();
     let selectItem = $('.add-item-name-select:last');
     $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != selectedVendorUuid){
-            return;
-        }
         selectItem.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
+            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
         `);
     });
     let selectedItemUuid = selectItem.val();
@@ -252,11 +211,6 @@ function appendColumn(){
             </td>
             <td class="add-product-uuid hide"></td>
             <td class="add-product-index">${productIndex}</td>
-            <td class="add-product-no"></td>
-            <td>
-                <select class="form-select select2 add-vendor-name-select">
-                </select>
-            </td>
             <td>
                 <select class="form-select select2 add-item-name-select">
                 </select>
@@ -320,12 +274,6 @@ function resetIndex(){
 
 // 選項變化時
 function selectChange(){
-    $('.add-vendor-name-select').change(function() {
-        let tr = $(this).closest('tr');
-        selectVendorChange(tr);
-        selectItemChange(tr);
-        addColumnChange(tr);
-    });
     $('.add-item-name-select').change(function() {
         let tr = $(this).closest('tr');
         selectItemChange(tr);
@@ -358,22 +306,6 @@ function inputChange(){
     });
 }
 
-// 廠商變化時品項變動
-function selectVendorChange(tr){
-    let selectVendor = tr.find('.add-vendor-name-select');
-    let selectedVendorUuid = selectVendor.val();
-    let selectItem = tr.find('.add-item-name-select');
-    selectItem.empty();
-    $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != selectedVendorUuid){
-            return;
-        }
-        selectItem.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
-        `);
-    });
-}
-
 // 品項變化時產品變動
 function selectItemChange(tr){
     let selectItem = tr.find('.add-item-name-select');
@@ -394,7 +326,6 @@ function selectItemChange(tr){
 function addColumnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.add-product-no');
     let tdUnit = tr.find('.add-product-unit');
     let inputQuantity = tr.find('.add-product-quantity');
     let tdUnitPrice = tr.find('.add-product-unit-price');
@@ -411,7 +342,6 @@ function addColumnChange(tr){
         let unitPrice = parseInt(value.unitPrice);
         let customUnitPrice = unitPrice;
         let costPrice = parseInt(value.costPrice);
-        tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
@@ -427,7 +357,6 @@ function addColumnChange(tr){
 function columnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.add-product-no');
     let tdUnit = tr.find('.add-product-unit');
     let inputQuantity = tr.find('.add-product-quantity');
     let tdUnitPrice = tr.find('.add-product-unit-price');

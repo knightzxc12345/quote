@@ -307,8 +307,7 @@ function previewQuote(data){
                 $('#preview-quote-tbody').append(`
                     <tr>
                         <td class="preview-quote-index">${value.index}</td>
-                        <td class="preview-quote-product-no">${value.no}</td>
-                        <td class="preview-quote-vendor-name">${value.vendorName}</td>
+                        <td class="preview-quote-item-no">${value.itemNo}</td>
                         <td class="preview-quote-item-name">${value.itemName}</td>
                         <td class="preview-quote-product-specification">${value.specification}</td>
                         <td class="preview-quote-product-quantity">${value.quantity}</td>

@@ -1,4 +1,3 @@
-let globalVendor = '';
 let globalItem = '';
 let globalProduct = '';
 let globalCustomer = '';
@@ -67,36 +66,6 @@ function getUsers(){
                 return;
             }
             globalUser = response.data;
-            getVendors();
-        },
-        error: function (xhr, status, error) {
-            let code = xhr.responseJSON.code;
-            if (code == 'A00006') {
-                goBack();
-                return;
-            }
-            console.log(jsonResponse);
-        }
-    });
-}
-
-// 取得廠商
-function getVendors(){
-    $.ajax({
-        url: `/common/vendor/v1`,
-        contentType: 'application/json',
-        type: 'GET',
-        headers: headers,
-        success: function (response) {
-            if (response.code != 'C00002') {
-                alertError('系統錯誤');
-                return;
-            }
-            // 空陣列
-            if ($.isEmptyObject(response.data)) {
-                return;
-            }
-            globalVendor = response.data;
             getItems();
         },
         error: function (xhr, status, error) {
@@ -255,11 +224,6 @@ function appendColumnFirst(product){
             </td>
             <td class="update-product-uuid hide"></td>
             <td class="update-product-index">${productIndex++}</td>
-            <td class="update-product-no"></td>
-            <td>
-                <select class="form-select select2 update-vendor-name-select">
-                </select>
-            </td>
             <td>
                 <select class="form-select select2 update-item-name-select">
                 </select>
@@ -299,11 +263,6 @@ function appendColumn(){
             </td>
             <td class="update-product-uuid hide"></td>
             <td class="update-product-index">${productIndex}</td>
-            <td class="update-product-no"></td>
-            <td>
-                <select class="form-select select2 update-vendor-name-select">
-                </select>
-            </td>
             <td>
                 <select class="form-select select2 update-item-name-select">
                 </select>
@@ -360,22 +319,10 @@ function buttonClick(){
 // 首次進入頁面設定row
 function setFirstSelect(product){
     appendColumnFirst(product);
-    let vendorUuid = product.vendorUuid;
     let itemUuid = product.itemUuid;
     let productUuid = product.productUuid;
-    let selectVendor = $('.update-vendor-name-select:last');
-    $.each(globalVendor, function(key, value) {
-        let isSelected = value.vendorUuid == product.vendorUuid ? 'selected' : '';
-        selectVendor.append(`
-            <option value='${value.vendorUuid}' ${isSelected}>${value.name}</option>
-        `);
-    });
-    let selectedVendorUuid = selectVendor.val();
     let selectItem = $('.update-item-name-select:last');
     $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != selectedVendorUuid){
-            return;
-        }
         let isSelected = value.itemUuid == product.itemUuid ? 'selected' : '';
         selectItem.append(`
             <option value='${value.itemUuid}' ${isSelected}>${value.name}</option>
@@ -399,18 +346,8 @@ function setFirstSelect(product){
 // 設定新的row
 function setSelect(){
     appendColumn();
-    let selectVendor = $('.update-vendor-name-select:last');
-    $.each(globalVendor, function(key, value) {
-        selectVendor.append(`
-            <option value='${value.vendorUuid}'>${value.name}</option>
-        `);
-    });
-    let selectedVendorUuid = selectVendor.val();
     let selectItem = $('.update-item-name-select:last');
     $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != selectedVendorUuid){
-            return;
-        }
         selectItem.append(`
             <option value='${value.itemUuid}'>${value.name}</option>
         `);
@@ -439,12 +376,6 @@ function resetIndex(){
 
 // 選項變化時
 function selectChange(){
-    $('.update-vendor-name-select').change(function() {
-        let tr = $(this).closest('tr');
-        selectVendorChange(tr);
-        selectItemChange(tr);
-        addColumnChange(tr);
-    });
     $('.update-item-name-select').change(function() {
         let tr = $(this).closest('tr');
         selectItemChange(tr);
@@ -588,22 +519,6 @@ function inputChange(){
             $(this).text(unitPrice);
         }
         columnChange(tr);
-    });
-}
-
-// 廠商變化時品項下拉選單調整
-function selectVendorChange(tr){
-    let selectVendor = tr.find('.update-vendor-name-select');
-    let selectedVendorUuid = selectVendor.val();
-    let selectItem = tr.find('.update-item-name-select');
-    selectItem.empty();
-    $.each(globalItem, function(key, value) {
-        if(value.vendorUuid != selectedVendorUuid){
-            return;
-        }
-        selectItem.append(`
-            <option value='${value.itemUuid}'>${value.name}</option>
-        `);
     });
 }
 

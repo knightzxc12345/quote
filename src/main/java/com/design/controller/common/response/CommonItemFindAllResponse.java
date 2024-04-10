@@ -4,7 +4,7 @@ public record CommonItemFindAllResponse(
 
         String itemUuid,
 
-        String no,
+        String itemNo,
 
         String name
 
