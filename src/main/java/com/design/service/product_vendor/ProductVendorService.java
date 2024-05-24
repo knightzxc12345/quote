@@ -12,4 +12,6 @@ public interface ProductVendorService {
 
     List<ProductVendorEntity> findAll(String productUuid);
 
+    List<ProductVendorEntity> findAllProductUuidIn(List<String> productUuids);
+
 }

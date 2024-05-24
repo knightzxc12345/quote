@@ -15,7 +15,7 @@ import java.time.Instant;
 @ToString(callSuper = true)
 @Data
 @Table(name = "vendor_quote", indexes = {
-        @Index(name = "vendor_quote_find_all", columnList = "is_deleted, vendor_uuid, quote_uuid"),
+        @Index(name = "vendor_quote_find_all", columnList = "is_deleted, vendor_uuid, customer_uuid, create_time"),
 })
 @Entity
 public class VendorQuoteEntity extends BaseEntity {
@@ -41,6 +41,17 @@ public class VendorQuoteEntity extends BaseEntity {
     )
     @NotBlank
     private String quoteUuid;
+
+    // 客戶uuid
+    @Column(
+            name = "customer_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String customerUuid;
 
     // 合計
     @Column(

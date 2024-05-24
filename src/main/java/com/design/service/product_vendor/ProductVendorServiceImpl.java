@@ -47,4 +47,9 @@ public class ProductVendorServiceImpl implements ProductVendorService {
         return productVendorRepository.findByIsDeletedFalseAndProductUuid(productUuid);
     }
 
+    @Override
+    public List<ProductVendorEntity> findAllProductUuidIn(List<String> productUuids) {
+        return productVendorRepository.findByIsDeletedFalseAndProductUuidIn(productUuids);
+    }
+
 }

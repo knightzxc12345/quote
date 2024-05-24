@@ -4,23 +4,28 @@ import com.design.converter.ConverterBase;
 
 public enum VendorQuoteStatus implements EnumBase<Integer> {
 
-    // 建立
-    CREATE(1),
+    CREATE(1, "建立"),
 
-    // 完成
-    FINISH(3)
+    FINISH(3, "完成")
 
     ;
 
-    private final int status;
+    private int status;
 
-    VendorQuoteStatus(final int status) {
+    private String value;
+
+    VendorQuoteStatus(int status, String value) {
         this.status = status;
+        this.value = value;
     }
 
     @Override
     public Integer get() {
         return status;
+    }
+
+    public String getValue(){
+        return value;
     }
 
     public static VendorQuoteStatus from(final Integer status) {

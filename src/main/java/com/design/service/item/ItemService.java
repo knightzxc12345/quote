@@ -17,6 +17,8 @@ public interface ItemService {
 
     List<ItemEntity> findAll();
 
+    List<ItemEntity> findAllItemUuidIn(List<String> itemUuids);
+
     List<ItemEntity> findAllCommon();
 
     List<ItemEntity> findAllLike(

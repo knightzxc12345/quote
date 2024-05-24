@@ -17,6 +17,8 @@ public interface VendorService {
 
     List<VendorEntity> findAll();
 
+    List<VendorEntity> findAllVendorUuidIn(List<String> vendorUuids);
+
     List<VendorEntity> findAllLike(String keyword);
 
     Page<VendorEntity> findAllLikeByPage(

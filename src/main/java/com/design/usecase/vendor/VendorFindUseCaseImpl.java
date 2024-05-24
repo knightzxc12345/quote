@@ -28,7 +28,9 @@ public class VendorFindUseCaseImpl implements VendorFindUseCase {
 
     @Override
     public List<VendorFindAllResponse> findAll(VendorFindRequest request) {
-        List<VendorEntity> vendorEntities = vendorService.findAllLike(request.keyword());
+        List<VendorEntity> vendorEntities = vendorService.findAllLike(
+                request.keyword()
+        );
         return format(vendorEntities);
     }
 

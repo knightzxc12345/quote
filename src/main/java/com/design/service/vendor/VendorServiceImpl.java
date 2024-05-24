@@ -64,6 +64,11 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public List<VendorEntity> findAllVendorUuidIn(List<String> vendorUuids) {
+        return vendorRepository.findByIsDeletedTrueAndUuidIn(vendorUuids);
+    }
+
+    @Override
     public List<VendorEntity> findAllLike(String keyword) {
         return vendorRepository.findAll(keyword);
     }
@@ -77,7 +82,10 @@ public class VendorServiceImpl implements VendorService {
                 new Sort.Order(Sort.Direction.ASC, "name")
         );
         Pageable pageable = PageRequest.of(page, size, sort);
-        return vendorRepository.findAllByPage(keyword, pageable);
+        return vendorRepository.findAllByPage(
+                keyword,
+                pageable
+        );
     }
 
 }

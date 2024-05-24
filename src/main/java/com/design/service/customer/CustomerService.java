@@ -17,6 +17,8 @@ public interface CustomerService {
 
     List<CustomerEntity> findAll();
 
+    List<CustomerEntity> findAllCustomerUuidIn(List<String> customerUuids);
+
     List<CustomerEntity> findAllLike(String keyword);
 
     Page<CustomerEntity> findAllLikeByPage(

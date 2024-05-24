@@ -19,6 +19,8 @@ public interface ProductService {
 
     List<ProductEntity> findAll();
 
+    List<ProductEntity> findAllByProductUuidIn(List<String> productUuids);
+
     List<ProductEntity> findAllByItemUuid(String itemUuid);
 
     List<ProductEntity> findAllLike(

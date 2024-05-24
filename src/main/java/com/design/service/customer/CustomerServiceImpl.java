@@ -64,6 +64,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<CustomerEntity> findAllCustomerUuidIn(List<String> customerUuids) {
+        return customerRepository.findByIsDeletedFalseAndUuidIn(customerUuids);
+    }
+
+    @Override
     public List<CustomerEntity> findAllLike(String keyword) {
         return customerRepository.findAll(keyword);
     }
