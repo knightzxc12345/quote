@@ -6,7 +6,9 @@ import com.design.handler.BusinessException;
 import com.design.repository.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -83,7 +85,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemEntity> findAllLikeByPage(
             String keyword,
-            Pageable pageable) {
+            Integer page,
+            Integer size) {
+        Sort sort = Sort.by(
+                new Sort.Order(Sort.Direction.ASC, "no"),
+                new Sort.Order(Sort.Direction.ASC, "name")
+        );
+        Pageable pageable = PageRequest.of(page, size, sort);
         return itemRepository.findAllByPage(
                 keyword,
                 pageable

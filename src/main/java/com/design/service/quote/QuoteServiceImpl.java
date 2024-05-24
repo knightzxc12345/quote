@@ -4,7 +4,9 @@ import com.design.entity.quote.QuoteEntity;
 import com.design.repository.quote.QuoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -61,7 +63,14 @@ public class QuoteServiceImpl implements QuoteService {
             String userUuid,
             String customerUuid,
             String keyword,
-            Pageable pageable) {
+            Integer page,
+            Integer size) {
+        Sort sort = Sort.by(
+                new Sort.Order(Sort.Direction.DESC, "createTime"),
+                new Sort.Order(Sort.Direction.ASC, "userUuid"),
+                new Sort.Order(Sort.Direction.ASC, "customerUuid")
+        );
+        Pageable pageable = PageRequest.of(page, size, sort);
         return quoteRepository.findAllByPage(
                 userUuid,
                 customerUuid,

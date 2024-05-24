@@ -9,8 +9,6 @@ import com.design.entity.vendor.VendorEntity;
 import com.design.service.vendor.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,10 +34,11 @@ public class VendorFindUseCaseImpl implements VendorFindUseCase {
 
     @Override
     public VendorFindPageResponse findAllByPage(VendorFindRequest request) {
-        Integer page = request.page();
-        Integer size = null == request.size() ? 10 : request.size();
-        Pageable pageable = PageRequest.of(page, size);
-        Page<VendorEntity> vendorEntityPage = vendorService.findAllLikeByPage(request.keyword(), pageable);
+        Page<VendorEntity> vendorEntityPage = vendorService.findAllLikeByPage(
+                request.keyword(),
+                request.page(),
+                request.size()
+        );
         List<VendorFindAllResponse> responses = format(vendorEntityPage.getContent());
         return new VendorFindPageResponse(
                 vendorEntityPage.getTotalPages(),

@@ -75,7 +75,7 @@ public class ItemController {
     )
     public ResponseBody findAll(
             @Validated final ItemFindRequest request) {
-        if(null == request.page()){
+        if(null == request.page() || null == request.size()){
             List<ItemFindAllResponse> responses = itemFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
         }

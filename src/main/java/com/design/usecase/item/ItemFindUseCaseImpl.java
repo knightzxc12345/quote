@@ -10,9 +10,6 @@ import com.design.service.item.ItemService;
 import com.design.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,15 +39,10 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
 
     @Override
     public ItemFindPageResponse findAllByPage(ItemFindRequest request) {
-        Integer page = request.page();
-        Integer size = null == request.size() ? 10 : request.size();
-        Sort.Order orderNo = new Sort.Order(Sort.Direction.ASC, "no");
-        Sort.Order orderName = new Sort.Order(Sort.Direction.ASC, "name");
-        Sort sort = Sort.by(orderNo, orderName);
-        Pageable pageable = PageRequest.of(page, size, sort);
         Page<ItemEntity> itemEntityPage = itemService.findAllLikeByPage(
                 request.keyword(),
-                pageable
+                request.page(),
+                request.size()
         );
         List<ItemFindAllResponse> responses = format(itemEntityPage.getContent());
         return new ItemFindPageResponse(

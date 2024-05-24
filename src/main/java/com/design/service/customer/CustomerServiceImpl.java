@@ -6,7 +6,9 @@ import com.design.handler.BusinessException;
 import com.design.repository.customer.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -67,7 +69,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<CustomerEntity> findAllLikeByPage(String keyword, Pageable pageable) {
+    public Page<CustomerEntity> findAllLikeByPage(
+            String keyword,
+            Integer page,
+            Integer size) {
+        Sort sort = Sort.by(
+                new Sort.Order(Sort.Direction.ASC, "name")
+        );
+        Pageable pageable = PageRequest.of(page, size, sort);
         return customerRepository.findAllByPage(keyword, pageable);
     }
 

@@ -11,9 +11,6 @@ import com.design.service.quote_detail.QuoteDetailService;
 import com.design.utils.InstantUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,18 +51,12 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
 
     @Override
     public QuoteFindPageResponse findAllByPage(QuoteFindRequest request) {
-        Integer page = request.page();
-        Integer size = null == request.size() ? 10 : request.size();
-        Sort.Order orderCreateTime = new Sort.Order(Sort.Direction.DESC, "createTime");
-        Sort.Order orderUserUuid = new Sort.Order(Sort.Direction.ASC, "userUuid");
-        Sort.Order orderCustomerUuid = new Sort.Order(Sort.Direction.ASC, "customerUuid");
-        Sort sort = Sort.by(orderCreateTime, orderUserUuid, orderCustomerUuid);
-        Pageable pageable = PageRequest.of(page, size, sort);
         Page<QuoteEntity> quoteEntityPage = quoteService.findAllLikeByPage(
                 request.userUuid(),
                 request.customerUuid(),
                 request.keyword(),
-                pageable
+                request.page(),
+                request.size()
         );
         List<QuoteFindAllResponse> responses = format(quoteEntityPage.getContent());
         return new QuoteFindPageResponse(

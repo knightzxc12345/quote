@@ -75,7 +75,7 @@ public class ProductController {
     )
     public ResponseBody findAll(
             @Validated final ProductFindRequest request) {
-        if(null == request.page()){
+        if(null == request.page() || null == request.size()){
             List<ProductFindAllResponse> responses = productFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
         }

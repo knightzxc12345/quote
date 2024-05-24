@@ -6,7 +6,9 @@ import com.design.handler.BusinessException;
 import com.design.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -94,7 +96,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductEntity> findAllLikeByPage(
             String keyword,
-            Pageable pageable) {
+            Integer page,
+            Integer size) {
+        Sort sort = Sort.by(
+                new Sort.Order(Sort.Direction.ASC, "itemUuid"),
+                new Sort.Order(Sort.Direction.ASC, "specification")
+        );
+        Pageable pageable = PageRequest.of(page, size, sort);
         return productRepository.findAllByPage(
                 keyword,
                 pageable

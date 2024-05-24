@@ -75,7 +75,7 @@ public class CustomerController {
     )
     public ResponseBody findAll(
             @Validated final CustomerFindRequest request) {
-        if(null == request.page()){
+        if(null == request.page() || null == request.size()){
             List<CustomerFindAllResponse> responses = customerFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
         }

@@ -49,8 +49,6 @@ public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
                 (
                     (:keyword IS NULL OR v.name LIKE CONCAT('%', :keyword, '%'))
                 )
-            ORDER BY 
-                v.name
             """
     )
     Page<VendorEntity> findAllByPage(@Param("keyword") String keyword, Pageable pageable);

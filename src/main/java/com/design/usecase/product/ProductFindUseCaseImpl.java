@@ -13,9 +13,6 @@ import com.design.service.product.ProductService;
 import com.design.service.product_vendor.ProductVendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,15 +44,10 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
 
     @Override
     public ProductFindPageResponse findAllByPage(ProductFindRequest request) {
-        Integer page = request.page();
-        Integer size = null == request.size() ? 10 : request.size();
-        Sort.Order orderItemUuid = new Sort.Order(Sort.Direction.ASC, "itemUuid");
-        Sort.Order orderSpecification = new Sort.Order(Sort.Direction.ASC, "specification");
-        Sort sort = Sort.by(orderItemUuid, orderSpecification);
-        Pageable pageable = PageRequest.of(page, size, sort);
         Page<ProductEntity> productEntityPage = productService.findAllLikeByPage(
                 request.keyword(),
-                pageable
+                request.page(),
+                request.size()
         );
         List<ProductFindAllResponse> responses = format(productEntityPage.getContent());
         return new ProductFindPageResponse(

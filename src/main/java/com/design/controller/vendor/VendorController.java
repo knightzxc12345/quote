@@ -75,7 +75,7 @@ public class VendorController {
     )
     public ResponseBody findAll(
             @Validated final VendorFindRequest request) {
-        if(null == request.page()){
+        if(null == request.page() || null == request.size()){
             List<VendorFindAllResponse> responses = vendorFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
         }

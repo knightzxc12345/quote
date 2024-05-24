@@ -9,8 +9,6 @@ import com.design.entity.customer.CustomerEntity;
 import com.design.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,10 +34,11 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
 
     @Override
     public CustomerFindPageResponse findAllByPage(CustomerFindRequest request) {
-        Integer page = request.page();
-        Integer size = null == request.size() ? 10 : request.size();
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CustomerEntity> customerEntityPage = customerService.findAllLikeByPage(request.keyword(), pageable);
+        Page<CustomerEntity> customerEntityPage = customerService.findAllLikeByPage(
+                request.keyword(),
+                request.page(),
+                request.size()
+        );
         List<CustomerFindAllResponse> responses = format(customerEntityPage.getContent());
         return new CustomerFindPageResponse(
                 customerEntityPage.getTotalPages(),

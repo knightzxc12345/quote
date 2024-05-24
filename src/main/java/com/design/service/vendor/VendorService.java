@@ -2,7 +2,6 @@ package com.design.service.vendor;
 
 import com.design.entity.vendor.VendorEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,6 +19,10 @@ public interface VendorService {
 
     List<VendorEntity> findAllLike(String keyword);
 
-    Page<VendorEntity> findAllLikeByPage(String keyword, Pageable pageable);
+    Page<VendorEntity> findAllLikeByPage(
+            String keyword,
+            Integer page,
+            Integer size
+    );
 
 }

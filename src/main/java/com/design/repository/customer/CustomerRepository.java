@@ -49,8 +49,6 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
                 (
                     (:keyword IS NULL OR c.name LIKE CONCAT('%', :keyword, '%'))
                 )
-            ORDER BY 
-                c.name
             """
     )
     Page<CustomerEntity> findAllByPage(@Param("keyword") String keyword, Pageable pageable);

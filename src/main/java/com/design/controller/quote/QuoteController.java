@@ -92,7 +92,7 @@ public class QuoteController {
     )
     public ResponseBody findAll(
             @Validated final QuoteFindRequest request) {
-        if(null == request.page()){
+        if(null == request.page() || null == request.size()){
             List<QuoteFindAllResponse> responses = quoteFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
         }

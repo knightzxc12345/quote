@@ -2,7 +2,6 @@ package com.design.service.customer;
 
 import com.design.entity.customer.CustomerEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,6 +19,10 @@ public interface CustomerService {
 
     List<CustomerEntity> findAllLike(String keyword);
 
-    Page<CustomerEntity> findAllLikeByPage(String keyword, Pageable pageable);
+    Page<CustomerEntity> findAllLikeByPage(
+            String keyword,
+            Integer page,
+            Integer size
+    );
 
 }
