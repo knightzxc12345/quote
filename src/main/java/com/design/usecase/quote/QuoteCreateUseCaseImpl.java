@@ -113,19 +113,6 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         return quoteDetailEntities;
     }
 
-    // 取得廠商
-    private VendorEntity getVendor(String vendorUuid, List<VendorEntity> vendorEntities){
-        if(null == vendorEntities || vendorEntities.isEmpty()){
-            return null;
-        }
-        for(VendorEntity vendorEntity : vendorEntities){
-            if(vendorEntity.getUuid().equals(vendorUuid)){
-                return vendorEntity;
-            }
-        }
-        return null;
-    }
-
     // 設定金額
     private QuoteEntity setAmount(List<QuoteDetailEntity> quoteDetailEntities, QuoteEntity quoteEntity){
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){

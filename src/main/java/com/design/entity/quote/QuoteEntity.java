@@ -11,10 +11,11 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+// 報價單
 @ToString(callSuper = true)
 @Data
 @Table(name = "quote", indexes = {
-        @Index(name = "quote_find_all", columnList = "is_deleted, user_uuid, customer_uuid"),
+        @Index(name = "quote_find_all", columnList = "is_deleted, user_uuid, customer_uuid, customer_name"),
 })
 @Entity
 public class QuoteEntity extends BaseEntity {

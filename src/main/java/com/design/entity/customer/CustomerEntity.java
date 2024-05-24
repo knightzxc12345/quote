@@ -12,6 +12,7 @@ import lombok.ToString;
 
 import java.time.Instant;
 
+// 客戶
 @ToString(callSuper = true)
 @Data
 @Table(name = "customer", indexes = {

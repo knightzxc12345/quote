@@ -1,10 +1,8 @@
-package com.design.entity.product;
+package com.design.entity.vendor_quote;
 
 import com.design.entity.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import com.design.entity.enums.VendorQuoteStatus;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,66 +11,58 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-// 產品
+// 廠商報價單
 @ToString(callSuper = true)
 @Data
-@Table(name = "product", indexes = {
-        @Index(name = "product_find_all", columnList = "is_deleted, item_uuid, specification")
+@Table(name = "vendor_quote", indexes = {
+        @Index(name = "vendor_quote_find_all", columnList = "is_deleted, vendor_uuid, quote_uuid"),
 })
 @Entity
-public class ProductEntity extends BaseEntity {
+public class VendorQuoteEntity extends BaseEntity {
 
-    // 品項uuid
+    // 廠商uuid
     @Column(
-            name = "item_uuid",
+            name = "vendor_uuid",
             nullable = false,
             updatable = true,
             unique = false,
             length = 36
     )
     @NotBlank
-    private String itemUuid;
+    private String vendorUuid;
 
-    // 規格
+    // 報價單uuid
     @Column(
-            name = "specification",
+            name = "quote_uuid",
             nullable = false,
             updatable = true,
             unique = false,
-            length = 256
+            length = 36
     )
     @NotBlank
-    private String specification;
+    private String quoteUuid;
 
-    // 單位
+    // 合計
     @Column(
-            name = "unit",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 32
-    )
-    private String unit;
-
-    // 單價
-    @Column(
-            name = "unit_price",
+            name = "amount",
             nullable = false,
             updatable = true,
             unique = false
     )
     @NotNull
-    private BigDecimal unitPrice;
+    private BigDecimal amount;
 
-    // 成本
+    // 廠商報價單狀態
     @Column(
-            name = "cost_price",
+            name = "status",
             nullable = false,
+            insertable = true,
             updatable = true,
             unique = false
     )
+    @Convert(converter = VendorQuoteStatus.Converter.class)
     @NotNull
-    private BigDecimal costPrice;
+    private VendorQuoteStatus vendorQuoteStatus;
 
     // 是否刪除
     @Column(

@@ -13,6 +13,7 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+// 保價單明細
 @ToString(callSuper = true)
 @Data
 @Table(name = "quote_detail", indexes = {

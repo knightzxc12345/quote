@@ -1,6 +1,7 @@
 package com.design.entity.base;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
@@ -23,6 +24,7 @@ public class BaseEntity {
             updatable = false,
             unique = true
     )
+    @NotNull
     private Long pk;
 
     // 唯一值
@@ -33,7 +35,7 @@ public class BaseEntity {
             unique = true,
             length = 36
     )
-    @NotNull
+    @NotBlank
     private String uuid;
 
     // 創建時間
@@ -55,7 +57,7 @@ public class BaseEntity {
             unique = false,
             length = 36
     )
-    @NotNull
+    @NotBlank
     private String createUser;
 
     // 編輯時間

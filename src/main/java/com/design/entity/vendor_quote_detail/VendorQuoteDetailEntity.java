@@ -1,4 +1,4 @@
-package com.design.entity.product;
+package com.design.entity.vendor_quote_detail;
 
 import com.design.entity.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -13,14 +13,25 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-// 產品
+// 廠商報價單明細
 @ToString(callSuper = true)
 @Data
-@Table(name = "product", indexes = {
-        @Index(name = "product_find_all", columnList = "is_deleted, item_uuid, specification")
+@Table(name = "vendor_quote_detail", indexes = {
+        @Index(name = "vendor_quote_detail_find_vendor_quote_uuid", columnList = "is_deleted, vendor_quote_uuid"),
 })
 @Entity
-public class ProductEntity extends BaseEntity {
+public class VendorQuoteDetailEntity extends BaseEntity {
+
+    // 廠商報價單uuid
+    @Column(
+            name = "vendor_quote_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String vendorQuoteUuid;
 
     // 品項uuid
     @Column(
@@ -33,46 +44,88 @@ public class ProductEntity extends BaseEntity {
     @NotBlank
     private String itemUuid;
 
-    // 規格
+    // 品項編號
     @Column(
-            name = "specification",
+            name = "item_no",
+            nullable = true,
+            updatable = true,
+            unique = false,
+            length = 10
+    )
+    private String itemNo;
+
+    // 品項名稱
+    @Column(
+            name = "item_name",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    @NotBlank
+    private String itemName;
+
+    // 產品uuid
+    @Column(
+            name = "product_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotBlank
+    private String productUuid;
+
+    // 產品規格
+    @Column(
+            name = "product_specification",
             nullable = false,
             updatable = true,
             unique = false,
             length = 256
     )
     @NotBlank
-    private String specification;
+    private String productSpecification;
 
-    // 單位
+    // 產品單位
     @Column(
-            name = "unit",
+            name = "product_unit",
             nullable = true,
             updatable = true,
             unique = false,
             length = 32
     )
-    private String unit;
+    private String productUnit;
 
-    // 單價
+    // 產品單價
     @Column(
-            name = "unit_price",
+            name = "product_unit_price",
             nullable = false,
             updatable = true,
             unique = false
     )
     @NotNull
-    private BigDecimal unitPrice;
+    private BigDecimal productUnitPrice;
 
-    // 成本
+    // 產品數量
     @Column(
-            name = "cost_price",
+            name = "product_quantity",
             nullable = false,
             updatable = true,
             unique = false
     )
     @NotNull
-    private BigDecimal costPrice;
+    private Integer productQuantity;
+
+    // 產品總計
+    @Column(
+            name = "product_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private BigDecimal productAmount;
 
     // 是否刪除
     @Column(
