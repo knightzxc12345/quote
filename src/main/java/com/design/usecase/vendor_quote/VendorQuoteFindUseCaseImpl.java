@@ -91,7 +91,6 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
                     vendorQuoteEntity.getQuoteUuid(),
                     vendorQuoteEntity.getVendorUuid(),
                     vendorQuoteEntity.getCustomerUuid(),
-                    vendorQuoteEntity.getAmount(),
                     vendorQuoteEntity.getVendorQuoteStatus().getValue(),
                     InstantUtil.to(vendorQuoteEntity.getCreateTime())
             ));

@@ -24,7 +24,6 @@ public class BaseEntity {
             updatable = false,
             unique = true
     )
-    @NotNull
     private Long pk;
 
     // 唯一值

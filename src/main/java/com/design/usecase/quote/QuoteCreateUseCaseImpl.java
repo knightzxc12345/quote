@@ -89,7 +89,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         // 初始化廠商報價單
         List<VendorQuoteEntity> vendorQuoteEntities = initVendorQuotes(vendorEntities, quoteEntity, customerEntity);
         // 初始化廠商報價明細清單
-        List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = initVendorQuoteDetails(vendorEntities, vendorQuoteEntities, quoteDetailEntities);
+        List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = initVendorQuoteDetails(productVendorEntities, vendorQuoteEntities, quoteDetailEntities);
         // 建立報價單
         quoteService.create(quoteEntity, userName);
         // 建立報價單明細清單
@@ -103,6 +103,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
     // 初始化報價單
     private QuoteEntity initQuote(QuoteCreateRequest request, UserEntity userEntity, CustomerEntity customerEntity){
         QuoteEntity quoteEntity = new QuoteEntity();
+        quoteEntity.setUuid(UUID.randomUUID().toString());
         quoteEntity.setUserUuid(userEntity.getUuid());
         quoteEntity.setUserName(userEntity.getName());
         quoteEntity.setCustomerUuid(customerEntity.getUuid());
@@ -219,19 +220,6 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         return new ArrayList<>(vendorUuids);
     }
 
-    // 取得廠商
-    private VendorEntity getVendor(List<VendorEntity> vendorEntities, String productUuid){
-        if(null == vendorEntities || vendorEntities.isEmpty()){
-            return null;
-        }
-        for(VendorEntity vendorEntity : vendorEntities){
-            if(vendorEntity.getUuid().equals(productUuid)){
-                return vendorEntity;
-            }
-        }
-        return null;
-    }
-
     // 初始化廠商報價單
     private List<VendorQuoteEntity> initVendorQuotes(
             List<VendorEntity> vendorEntities,
@@ -249,27 +237,28 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             vendorQuoteEntity.setQuoteUuid(quoteEntity.getUuid());
             vendorQuoteEntity.setCustomerUuid(customerEntity.getUuid());
             vendorQuoteEntity.setVendorQuoteStatus(VendorQuoteStatus.CREATE);
+            vendorQuoteEntities.add(vendorQuoteEntity);
         }
         return vendorQuoteEntities;
     }
 
     // 初始化廠商報價明細清單
     private List<VendorQuoteDetailEntity> initVendorQuoteDetails(
-            List<VendorEntity> vendorEntities,
+            List<ProductVendorEntity> productVendorEntities,
             List<VendorQuoteEntity> vendorQuoteEntities,
             List<QuoteDetailEntity> quoteDetailEntities){
         List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = new ArrayList<>();
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return vendorQuoteDetailEntities;
         }
-        VendorEntity vendorEntity;
+        ProductVendorEntity productVendorEntity;
         VendorQuoteEntity vendorQuoteEntity;
         VendorQuoteDetailEntity vendorQuoteDetailEntity;
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
-            // 取得廠商
-            vendorEntity = getVendor(vendorEntities, quoteDetailEntity.getProductUuid());
+            // 取得產品廠商
+            productVendorEntity = getProductVendor(productVendorEntities, quoteDetailEntity.getProductUuid());
             // 取得廠商報價
-            vendorQuoteEntity = getVendorQuote(vendorQuoteEntities, vendorEntity.getUuid());
+            vendorQuoteEntity = getVendorQuote(vendorQuoteEntities, productVendorEntity.getVendorUuid());
             vendorQuoteDetailEntity = new VendorQuoteDetailEntity();
             vendorQuoteDetailEntity.setVendorQuoteUuid(vendorQuoteEntity.getQuoteUuid());
             vendorQuoteDetailEntity.setItemUuid(quoteDetailEntity.getItemUuid());
@@ -284,6 +273,19 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             vendorQuoteDetailEntities.add(vendorQuoteDetailEntity);
         }
         return vendorQuoteDetailEntities;
+    }
+
+    // 取得產品廠商
+    private ProductVendorEntity getProductVendor(List<ProductVendorEntity> productVendorEntities, String productUuid){
+        if(null == productVendorEntities || productVendorEntities.isEmpty()){
+            return null;
+        }
+        for(ProductVendorEntity productVendorEntity : productVendorEntities){
+            if(productVendorEntity.getProductUuid().equals(productUuid)){
+                return productVendorEntity;
+            }
+        }
+        return null;
     }
 
     // 取得廠商報價

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 // 廠商報價單
@@ -52,16 +51,6 @@ public class VendorQuoteEntity extends BaseEntity {
     )
     @NotBlank
     private String customerUuid;
-
-    // 合計
-    @Column(
-            name = "amount",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private BigDecimal amount;
 
     // 廠商報價單狀態
     @Column(

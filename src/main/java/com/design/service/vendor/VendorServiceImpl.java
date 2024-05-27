@@ -65,7 +65,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<VendorEntity> findAllVendorUuidIn(List<String> vendorUuids) {
-        return vendorRepository.findByIsDeletedTrueAndUuidIn(vendorUuids);
+        return vendorRepository.findByIsDeletedFalseAndUuidIn(vendorUuids);
     }
 
     @Override

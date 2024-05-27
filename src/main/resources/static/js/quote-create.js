@@ -357,6 +357,7 @@ function addColumnChange(tr){
 function columnChange(tr){
     let selectProduct = tr.find('.add-product-specification-select');
     let selectedProductUuid = selectProduct.val();
+    let tdNo = tr.find('.add-product-no');
     let tdUnit = tr.find('.add-product-unit');
     let inputQuantity = tr.find('.add-product-quantity');
     let tdUnitPrice = tr.find('.add-product-unit-price');

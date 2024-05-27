@@ -1,7 +1,5 @@
 package com.design.controller.vendor_quote.response;
 
-import java.math.BigDecimal;
-
 public record VendorQuoteFindAllResponse(
 
         String vendorQuoteUuid,
@@ -9,8 +7,6 @@ public record VendorQuoteFindAllResponse(
         String vendorUuid,
 
         String customerUuid,
-
-        BigDecimal amount,
 
         String status,
 
