@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>報價單</title>
+    <title>客戶</title>
     <th:block th:include="common/css.html"></th:block>
     <th:block th:include="common/js.html"></th:block>
     <script th:src="@{/js/customer.js}" type="text/javascript"></script>
@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="add-customer" aria-labelledby="add-customer-label">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="add-customer" aria-labelledby="add-customer-label">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="add-customer-label">新增客戶</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="update-customer" aria-labelledby="update-customer-label">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="update-customer" aria-labelledby="update-customer-label">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="update-customer-label">編輯客戶</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -186,7 +186,7 @@
         </div>
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static" id="delete-customer-modal" tabindex="-1" aria-labelledby="delete-customer-label" aria-hidden="true">
+    <div class="modal fade" id="delete-customer-modal" tabindex="-1" aria-labelledby="delete-customer-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

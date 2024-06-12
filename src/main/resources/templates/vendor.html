@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>報價單</title>
+    <title>廠商</title>
     <th:block th:include="common/css.html"></th:block>
     <th:block th:include="common/js.html"></th:block>
     <script th:src="@{/js/vendor.js}" type="text/javascript"></script>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="add-vendor" aria-labelledby="add-vendor-label">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="add-vendor" aria-labelledby="add-vendor-label">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="add-vendor-label">新增廠商</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -132,7 +132,7 @@
         </div>
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static" id="delete-vendor-modal" tabindex="-1" aria-labelledby="delete-vendor-label" aria-hidden="true">
+    <div class="modal fade" id="delete-vendor-modal" tabindex="-1" aria-labelledby="delete-vendor-label" aria-hidden="true">
         <div class="modal-dialog">
               <div class="modal-content">
                   <div class="modal-header">
