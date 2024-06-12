@@ -276,7 +276,7 @@ function addProductItem(){
     item.empty();
     $.each(globalItem, function(key, value) {
         item.append(`
-            <option value='${value.itemUuid}'>${value.no}-${value.name}</option>
+            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
         `);
     });
     $('#add-product-item').selectpicker('refresh');
@@ -288,7 +288,7 @@ function updateProductItem(){
     item.empty();
     $.each(globalItem, function(key, value) {
         item.append(`
-            <option value='${value.itemUuid}'>${value.no}-${value.name}</option>
+            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
         `);
     });
     $('#update-product-item').selectpicker('refresh');
