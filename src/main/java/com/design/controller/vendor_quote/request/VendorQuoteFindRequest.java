@@ -2,7 +2,7 @@ package com.design.controller.vendor_quote.request;
 
 import jakarta.validation.constraints.Min;
 
-public record VendorQuoteRequest(
+public record VendorQuoteFindRequest(
 
         @Min(value = 0, message = "頁數不得小於0")
         Integer page,

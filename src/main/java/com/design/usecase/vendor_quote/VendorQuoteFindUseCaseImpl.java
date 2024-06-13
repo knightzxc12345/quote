@@ -1,6 +1,6 @@
 package com.design.usecase.vendor_quote;
 
-import com.design.controller.vendor_quote.request.VendorQuoteRequest;
+import com.design.controller.vendor_quote.request.VendorQuoteFindRequest;
 import com.design.controller.vendor_quote.response.VendorQuoteFindAllResponse;
 import com.design.controller.vendor_quote.response.VendorQuoteFindPageResponse;
 import com.design.controller.vendor_quote.response.VendorQuoteFindResponse;
@@ -56,7 +56,7 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
     }
 
     @Override
-    public List<VendorQuoteFindAllResponse> findAll(VendorQuoteRequest request) {
+    public List<VendorQuoteFindAllResponse> findAll(VendorQuoteFindRequest request) {
         List<VendorQuoteEntity> vendorQuoteEntities = vendorQuoteService.findAll(
                 request.vendorUuid(),
                 request.customerUuid()
@@ -65,7 +65,7 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
     }
 
     @Override
-    public VendorQuoteFindPageResponse findAllByPage(VendorQuoteRequest request) {
+    public VendorQuoteFindPageResponse findAllByPage(VendorQuoteFindRequest request) {
         Page<VendorQuoteEntity> vendorQuoteEntityPage = vendorQuoteService.findAllByPage(
                 request.vendorUuid(),
                 request.customerUuid(),

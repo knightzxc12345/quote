@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>廠商產品</title>
+    <th:block th:include="common/css.html"></th:block>
+    <th:block th:include="common/js.html"></th:block>
+    <script th:src="@{/js/vendor-product.js}" type="text/javascript"></script>
+</head>
+
+<body class="close-scroller">
+<th:block th:include="common/header.html"></th:block>
+<th:block th:include="common/alert.html"></th:block>
+
+<div class="container-fluid">
+    <div class="row">
+        <th:block th:include="common/menu.html"></th:block>
+        <div class="col-11 right">
+            <div class="d-flex justify-content-between title">
+                <div>
+                    <h3>廠商產品</h3>
+                </div>
+                <div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="vendor-product-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search">
+                        <button class="btn btn-outline-secondary" type="button" id="vendor-product-search" onclick="search();">搜尋</button>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-vendor-product" aria-controls="add-vendor-product">新增廠商產品</button>
+                </div>
+            </div>
+            <table class="table table-striped" id="vendorProductList">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 30%;">廠商名稱</th>
+                    <th scope="col" style="width: 30%;">產品名稱</th>
+                    <th scope="col" style="width: 30%;">單價</th>
+                    <th scope="col" style="width: 10%;"></th>
+                </tr>
+                </thead>
+                <tbody id="vendor-product-tbody">
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination" id="vendorProductListPage">
+
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="add-vendor-product" aria-labelledby="add-vendor-label-product">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="add-vendor-product-label">新增廠商產品</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="margin-right: 1px;">廠商</span>
+            <select class="selectpicker" id="add-vendor-product-vendor" data-live-search="true">
+
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">名稱</span>
+            <input type="text" class="form-control" id="add-vendor-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <div class="invalid-feedback">
+                名稱不得為空!
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">單價</span>
+            <input type="text" class="form-control" id="add-vendor-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <div class="invalid-feedback">
+                單價不得為空!
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+        <button type="button" class="btn btn-outline-success btn-sm" onclick="addVendorProduct();">送出</button>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="update-vendor" aria-labelledby="update-vendor-product-label">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="update-vendor-product-label">編輯廠商產品</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="hide" id="update-vendor-product-uuid"></div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="margin-right: 1px;">廠商</span>
+            <select class="selectpicker" id="update-vendor-product-vendor" data-live-search="true">
+
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">名稱</span>
+            <input type="text" class="form-control" id="update-vendor-product-name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <div class="invalid-feedback">
+                名稱不得為空!
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">單價</span>
+            <input type="text" class="form-control" id="update-vendor-product-unit-price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <div class="invalid-feedback">
+                單價不得為空!
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+        <button type="button" class="btn btn-outline-success btn-sm" onclick="updateVendorProduct();">送出</button>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-vendor-product-modal" tabindex="-1" aria-labelledby="delete-vendor-product-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">刪除確認</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="hide" id="delete-vendor-product-uuid"></div>
+                確定要刪除此廠商?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="deleteVendorProduct();">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

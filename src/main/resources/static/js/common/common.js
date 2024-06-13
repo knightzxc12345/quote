@@ -15,6 +15,9 @@ function init(){
     if(window.location.pathname === '/vendor'){
         $("#menu-vendor").addClass('menu-active');
     }
+    if(window.location.pathname === '/vendor-product'){
+        $("#menu-vendor-product").addClass('menu-active');
+    }
     if(window.location.pathname === '/item'){
         $("#menu-item").addClass('menu-active');
     }

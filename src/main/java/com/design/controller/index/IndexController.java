@@ -19,6 +19,11 @@ public class IndexController {
         return "vendor";
     }
 
+    @RequestMapping("/vendor-product")
+    public String vendorProduct() {
+        return "vendor-product";
+    }
+
     @RequestMapping("/item")
     public String item() {
         return "item";

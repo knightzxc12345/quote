@@ -29,6 +29,7 @@ public class SecurityConfig {
             "/common/**",
             "/customer",
             "/vendor",
+            "/vendor-product",
             "/item",
             "/product",
             "/quote",

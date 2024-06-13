@@ -2,7 +2,7 @@ package com.design.controller.vendor_quote;
 
 import com.design.base.ResponseBody;
 import com.design.base.eunms.CommonEnum;
-import com.design.controller.vendor_quote.request.VendorQuoteRequest;
+import com.design.controller.vendor_quote.request.VendorQuoteFindRequest;
 import com.design.controller.vendor_quote.response.VendorQuoteFindAllResponse;
 import com.design.controller.vendor_quote.response.VendorQuoteFindPageResponse;
 import com.design.controller.vendor_quote.response.VendorQuoteFindResponse;
@@ -38,7 +38,7 @@ public class VendorQuoteController {
             value = "v1"
     )
     public ResponseBody findAll(
-            @Validated final VendorQuoteRequest request) {
+            @Validated final VendorQuoteFindRequest request) {
         if(null == request.page() || null == request.size()){
             List<VendorQuoteFindAllResponse> responses = vendorQuoteFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);
