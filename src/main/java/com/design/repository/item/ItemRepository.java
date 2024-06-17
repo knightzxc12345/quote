@@ -28,9 +28,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
                 i
             FROM
                 ItemEntity i
-            RIGHT JOIN
-                ProductEntity p 
-            ON p.itemUuid = i.uuid
             WHERE 
                 i.isDeleted = false
             ORDER BY 

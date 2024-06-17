@@ -165,7 +165,7 @@ function getItems(){
             globalItem = response.data;
             addProductItem();
             updateProductItem();
-            getProducts(globalPageNow, globalPageSize);
+            getProducts();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
