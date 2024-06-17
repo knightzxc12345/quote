@@ -1,16 +1,14 @@
-let globalPageNow = 0;
-let globalPageSize = 12;
-let globalPageTotal = 0;
 let globalKeyword = '';
 
 window.onload = function () {
     init();
-    getVendors(globalPageNow, globalPageSize);
-    offcanvasEvent();
-    pageEvent();
+    getVendors();
     searchEnter();
+    pageEvent(getVendors);
+    offcanvasEvent();
 };
 
+// 點擊搜尋
 function searchEnter(){
     $("#vendor-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -19,11 +17,13 @@ function searchEnter(){
     });
 }
 
+// 搜尋
 function search(){
     globalKeyword = $("#vendor-search-input").val();
     getVendors();
 }
 
+// 事件配置
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
@@ -49,6 +49,7 @@ function offcanvasEvent(){
     });
 }
 
+// 分頁配置
 function pageEvent(){
     $(document).on("click", ".page-item", function() {
         let pageVal = $(this).find(".page-link").data('val');
@@ -77,6 +78,7 @@ function pageEvent(){
     });
 }
 
+// 取得廠商清單
 function getVendors() {
     $.ajax({
         url: `/vendor/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
@@ -126,6 +128,7 @@ function getVendors() {
     });
 }
 
+// 新增廠商
 function addVendor() {
     const name = $("#add-vendor-name").val();
     const address = $("#add-vendor-address").val();
@@ -169,6 +172,7 @@ function addVendor() {
     });
 }
 
+// 更新廠商
 function updateVendor() {
     const vendorUuid = $('#update-vendor-uuid').val();
     const name = $("#update-vendor-name").val();
@@ -213,6 +217,7 @@ function updateVendor() {
     });
 }
 
+// 刪除廠商
 function deleteVendor(){
     const vendorUuid = $('#delete-vendor-uuid').val();
     $.ajax({
@@ -237,14 +242,4 @@ function deleteVendor(){
             alertError(message);
         }
     });
-}
-
-function validateInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
 }

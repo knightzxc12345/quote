@@ -1,6 +1,3 @@
-let globalPageNow = 0;
-let globalPageSize = 12;
-let globalPageTotal = 0;
 let globalUser = '';
 let globalCustomer = '';
 let globalKeyword = '';
@@ -10,11 +7,11 @@ let globalCustomerSelect;
 window.onload = function() {
     init();
     getUsers();
-    getQuotes(globalPageNow, globalPageSize);
-    offcanvasEvent();
-    pageEvent();
-    searchEnter();
+    getQuotes();
     selectChange();
+    searchEnter();
+    pageEvent(getQuotes);
+    offcanvasEvent();
 };
 
 function searchEnter(){
@@ -70,34 +67,6 @@ function offcanvasEvent(){
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
         $('#delete-quote-uuid').val(jsonData.quoteUuid);
-    });
-}
-
-function pageEvent(){
-    $(document).on("click", ".page-item", function() {
-        let pageVal = $(this).find(".page-link").data('val');
-        if('pre' == pageVal){
-            if(0 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow -= 1;
-            getQuotes();
-            return;
-        }
-        if('next' == pageVal){
-            if(globalPageTotal - 1 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow += 1;
-            getQuotes();
-            return;
-        }
-        let numberPageText = parseInt(pageVal, 10);
-        // 設定全域變數
-        globalPageNow = numberPageText - 1;
-        getQuotes();
     });
 }
 
@@ -405,10 +374,12 @@ function deleteQuote(){
     });
 }
 
+// 新增報價單跳頁
 function addQuote(){
     location.href = "/quote/create";
 }
 
+// 更新報價單跳頁
 function updateQuote(quoteUuid){
     location.href = "/quote/update/" + quoteUuid;
 }

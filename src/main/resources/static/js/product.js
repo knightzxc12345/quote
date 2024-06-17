@@ -1,6 +1,3 @@
-let globalPageNow = 0;
-let globalPageSize = 12;
-let globalPageTotal = 0;
 let globalKeyword = '';
 let globalItem = '';
 let globalVendor = '';
@@ -8,16 +5,15 @@ let globalVendorSelect;
 
 window.onload = function () {
     init();
-    getItems();
-    offcanvasEvent();
-    pageEvent();
-    searchEnter();
+    getVendors();
     selectChange();
     inputChange();
-    getVendors();
-    $('.selectpicker').selectpicker();
+    searchEnter();
+    pageEvent(getProducts);
+    offcanvasEvent();
 };
 
+// 點擊搜尋
 function searchEnter(){
     $("#product-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -26,14 +22,16 @@ function searchEnter(){
     });
 }
 
+// 搜尋變更
 function selectChange(){
-    $('#vendor-name-select').change(function() {
+    $('#vendor-name-search-select').change(function() {
         let value = $(this).val();
         globalVendorSelect = 'all' == value ? null : value;
         getProducts();
     });
 }
 
+// 更新輸入數字欄位
 function inputChange(){
     $("#add-product-unit-price").change(function() {
         $(this).val(updateValue($(this)));
@@ -49,19 +47,22 @@ function inputChange(){
     });
 }
 
+// 更新輸入數字欄位值
 function updateValue(element){
     let value = $(element).val().replace(/,/g, '');
     if(!/^\d+$/.test(value)){
-        return "1";
+        return "";
     }
     return Number(value).toLocaleString();
 }
 
+// 搜尋
 function search(){
     globalKeyword = $("#product-search-input").val();
     getProducts();
 }
 
+// 事件配置
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
@@ -91,34 +92,7 @@ function offcanvasEvent(){
     });
 }
 
-function pageEvent(){
-    $(document).on("click", ".page-item", function() {
-        let pageVal = $(this).find(".page-link").data('val');
-        if('pre' == pageVal){
-            if(0 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow -= 1;
-            getProducts();
-            return;
-        }
-        if('next' == pageVal){
-            if(globalPageTotal - 1 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow += 1;
-            getProducts();
-            return;
-        }
-        let numberPageText = parseInt(pageVal, 10);
-        // 設定全域變數
-        globalPageNow = numberPageText - 1;
-        getProducts();
-    });
-}
-
+// 取得廠商清單
 function getVendors(){
     $.ajax({
         url: `/common/vendor/v1`,
@@ -135,27 +109,31 @@ function getVendors(){
                 return;
             }
             globalVendor = response.data;
-            $('#vendor-name-select').append(`
+            let vendorSelect = $('#vendor-name-search-select');
+            let addProductVendor = $('#add-product-vendor');
+            let updateProductVendor = $('#update-product-vendor');
+            vendorSelect.append(`
                 <option value='all' selected>全部</option>
             `);
             $.each(response.data, function(key, value) {
                 let selected = key == 0 ? 'selected' : '';
-                $('#vendor-name-select').append(`
+                vendorSelect.append(`
                     <option value='${value.vendorUuid}'>${value.name}</option>
                 `);
-                $('#add-product-vendor').append(`
+                addProductVendor.append(`
                     <option value='${value.vendorUuid}' ${selected}>${value.name}</option>
                 `);
-                $('#update-product-vendor').append(`
+                updateProductVendor.append(`
                     <option value='${value.vendorUuid}' ${selected}>${value.name}</option>
                 `);
             });
-            $('#vendor-name-select').selectpicker('refresh');
-            $('#vendor-name-select').selectpicker('render');
-            $('#add-product-vendor').selectpicker('refresh');
-            $('#add-product-vendor').selectpicker('render');
-            $('#update-product-vendor').selectpicker('refresh');
-            $('#update-product-vendor').selectpicker('render');
+            vendorSelect.selectpicker('refresh');
+            vendorSelect.selectpicker('render');
+            addProductVendor.selectpicker('refresh');
+            addProductVendor.selectpicker('render');
+            updateProductVendor.selectpicker('refresh');
+            updateProductVendor.selectpicker('render');
+            getItems();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -168,6 +146,7 @@ function getVendors(){
     });
 }
 
+// 取得項目清單
 function getItems(){
     $.ajax({
         url: `/common/item/v1`,
@@ -199,6 +178,33 @@ function getItems(){
     });
 }
 
+// 新增產品項目
+function addProductItem(){
+    let item = $('#add-product-item');
+    item.empty();
+    $.each(globalItem, function(key, value) {
+        item.append(`
+            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
+        `);
+    });
+    $('#add-product-item').selectpicker('refresh');
+    $('#add-product-item').selectpicker('render');
+}
+
+// 更新產品項目
+function updateProductItem(){
+    let item = $('#update-product-item');
+    item.empty();
+    $.each(globalItem, function(key, value) {
+        item.append(`
+            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
+        `);
+    });
+    $('#update-product-item').selectpicker('refresh');
+    $('#update-product-item').selectpicker('render');
+}
+
+// 取得產品清單
 function getProducts() {
     let url = `product/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
     if(!isEmpty(globalVendorSelect)){
@@ -223,7 +229,7 @@ function getProducts() {
                 let itemName = findItemName(value.itemUuid);
                 let unitPriceFormatted = value.unitPrice.toLocaleString();
                 let costPriceFormatted = value.costPrice.toLocaleString();
-                let vendorName = getVendorName(value.vendorUuids);
+                let vendorName = findVendorName(value.vendorUuids);
                 $("#product-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${value.itemNo}</td>
@@ -258,7 +264,18 @@ function getProducts() {
     });
 }
 
-function getVendorName(vendorUuids) {
+// 取得項目名稱
+function findItemName(itemUuid) {
+    for (let i = 0; i < globalItem.length; i++) {
+        if (globalItem[i].itemUuid === itemUuid) {
+            return globalItem[i].name;
+        }
+    }
+    return null;
+}
+
+// 取得廠商名稱
+function findVendorName(vendorUuids) {
     let vendorNames = [];
     vendorUuids.forEach(function(vendorUuid) {
         let vendor = globalVendor.find(function(vendor) {
@@ -271,39 +288,7 @@ function getVendorName(vendorUuids) {
     return vendorNames.join(",");
 }
 
-function addProductItem(){
-    let item = $('#add-product-item');
-    item.empty();
-    $.each(globalItem, function(key, value) {
-        item.append(`
-            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
-        `);
-    });
-    $('#add-product-item').selectpicker('refresh');
-    $('#add-product-item').selectpicker('render');
-}
-
-function updateProductItem(){
-    let item = $('#update-product-item');
-    item.empty();
-    $.each(globalItem, function(key, value) {
-        item.append(`
-            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
-        `);
-    });
-    $('#update-product-item').selectpicker('refresh');
-    $('#update-product-item').selectpicker('render');
-}
-
-function findItemName(itemUuid) {
-    for (let i = 0; i < globalItem.length; i++) {
-        if (globalItem[i].itemUuid === itemUuid) {
-            return globalItem[i].name;
-        }
-    }
-    return null;
-}
-
+// 新增產品
 function addProduct() {
     const itemUuid = $("#add-product-item").val();
     const specification = $("#add-product-specification").val();
@@ -353,6 +338,7 @@ function addProduct() {
     });
 }
 
+// 更新產品
 function updateProduct() {
     const productUuid = $('#update-product-uuid').val();
     const itemUuid = $("#update-product-item").val();
@@ -403,6 +389,7 @@ function updateProduct() {
     });
 }
 
+// 刪除產品
 function deleteProduct(){
     const productUuid = $('#delete-product-uuid').val();
     $.ajax({
@@ -427,38 +414,4 @@ function deleteProduct(){
             alertError(message);
         }
     });
-}
-
-function validateInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
-}
-
-function validateNumberInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    if (!/^\d+$/.test(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
-}
-
-function validateSelect(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        alertWarning("廠商至少要選一個");
-        return false;
-    }
-    return true;
 }

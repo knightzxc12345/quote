@@ -3,6 +3,9 @@ const globalToken = localStorage.getItem('token');
 const headers = {
     'Authorization': `Bearer ${globalToken}`,
 };
+let globalPageNow = 0;
+let globalPageSize = 12;
+let globalPageTotal = 0;
 
 function init(){
     valid();
@@ -133,4 +136,70 @@ function setPage(elementId, pageTotal, pageNow){
             </li>
         `);
     }
+}
+
+// 驗證輸入框
+function validateInput(value, elementId) {
+    const element = $(elementId);
+    if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        return false;
+    }
+    element.removeClass("is-invalid").addClass("is-valid");
+    return true;
+}
+
+// 驗證數字
+function validateNumberInput(value, elementId) {
+    const element = $(elementId);
+    if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        return false;
+    }
+    if (!/^\d+$/.test(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        return false;
+    }
+    element.removeClass("is-invalid").addClass("is-valid");
+    return true;
+}
+
+// 驗證下拉選單
+function validateSelect(value, elementId) {
+    const element = $(elementId);
+    if (isEmpty(value)) {
+        element.removeClass("is-valid").addClass("is-invalid");
+        alertWarning("廠商至少要選一個");
+        return false;
+    }
+    return true;
+}
+
+// 分頁配置
+function pageEvent(action){
+    $(document).on("click", ".page-item", function() {
+        let pageVal = $(this).find(".page-link").data('val');
+        if('pre' == pageVal){
+            if(0 == globalPageNow){
+                return;
+            }
+            // 設定全域變數
+            globalPageNow -= 1;
+            action();
+            return;
+        }
+        if('next' == pageVal){
+            if(globalPageTotal - 1 == globalPageNow){
+                return;
+            }
+            // 設定全域變數
+            globalPageNow += 1;
+            action();
+            return;
+        }
+        let numberPageText = parseInt(pageVal, 10);
+        // 設定全域變數
+        globalPageNow = numberPageText - 1;
+        action();
+    });
 }

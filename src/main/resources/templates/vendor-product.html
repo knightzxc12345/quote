@@ -5,7 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>廠商產品</title>
     <th:block th:include="common/css.html"></th:block>
+    <link th:href="@{/css/common/bootstrap-select.min.css}" rel="stylesheet"/>
     <th:block th:include="common/js.html"></th:block>
+    <script th:src="@{/js/common/bootstrap-select.min.js}" type="text/javascript" xmlns:th="http://www.thymeleaf.org"></script>
+    <script th:src="@{/js/common/defaults-zh_TW.min.js}" type="text/javascript" xmlns:th="http://www.thymeleaf.org"></script>
     <script th:src="@{/js/vendor-product.js}" type="text/javascript"></script>
 </head>
 
@@ -23,7 +26,9 @@
                 </div>
                 <div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="vendor-product-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search">
+                        <select class="selectpicker" id="vendor-name-search-select" data-live-search="true" title="請選擇...">
+                        </select>
+                        <input type="text" class="form-control" id="vendor-product-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search" style="margin-left: 1px;">
                         <button class="btn btn-outline-secondary" type="button" id="vendor-product-search" onclick="search();">搜尋</button>
                     </div>
                 </div>
@@ -89,7 +94,7 @@
     </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="update-vendor" aria-labelledby="update-vendor-product-label">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="update-vendor-product" aria-labelledby="update-vendor-product-label">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="update-vendor-product-label">編輯廠商產品</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

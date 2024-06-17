@@ -4,6 +4,7 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+// 登入
 function login() {
     const account = $("#account").val();
     const password = $("#password").val();
@@ -14,16 +15,7 @@ function login() {
     }
 }
 
-function validateInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
-}
-
+// 驗證使用者
 function valid(account, password){
     const data = {
         "account" : account,

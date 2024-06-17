@@ -62,6 +62,7 @@ public class VendorProductFindUseCaseImpl implements VendorProductFindUseCase {
         }
         for(VendorProductEntity vendorProductEntity : vendorProductEntities){
             responses.add(new VendorProductFindAllResponse(
+                    vendorProductEntity.getUuid(),
                     vendorProductEntity.getVendorUuid(),
                     vendorProductEntity.getName(),
                     vendorProductEntity.getUnitPrice().longValue()

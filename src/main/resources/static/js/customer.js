@@ -1,16 +1,14 @@
-let globalPageNow = 0;
-let globalPageSize = 12;
-let globalPageTotal = 0;
 let globalKeyword = '';
 
 window.onload = function () {
     init();
     getCustomers(globalPageNow, globalPageSize);
-    offcanvasEvent();
-    pageEvent();
+    pageEvent(getCustomers);
     searchEnter();
+    offcanvasEvent();
 };
 
+// 點擊搜尋
 function searchEnter(){
     $("#customer-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -19,11 +17,13 @@ function searchEnter(){
     });
 }
 
+// 搜尋
 function search(){
     globalKeyword = $("#customer-search-input").val();
     getCustomers();
 }
 
+// 事件配置
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
@@ -56,34 +56,7 @@ function offcanvasEvent(){
     });
 }
 
-function pageEvent(){
-    $(document).on("click", ".page-item", function() {
-        let pageVal = $(this).find(".page-link").data('val');
-        if('pre' == pageVal){
-            if(0 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow -= 1;
-            getCustomers();
-            return;
-        }
-        if('next' == pageVal){
-            if(globalPageTotal - 1 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow += 1;
-            getCustomers();
-            return;
-        }
-        let numberPageText = parseInt(pageVal, 10);
-        // 設定全域變數
-        globalPageNow = numberPageText - 1;
-        getCustomers();
-    });
-}
-
+// 取得客戶清單
 function getCustomers() {
     $.ajax({
         url: `/customer/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`,
@@ -146,6 +119,7 @@ function getCustomers() {
     });
 }
 
+// 新增客戶
 function addCustomer() {
     const name = $("#add-customer-name").val();
     const address = $("#add-customer-address").val();
@@ -203,6 +177,7 @@ function addCustomer() {
     });
 }
 
+// 更新客戶
 function updateCustomer() {
     const customerUuid = $('#update-customer-uuid').val();
     const name = $("#update-customer-name").val();
@@ -261,6 +236,7 @@ function updateCustomer() {
     });
 }
 
+// 刪除客戶
 function deleteCustomer(){
     const customerUuid = $('#delete-customer-uuid').val();
     $.ajax({
@@ -285,14 +261,4 @@ function deleteCustomer(){
             alertError(message);
         }
     });
-}
-
-function validateInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
 }

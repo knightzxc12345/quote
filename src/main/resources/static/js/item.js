@@ -1,16 +1,14 @@
-let globalPageNow = 0;
-let globalPageSize = 12;
-let globalPageTotal = 0;
 let globalKeyword = '';
 
 window.onload = function () {
     init();
-    searchEnter();
     getItems();
+    searchEnter();
+    pageEvent(getItems);
     offcanvasEvent();
-    pageEvent();
 };
 
+// 點擊搜尋
 function searchEnter(){
     $("#item-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -19,11 +17,13 @@ function searchEnter(){
     });
 }
 
+// 搜尋
 function search(){
     globalKeyword = $("#item-search-input").val();
     getItems();
 }
 
+// 事件配置
 function offcanvasEvent(){
     document.addEventListener('click', function(event) {
         if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
@@ -46,34 +46,7 @@ function offcanvasEvent(){
     });
 }
 
-function pageEvent(){
-    $(document).on("click", ".page-item", function() {
-        let pageVal = $(this).find(".page-link").data('val');
-        if('pre' == pageVal){
-            if(0 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow -= 1;
-            getItems();
-            return;
-        }
-        if('next' == pageVal){
-            if(globalPageTotal - 1 == globalPageNow){
-                return;
-            }
-            // 設定全域變數
-            globalPageNow += 1;
-            getItems();
-            return;
-        }
-        let numberPageText = parseInt(pageVal, 10);
-        // 設定全域變數
-        globalPageNow = numberPageText - 1;
-        getItems();
-    });
-}
-
+// 取得項目清單
 function getItems() {
     let url = `/item/v1?page=${globalPageNow}&size=${globalPageSize}&keyword=${globalKeyword}`;
     $.ajax({
@@ -121,6 +94,7 @@ function getItems() {
     });
 }
 
+// 新增項目
 function addItem() {
     const no = $("#add-item-no").val();
     const name = $("#add-item-name").val();
@@ -159,6 +133,7 @@ function addItem() {
     });
 }
 
+// 更新項目
 function updateItem() {
     const itemUuid = $('#update-item-uuid').val();
     const no = $("#update-item-no").val();
@@ -198,6 +173,7 @@ function updateItem() {
     });
 }
 
+// 刪除項目
 function deleteItem(){
     const itemUuid = $('#delete-item-uuid').val();
     $.ajax({
@@ -222,14 +198,4 @@ function deleteItem(){
             alertError(message);
         }
     });
-}
-
-function validateInput(value, elementId) {
-    const element = $(elementId);
-    if (isEmpty(value)) {
-        element.removeClass("is-valid").addClass("is-invalid");
-        return false;
-    }
-    element.removeClass("is-invalid").addClass("is-valid");
-    return true;
 }

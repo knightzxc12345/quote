@@ -1,6 +1,7 @@
 package com.design.controller.vendor_product.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record VendorProductCreateRequest(
 
@@ -10,7 +11,7 @@ public record VendorProductCreateRequest(
         @NotBlank(message = "名稱不得為空")
         String name,
 
-        @NotBlank(message = "單價不得為空")
+        @NotNull(message = "單價不得為空")
         Long unitPrice
 
 ) {
