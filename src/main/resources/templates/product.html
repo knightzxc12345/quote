@@ -4,10 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>報價單</title>
     <th:block th:include="common/css.html"></th:block>
-    <link th:href="@{/css/common/bootstrap-select.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/product.css}" rel="stylesheet"/>
     <th:block th:include="common/js.html"></th:block>
-    <script th:src="@{/js/common/bootstrap-select.min.js}" type="text/javascript" xmlns:th="http://www.thymeleaf.org"></script>
-    <script th:src="@{/js/common/defaults-zh_TW.min.js}" type="text/javascript" xmlns:th="http://www.thymeleaf.org"></script>
     <script th:src="@{/js/product.js}" type="text/javascript"></script>
 </head>
 <body class="close-scroller">
@@ -104,10 +102,19 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-                <label class="input-group-text" for="add-product-vendor" style="margin-right: 1px;">廠商</label>
-                <select class="selectpicker" id="add-product-vendor" data-live-search="true" multiple title="請選擇...">
+                <label class="input-group-text" style="margin-right: 1px;">廠商產品</label>
+                <select class="selectpicker" id="add-product-vendor" data-live-search="true" title="請選擇...">
 
                 </select>
+                <select class="selectpicker" data-live-search="true" title="請選擇...">
+
+                </select>
+                <input type="text" class="form-control add-product-vendor-product-unit-price" style="margin-left: 1px; width:25%;" disabled/>
+                <input type="text" class="form-control add-product-vendor-product-qty" style="margin-left: 1px;"/>
+                <div class="align-self-center" style="margin-left: 1px;">
+                    <button class="btn btn-success btn-sm add-product-vendor-product-add">+</button>
+                    <button class="btn btn-danger btn-sm add-product-vendor-product-cancel">-</button>
+                </div>
             </div>
         </div>
         <div class="offcanvas-footer">

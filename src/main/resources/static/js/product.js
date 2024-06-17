@@ -111,7 +111,7 @@ function getVendors(){
             globalVendor = response.data;
             let vendorSelect = $('#vendor-name-search-select');
             let addProductVendor = $('#add-product-vendor');
-            let updateProductVendor = $('#update-product-vendor');
+            let updateProductVendor = $('.update-product-vendor');
             vendorSelect.append(`
                 <option value='all' selected>全部</option>
             `);
