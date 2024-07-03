@@ -5,12 +5,8 @@ import com.design.base.ResponseBody;
 import com.design.base.eunms.CommonEnum;
 import com.design.controller.common.request.LoginRequest;
 import com.design.controller.common.response.*;
-import com.design.usecase.customer.CustomerFindUseCase;
-import com.design.usecase.item.ItemFindUseCase;
-import com.design.usecase.login.LoginUseCase;
-import com.design.usecase.product.ProductFindUseCase;
-import com.design.usecase.user.UserFindUseCase;
-import com.design.usecase.vendor.VendorFindUseCase;
+import com.design.usecase.common.*;
+import com.design.usecase.login.CommonLoginUseCase;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -24,24 +20,24 @@ import java.util.List;
 @Validated
 public class CommonController {
 
-    private final LoginUseCase loginUseCase;
+    private final CommonLoginUseCase commonLoginUseCase;
 
-    private final UserFindUseCase userFindUseCase;
+    private final CommonUserFindUseCase commonUserFindUseCase;
 
-    private final CustomerFindUseCase customerFindUseCase;
+    private final CommonCustomerFindUseCase commonCustomerFindUseCase;
 
-    private final VendorFindUseCase vendorFindUseCase;
+    private final CommonVendorFindUseCase commonVendorFindUseCase;
 
-    private final ProductFindUseCase productFindUseCase;
+    private final CommonProductFindUseCase commonProductFindUseCase;
 
-    private final ItemFindUseCase itemFindUseCase;
+    private final CommonItemFindUseCase commonItemFindUseCase;
 
     @PostMapping(
             value = "login/v1"
     )
     public ResponseBody login(
             @RequestBody @Validated @NotNull final LoginRequest request) {
-        CommonLoginResponse response = loginUseCase.login(request);
+        CommonLoginResponse response = commonLoginUseCase.login(request);
         return new ResponseBody(CommonEnum.C00001, response);
     }
 
@@ -49,7 +45,7 @@ public class CommonController {
             value = "user/v1/business"
     )
     public ResponseBody findAllBusiness() {
-        List<CommonUserFindAllResponse> responses = userFindUseCase.findAllCommonByRoleUuid(Common.BUSINESS);
+        List<CommonUserFindAllResponse> responses = commonUserFindUseCase.findAllByRoleUuid(Common.BUSINESS);
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 
@@ -57,7 +53,7 @@ public class CommonController {
             value = "customer/v1"
     )
     public ResponseBody findAllCustomer() {
-        List<CommonCustomerFindAllResponse> responses = customerFindUseCase.findAllCommon();
+        List<CommonCustomerFindAllResponse> responses = commonCustomerFindUseCase.findAll();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 
@@ -65,7 +61,7 @@ public class CommonController {
             value = "vendor/v1"
     )
     public ResponseBody findAllVendor() {
-        List<CommonVendorFindAllResponse> responses = vendorFindUseCase.findAllCommon();
+        List<CommonVendorFindAllResponse> responses = commonVendorFindUseCase.findAll();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 
@@ -73,7 +69,7 @@ public class CommonController {
             value = "product/v1"
     )
     public ResponseBody findAllProduct() {
-        List<CommonProductFindAllResponse> responses = productFindUseCase.findAllCommon();
+        List<CommonProductFindAllResponse> responses = commonProductFindUseCase.findAll();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 
@@ -81,7 +77,7 @@ public class CommonController {
             value = "item/v1"
     )
     public ResponseBody findAllItem() {
-        List<CommonItemFindAllResponse> responses = itemFindUseCase.findAllCommon();
+        List<CommonItemFindAllResponse> responses = commonItemFindUseCase.findAll();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 

@@ -36,6 +36,41 @@ function offcanvasEvent(){
     });
 }
 
+// 關閉新增畫布
+function closeAdd() {
+    let offcanvasElement = document.getElementById('add-vendor-product');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#add-vendor-product input').val('');
+    $('#add-vendor-product input').removeClass('is-valid');
+    $('#add-vendor-product input').removeClass('is-invalid');
+}
+
+// 關閉更新畫布
+function closeUpdate() {
+    let offcanvasElement = document.getElementById('update-vendor-product');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#update-vendor-product input').removeClass('is-valid');
+    $('#update-vendor-product input').removeClass('is-invalid');
+}
+
+// 關閉刪除畫布
+function closeDelete() {
+    let modalElement = document.getElementById('delete-vendor-product');
+    let modal = bootstrap.Modal.getInstance(modalElement);
+    if (!modal) {
+        modal = new bootstrap.Modal(modalElement);
+    }
+    modal.hide();
+}
+
 function searchEnter(){
     $("#vendor-product-search-input").on("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -168,7 +203,7 @@ function getVendorProducts() {
                         <td>${unitPriceFormatted}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-vendor-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-vendor-product' aria-controls='update-vendor-product'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-vendor-product-json' data-bs-toggle="modal" data-bs-target="#delete-vendor-product-modal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-vendor-product-json' data-bs-toggle="modal" data-bs-target="#delete-vendor-product">刪除</button>
                         </td>
                     </tr>
                 `);
@@ -228,7 +263,8 @@ function addVendorProduct() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeAdd();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -270,7 +306,8 @@ function updateVendorProduct() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeUpdate();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -297,7 +334,8 @@ function deleteVendorProduct(){
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeDelete();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public ProductEntity create(ProductEntity productEntity, String userUuid) {
+    public ProductEntity create(ProductEntity productEntity, UUID userUuid) {
         ProductEntity isExists = productRepository.findByItemUuidAndSpecification(
                 productEntity.getItemUuid(),
                 productEntity.getSpecification()
@@ -36,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(ProductEntity productEntity, String userUuid) {
+    public void update(ProductEntity productEntity, UUID userUuid) {
         ProductEntity isExists = productRepository.findByItemUuidAndSpecification(
                 productEntity.getItemUuid(),
                 productEntity.getSpecification()
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(ProductEntity productEntity, String userUuid) {
+    public void delete(ProductEntity productEntity, UUID userUuid) {
         productEntity.setIsDeleted(true);
         productEntity.setDeletedTime(Instant.now());
         productEntity.setDeletedUser(userUuid);
@@ -58,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteAll(List<ProductEntity> productEntities, String userUuid) {
+    public void deleteAll(List<ProductEntity> productEntities, UUID userUuid) {
         if(null == productEntities || productEntities.isEmpty()){
             return;
         }
@@ -71,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity findByUuid(String productUuid) {
+    public ProductEntity findByUuid(UUID productUuid) {
         return productRepository.findByIsDeletedFalseAndUuid(productUuid);
     }
 
@@ -81,12 +82,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductEntity> findAllByProductUuidIn(List<String> productUuids) {
+    public List<ProductEntity> findAllByProductUuidIn(List<UUID> productUuids) {
         return productRepository.findByIsDeletedFalseAndUuidIn(productUuids);
     }
 
     @Override
-    public List<ProductEntity> findAllByItemUuid(String itemUuid) {
+    public List<ProductEntity> findAllByItemUuid(UUID itemUuid) {
         return productRepository.findByIsDeletedFalseAndItemUuid(itemUuid);
     }
 

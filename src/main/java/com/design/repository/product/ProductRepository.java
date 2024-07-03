@@ -8,21 +8,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    ProductEntity findByItemUuidAndSpecification(String itemUuid, String specification);
+    ProductEntity findByItemUuidAndSpecification(UUID itemUuid, String specification);
 
-    ProductEntity findByIsDeletedFalseAndUuid(String productUuid);
+    ProductEntity findByIsDeletedFalseAndUuid(UUID productUuid);
 
     List<ProductEntity> findByIsDeletedFalseOrderByItemUuidAscSpecificationAsc();
 
-    List<ProductEntity> findByIsDeletedFalseAndUuidIn(List<String> productUuids);
+    List<ProductEntity> findByIsDeletedFalseAndUuidIn(List<UUID> productUuids);
 
-    List<ProductEntity> findByIsDeletedFalseAndItemUuid(String itemUuid);
+    List<ProductEntity> findByIsDeletedFalseAndItemUuid(UUID itemUuid);
 
     @Query(value =
             """
@@ -60,7 +60,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             """
     )
     Page<ProductEntity> findAllByPage(
-            @Param("keyword") String keyword, Pageable pageable
+            @Param("keyword") String keyword,
+            Pageable pageable
     );
 
 }

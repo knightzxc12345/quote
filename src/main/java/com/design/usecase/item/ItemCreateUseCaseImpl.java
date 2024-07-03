@@ -15,10 +15,15 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
 
     @Override
     public void create(ItemCreateRequest request) {
+        ItemEntity itemEntity = init(request);
+        itemService.create(itemEntity, JwtUtil.extractUserUuid());
+    }
+
+    private ItemEntity init(ItemCreateRequest request){
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setNo(request.no());
         itemEntity.setName(request.name());
-        itemService.create(itemEntity, JwtUtil.extractUsername());
+        return itemEntity;
     }
 
 }

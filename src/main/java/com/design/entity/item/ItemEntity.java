@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.UUID;
 
 // 項目
 @ToString(callSuper = true)
@@ -72,6 +73,6 @@ public class ItemEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

@@ -6,10 +6,11 @@ import com.design.controller.vendor_quote.response.VendorQuoteFindPageResponse;
 import com.design.controller.vendor_quote.response.VendorQuoteFindResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VendorQuoteFindUseCase {
 
-    VendorQuoteFindResponse findByUuid(String vendorQuoteUuid);
+    VendorQuoteFindResponse findByUuid(UUID vendorQuoteUuid);
 
     List<VendorQuoteFindAllResponse> findAll(VendorQuoteFindRequest request);
 

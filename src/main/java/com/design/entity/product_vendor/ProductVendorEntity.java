@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.UUID;
 
 // 產品廠商
 @ToString(callSuper = true)
@@ -29,8 +30,8 @@ public class ProductVendorEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String productUuid;
+    @NotNull
+    private UUID productUuid;
 
     // 廠商uuid
     @Column(
@@ -40,8 +41,8 @@ public class ProductVendorEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String vendorUuid;
+    @NotNull
+    private UUID vendorUuid;
 
     // 是否刪除
     @Column(
@@ -73,6 +74,6 @@ public class ProductVendorEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

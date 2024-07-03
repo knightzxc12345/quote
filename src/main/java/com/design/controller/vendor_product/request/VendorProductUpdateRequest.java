@@ -3,10 +3,12 @@ package com.design.controller.vendor_product.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public record VendorProductUpdateRequest(
 
-        @NotBlank(message = "廠商uuid不得為空")
-        String vendorUuid,
+        @NotNull(message = "廠商uuid不得為空")
+        UUID vendorUuid,
 
         @NotBlank(message = "名稱不得為空")
         String name,

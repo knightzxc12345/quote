@@ -12,6 +12,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 // 產品
 @ToString(callSuper = true)
@@ -30,8 +31,8 @@ public class ProductEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String itemUuid;
+    @NotNull
+    private UUID itemUuid;
 
     // 規格
     @Column(
@@ -64,16 +65,6 @@ public class ProductEntity extends BaseEntity {
     @NotNull
     private BigDecimal unitPrice;
 
-    // 成本
-    @Column(
-            name = "cost_price",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private BigDecimal costPrice;
-
     // 是否刪除
     @Column(
             name = "is_deleted",
@@ -104,6 +95,6 @@ public class ProductEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

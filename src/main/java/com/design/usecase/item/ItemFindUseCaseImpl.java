@@ -1,6 +1,5 @@
 package com.design.usecase.item;
 
-import com.design.controller.common.response.CommonItemFindAllResponse;
 import com.design.controller.item.request.ItemFindRequest;
 import com.design.controller.item.response.ItemFindAllResponse;
 import com.design.controller.item.response.ItemFindPageResponse;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
     private final ProductService productService;
 
     @Override
-    public ItemFindResponse findByUuid(String itemUuid) {
+    public ItemFindResponse findByUuid(UUID itemUuid) {
         ItemEntity itemEntity = itemService.findByUuid(itemUuid);
         return format(itemEntity);
     }
@@ -53,12 +53,6 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         );
     }
 
-    @Override
-    public List<CommonItemFindAllResponse> findAllCommon() {
-        List<ItemEntity> itemEntities = itemService.findAllCommon();
-        return formatCommon(itemEntities);
-    }
-
     private ItemFindResponse format(ItemEntity itemEntity){
         return new ItemFindResponse(
                 itemEntity.getUuid(),
@@ -74,21 +68,6 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         }
         for(ItemEntity itemEntity : itemEntities){
             responses.add(new ItemFindAllResponse(
-                    itemEntity.getUuid(),
-                    itemEntity.getNo(),
-                    itemEntity.getName()
-            ));
-        }
-        return responses;
-    }
-
-    private List<CommonItemFindAllResponse> formatCommon(List<ItemEntity> itemEntities){
-        List<CommonItemFindAllResponse> responses = new ArrayList<>();
-        if(null == itemEntities || itemEntities.isEmpty()){
-            return responses;
-        }
-        for(ItemEntity itemEntity : itemEntities){
-            responses.add(new CommonItemFindAllResponse(
                     itemEntity.getUuid(),
                     itemEntity.getNo(),
                     itemEntity.getName()

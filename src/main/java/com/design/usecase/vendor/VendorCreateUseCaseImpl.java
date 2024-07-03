@@ -15,13 +15,18 @@ public class VendorCreateUseCaseImpl implements VendorCreateUseCase {
 
     @Override
     public void create(VendorCreateRequest request) {
+        VendorEntity vendorEntity = init(request);
+        vendorService.create(vendorEntity, JwtUtil.extractUserUuid());
+    }
+
+    private VendorEntity init(VendorCreateRequest request){
         VendorEntity vendorEntity = new VendorEntity();
         vendorEntity.setName(request.name());
         vendorEntity.setAddress(request.address());
         vendorEntity.setMobile(request.mobile());
         vendorEntity.setTel(request.tel());
         vendorEntity.setFax(request.fax());
-        vendorService.create(vendorEntity, JwtUtil.extractUsername());
+        return vendorEntity;
     }
 
 }

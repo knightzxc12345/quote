@@ -25,11 +25,11 @@
                             <select class="selectpicker" id="vendor-name-search-select" data-live-search="true" title="請選擇...">
                             </select>
                             <input type="text" class="form-control" id="product-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search" style="margin-left: 1px;">
-                            <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
+                            <button class="btn btn-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-product" aria-controls="add-product">新增產品</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-product" aria-controls="add-product">新增產品</button>
                     </div>
                 </div>
                 <table class="table table-striped" id="productList">
@@ -101,25 +101,51 @@
                     成本不得為空且必須為數字!
                 </div>
             </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text" style="margin-right: 1px;">廠商產品</label>
-                <select class="selectpicker" id="add-product-vendor" data-live-search="true" title="請選擇...">
+            <table class="table table-striped vertical-align-middle" id="vendorProductList">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 10%;">項次</th>
+                    <th scope="col" style="width: 25%;">廠商</th>
+                    <th scope="col" style="width: 25%;">產品</th>
+                    <th scope="col" style="width: 20%;">金額</th>
+                    <th scope="col" style="width: 10%;">數量</th>
+                    <th scope="col" style="width: 10%;"></th>
+                </tr>
+                </thead>
+                <tbody id="customer-tbody">
+                    <tr>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            <select class="selectpicker add-product-vendor" data-live-search="true" title="請選擇...">
 
-                </select>
-                <select class="selectpicker" data-live-search="true" title="請選擇...">
+                            </select>
+                        </td>
+                        <td>
+                            <select class="selectpicker" data-live-search="true" title="請選擇...">
 
-                </select>
-                <input type="text" class="form-control add-product-vendor-product-unit-price" style="margin-left: 1px; width:25%;" disabled/>
-                <input type="text" class="form-control add-product-vendor-product-qty" style="margin-left: 1px;"/>
-                <div class="align-self-center" style="margin-left: 1px;">
-                    <button class="btn btn-success btn-sm add-product-vendor-product-add">+</button>
-                    <button class="btn btn-danger btn-sm add-product-vendor-product-cancel">-</button>
-                </div>
-            </div>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control add-product-vendor-product-unit-price" style="margin-left: 1px; width:25%;" disabled/>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control add-product-vendor-product-qty" style="margin-left: 1px;"/>
+                        </td>
+                        <td>
+                            <div class="align-self-center" style="margin-left: 1px;">
+                                <button class="btn btn-success btn-sm add-product-vendor-product-add">+</button>
+                                <button class="btn btn-danger btn-sm add-product-vendor-product-cancel">-</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="addProduct();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="addProduct();">送出</button>
         </div>
     </div>
 
@@ -172,12 +198,12 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="updateProduct();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="updateProduct();">送出</button>
         </div>
     </div>
 
-    <div class="modal fade" id="delete-product-modal" tabindex="-1" aria-labelledby="delete-product-label" aria-hidden="true">
+    <div class="modal fade" id="delete-product" tabindex="-1" aria-labelledby="delete-product-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

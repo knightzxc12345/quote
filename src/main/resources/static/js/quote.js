@@ -190,7 +190,7 @@ function getQuotes() {
                                 <span class="download-quote-text" role="status">下載</span>
                             </button>
                             <button type='button' class='btn btn-warning btn-sm margin-right-3 get-update-quote-json'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote-modal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote">刪除</button>
                         </td>
                     </tr>
                 `);

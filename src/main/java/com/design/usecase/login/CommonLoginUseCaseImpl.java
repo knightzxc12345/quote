@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LoginUseCaseImpl implements LoginUseCase {
+public class CommonLoginUseCaseImpl implements CommonLoginUseCase {
 
     private final UserService userService;
 

@@ -25,24 +25,28 @@ public class ProductCreateUseCaseImpl implements ProductCreateUseCase {
 
     @Override
     public void create(ProductCreateRequest request) {
+        ProductEntity productEntity = initProduct(request);
+        List<ProductVendorEntity> productVendorEntities = initProductVendors(request, productEntity);
+        // 新增產品
+        productService.create(productEntity, JwtUtil.extractUserUuid());
+        // 新增產品廠商清單
+        productVendorService.createAll(productVendorEntities, JwtUtil.extractUserUuid());
+    }
+
+    private ProductEntity initProduct(ProductCreateRequest request){
         ProductEntity productEntity = new ProductEntity();
-        productEntity.setUuid(UUID.randomUUID().toString());
+        productEntity.setUuid(UUID.randomUUID());
         productEntity.setItemUuid(request.itemUuid());
         productEntity.setSpecification(request.specification());
         productEntity.setUnit(request.unit());
         productEntity.setUnitPrice(request.unitPrice());
-        productEntity.setCostPrice(request.costPrice());
-        List<ProductVendorEntity> productVendorEntities = getProductVendors(request, productEntity);
-        // 新增產品
-        productService.create(productEntity, JwtUtil.extractUsername());
-        // 新增產品廠商清單
-        productVendorService.createAll(productVendorEntities, JwtUtil.extractUsername());
+        return productEntity;
     }
 
-    private List<ProductVendorEntity> getProductVendors(ProductCreateRequest request, ProductEntity productEntity){
+    private List<ProductVendorEntity> initProductVendors(ProductCreateRequest request, ProductEntity productEntity){
         List<ProductVendorEntity> productVendorEntities = new ArrayList<>();
         ProductVendorEntity productVendorEntity;
-        for(String vendorUuid : request.vendors()){
+        for(UUID vendorUuid : request.vendors()){
             productVendorEntity = new ProductVendorEntity();
             productVendorEntity.setProductUuid(productEntity.getUuid());
             productVendorEntity.setVendorUuid(vendorUuid);

@@ -49,6 +49,41 @@ function offcanvasEvent(){
     });
 }
 
+// 關閉新增畫布
+function closeAdd() {
+    let offcanvasElement = document.getElementById('add-vendor');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#add-vendor input').val('');
+    $('#add-vendor input').removeClass('is-valid');
+    $('#add-vendor input').removeClass('is-invalid');
+}
+
+// 關閉更新畫布
+function closeUpdate() {
+    let offcanvasElement = document.getElementById('update-vendor');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#update-vendor input').removeClass('is-valid');
+    $('#update-vendor input').removeClass('is-invalid');
+}
+
+// 關閉刪除畫布
+function closeDelete() {
+    let modalElement = document.getElementById('delete-vendor');
+    let modal = bootstrap.Modal.getInstance(modalElement);
+    if (!modal) {
+        modal = new bootstrap.Modal(modalElement);
+    }
+    modal.hide();
+}
+
 // 分頁配置
 function pageEvent(){
     $(document).on("click", ".page-item", function() {
@@ -105,7 +140,7 @@ function getVendors() {
                         <td>${value.fax}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-vendor-json' data-bs-toggle='offcanvas' data-bs-target='#update-vendor' aria-controls='update-vendor'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-vendor-json' data-bs-toggle="modal" data-bs-target="#delete-vendor-modal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-vendor-json' data-bs-toggle="modal" data-bs-target="#delete-vendor">刪除</button>
                         </td>
                     </tr>
                 `);
@@ -158,7 +193,8 @@ function addVendor() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeAdd();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -203,7 +239,8 @@ function updateVendor() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeUpdate();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -230,7 +267,8 @@ function deleteVendor(){
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeDelete();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

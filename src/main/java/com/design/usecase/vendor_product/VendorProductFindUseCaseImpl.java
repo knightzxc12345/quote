@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class VendorProductFindUseCaseImpl implements VendorProductFindUseCase {
     private final VendorProductService vendorProductService;
 
     @Override
-    public VendorProductFindResponse findByUuid(String vendorProductUuid) {
+    public VendorProductFindResponse findByUuid(UUID vendorProductUuid) {
         VendorProductEntity vendorProductEntity = vendorProductService.findByUuid(vendorProductUuid);
         return new VendorProductFindResponse(
                 vendorProductEntity.getVendorUuid(),
@@ -31,8 +32,9 @@ public class VendorProductFindUseCaseImpl implements VendorProductFindUseCase {
 
     @Override
     public List<VendorProductFindAllResponse> findAll(VendorProductFindRequest request) {
+        String vendorUuid = null == request.vendorUuid() ? null : request.vendorUuid().toString();
         List<VendorProductEntity> vendorProductEntities = vendorProductService.findAllLike(
-                request.vendorUuid(),
+                vendorUuid,
                 request.keyword()
         );
         return format(vendorProductEntities);
@@ -40,8 +42,9 @@ public class VendorProductFindUseCaseImpl implements VendorProductFindUseCase {
 
     @Override
     public VendorProductFindPageResponse findAllByPage(VendorProductFindRequest request) {
+        String vendorUuid = null == request.vendorUuid() ? null : request.vendorUuid().toString();
         Page<VendorProductEntity> vendorProductEntityPage = vendorProductService.findAllLikeByPage(
-                request.vendorUuid(),
+                vendorUuid,
                 request.keyword(),
                 request.page(),
                 request.size()

@@ -22,7 +22,7 @@ public class VendorProductServiceImpl implements VendorProductService {
     private final VendorProductRepository vendorProductRepository;
 
     @Override
-    public VendorProductEntity create(VendorProductEntity vendorProductEntity, String userUuid) {
+    public VendorProductEntity create(VendorProductEntity vendorProductEntity, UUID userUuid) {
         VendorProductEntity isExists = vendorProductRepository.findByIsDeletedFalseAndVendorUuidAndName(
                 vendorProductEntity.getVendorUuid(),
                 vendorProductEntity.getName()
@@ -31,14 +31,14 @@ public class VendorProductServiceImpl implements VendorProductService {
             throw new BusinessException(VendorProductEnum.VE0001);
         }
         vendorProductEntity.setIsDeleted(false);
-        vendorProductEntity.setUuid(UUID.randomUUID().toString());
+        vendorProductEntity.setUuid(UUID.randomUUID());
         vendorProductEntity.setCreateTime(Instant.now());
         vendorProductEntity.setCreateUser(userUuid);
         return vendorProductRepository.save(vendorProductEntity);
     }
 
     @Override
-    public void update(VendorProductEntity vendorProductEntity, String userUuid) {
+    public void update(VendorProductEntity vendorProductEntity, UUID userUuid) {
         VendorProductEntity isExists = vendorProductRepository.findByIsDeletedFalseAndVendorUuidAndName(
                 vendorProductEntity.getVendorUuid(),
                 vendorProductEntity.getName()
@@ -52,7 +52,7 @@ public class VendorProductServiceImpl implements VendorProductService {
     }
 
     @Override
-    public void delete(VendorProductEntity vendorProductEntity, String userUuid) {
+    public void delete(VendorProductEntity vendorProductEntity, UUID userUuid) {
         vendorProductEntity.setIsDeleted(true);
         vendorProductEntity.setDeletedTime(Instant.now());
         vendorProductEntity.setDeletedUser(userUuid);
@@ -60,7 +60,7 @@ public class VendorProductServiceImpl implements VendorProductService {
     }
 
     @Override
-    public VendorProductEntity findByUuid(String vendorProductUuid) {
+    public VendorProductEntity findByUuid(UUID vendorProductUuid) {
         return vendorProductRepository.findByIsDeletedFalseAndUuid(vendorProductUuid);
     }
 
@@ -81,6 +81,7 @@ public class VendorProductServiceImpl implements VendorProductService {
             Integer page,
             Integer size) {
         Sort sort = Sort.by(
+                new Sort.Order(Sort.Direction.ASC, "vendorUuid"),
                 new Sort.Order(Sort.Direction.ASC, "name")
         );
         Pageable pageable = PageRequest.of(page, size, sort);

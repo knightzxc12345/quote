@@ -4,14 +4,15 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public record QuoteFindResponse(
 
-        String quoteUUid,
+        UUID quoteUUid,
 
-        String userUuid,
+        UUID userUuid,
 
-        String customerUuid,
+        UUID customerUuid,
 
         String underTakerName,
 
@@ -24,9 +25,9 @@ public record QuoteFindResponse(
 
         public record Product(
 
-                String itemUuid,
+                UUID itemUuid,
 
-                String productUuid,
+                UUID productUuid,
 
                 Integer quantity,
 

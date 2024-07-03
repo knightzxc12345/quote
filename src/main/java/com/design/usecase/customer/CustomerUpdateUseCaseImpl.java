@@ -7,6 +7,8 @@ import com.design.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerUpdateUseCaseImpl implements CustomerUpdateUseCase {
@@ -14,8 +16,13 @@ public class CustomerUpdateUseCaseImpl implements CustomerUpdateUseCase {
     private final CustomerService customerService;
 
     @Override
-    public void update(CustomerUpdateRequest request, String customerUuid) {
+    public void update(CustomerUpdateRequest request, UUID customerUuid) {
         CustomerEntity customerEntity = customerService.findByUuid(customerUuid);
+        customerEntity = update(customerEntity, request);
+        customerService.update(customerEntity, JwtUtil.extractUserUuid());
+    }
+
+    private CustomerEntity update(CustomerEntity customerEntity, CustomerUpdateRequest request){
         customerEntity.setName(request.name());
         customerEntity.setAddress(request.address());
         customerEntity.setVatNumber(request.vatNumber());
@@ -28,7 +35,7 @@ public class CustomerUpdateUseCaseImpl implements CustomerUpdateUseCase {
         customerEntity.setGeneralAffairsManagerName(request.generalAffairsManagerName());
         customerEntity.setGeneralAffairsManagerMobile(request.generalAffairsManagerMobile());
         customerEntity.setGeneralAffairsManagerEmail(request.generalAffairsManagerEmail());
-        customerService.update(customerEntity, JwtUtil.extractUsername());
+        return customerEntity;
     }
 
 }

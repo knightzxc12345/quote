@@ -12,6 +12,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 // 保價單明細
 @ToString(callSuper = true)
@@ -30,8 +31,8 @@ public class QuoteDetailEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String quoteUuid;
+    @NotNull
+    private UUID quoteUuid;
 
     // 品項uuid
     @Column(
@@ -41,8 +42,8 @@ public class QuoteDetailEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String itemUuid;
+    @NotNull
+    private UUID itemUuid;
 
     // 品項編號
     @Column(
@@ -73,8 +74,8 @@ public class QuoteDetailEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String productUuid;
+    @NotNull
+    private UUID productUuid;
 
     // 產品規格
     @Column(
@@ -117,16 +118,6 @@ public class QuoteDetailEntity extends BaseEntity {
     @NotNull
     private BigDecimal productCustomUnitPrice;
 
-    // 產品成本
-    @Column(
-            name = "product_cost_price",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private BigDecimal productCostPrice;
-
     // 產品數量
     @Column(
             name = "product_quantity",
@@ -146,16 +137,6 @@ public class QuoteDetailEntity extends BaseEntity {
     )
     @NotNull
     private BigDecimal productAmount;
-
-    // 產品成本總計
-    @Column(
-            name = "product_cost_amount",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private BigDecimal productCostAmount;
 
     // 產品客製總計
     @Column(
@@ -197,6 +178,6 @@ public class QuoteDetailEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

@@ -9,11 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
 
-    QuoteEntity findByIsDeletedFalseAndUuid(String quoteUuid);
+    QuoteEntity findByIsDeletedFalseAndUuid(UUID quoteUuid);
 
     @Query(value =
             """
@@ -23,8 +24,8 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
                 QuoteEntity q 
             WHERE 
                 q.isDeleted = false
-                AND (:userUuid IS NULL OR q.userUuid = :userUuid)
-                AND (:customerUuid IS NULL OR q.customerUuid = :customerUuid)
+                AND (:userUuid IS NULL OR CAST(q.userUuid AS String) = :userUuid)
+                AND (:customerUuid IS NULL OR CAST(q.customerUuid AS String) = :customerUuid)
                 AND 
                 (
                     (:keyword IS NULL OR q.customerName LIKE CONCAT('%', :keyword, '%'))
@@ -49,8 +50,8 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
                 QuoteEntity q
             WHERE 
                 q.isDeleted = false
-                AND (:userUuid IS NULL OR q.userUuid = :userUuid)
-                AND (:customerUuid IS NULL OR q.customerUuid = :customerUuid)
+                AND (:userUuid IS NULL OR CAST(q.userUuid AS String) = :userUuid)
+                AND (:customerUuid IS NULL OR CAST(q.customerUuid AS String) = :customerUuid)
                 AND 
                 (
                     (:keyword IS NULL OR q.customerName LIKE CONCAT('%', :keyword, '%'))

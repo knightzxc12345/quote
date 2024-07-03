@@ -92,6 +92,42 @@ function offcanvasEvent(){
     });
 }
 
+// 關閉新增畫布
+function closeAdd() {
+    let offcanvasElement = document.getElementById('add-product');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#add-product input').val('');
+    $('#add-product input').removeClass('is-valid');
+    $('#add-product input').removeClass('is-invalid');
+    $('#add-product select').prop('selectedIndex', 0);
+}
+
+// 關閉更新畫布
+function closeUpdate() {
+    let offcanvasElement = document.getElementById('update-product');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#update-product input').removeClass('is-valid');
+    $('#update-product input').removeClass('is-invalid');
+}
+
+// 關閉刪除畫布
+function closeDelete() {
+    let modalElement = document.getElementById('delete-product');
+    let modal = bootstrap.Modal.getInstance(modalElement);
+    if (!modal) {
+        modal = new bootstrap.Modal(modalElement);
+    }
+    modal.hide();
+}
+
 // 取得廠商清單
 function getVendors(){
     $.ajax({
@@ -110,7 +146,7 @@ function getVendors(){
             }
             globalVendor = response.data;
             let vendorSelect = $('#vendor-name-search-select');
-            let addProductVendor = $('#add-product-vendor');
+            let addProductVendor = $('.add-product-vendor');
             let updateProductVendor = $('.update-product-vendor');
             vendorSelect.append(`
                 <option value='all' selected>全部</option>
@@ -241,7 +277,7 @@ function getProducts() {
                         <td>${vendorName}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-product-json' data-bs-toggle='offcanvas' data-bs-target='#update-product' aria-controls='update-product'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product-modal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-product-json' data-bs-toggle="modal" data-bs-target="#delete-product">刪除</button>
                         </td>
                     </tr>
                 `);
@@ -324,7 +360,8 @@ function addProduct() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeAdd();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -375,7 +412,8 @@ function updateProduct() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeUpdate();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -402,7 +440,8 @@ function deleteProduct(){
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeDelete();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

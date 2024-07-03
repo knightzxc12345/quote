@@ -5,11 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public record ProductCreateRequest(
 
-        @NotBlank(message = "品項uuid不得為空")
-        String itemUuid,
+        @NotNull(message = "品項uuid不得為空")
+        UUID itemUuid,
 
         @NotBlank(message = "規格不得為空")
         String specification,
@@ -24,7 +25,7 @@ public record ProductCreateRequest(
         BigDecimal costPrice,
 
         @NotNull(message = "廠商清單不得為空")
-        List<String> vendors
+        List<UUID> vendors
 
 ) {
 }

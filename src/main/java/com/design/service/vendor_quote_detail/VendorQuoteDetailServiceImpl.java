@@ -16,13 +16,13 @@ public class VendorQuoteDetailServiceImpl implements VendorQuoteDetailService {
     private final VendorQuoteDetailRepository vendorQuoteDetailRepository;
 
     @Override
-    public void createAll(List<VendorQuoteDetailEntity> vendorQuoteDetailEntities, String userUuid) {
+    public void createAll(List<VendorQuoteDetailEntity> vendorQuoteDetailEntities, UUID userUuid) {
         if(null == vendorQuoteDetailEntities || vendorQuoteDetailEntities.isEmpty()){
             return;
         }
         for(VendorQuoteDetailEntity vendorQuoteDetailEntity : vendorQuoteDetailEntities){
             vendorQuoteDetailEntity.setIsDeleted(false);
-            vendorQuoteDetailEntity.setUuid(UUID.randomUUID().toString());
+            vendorQuoteDetailEntity.setUuid(UUID.randomUUID());
             vendorQuoteDetailEntity.setCreateTime(Instant.now());
             vendorQuoteDetailEntity.setCreateUser(userUuid);
         }
@@ -30,7 +30,7 @@ public class VendorQuoteDetailServiceImpl implements VendorQuoteDetailService {
     }
 
     @Override
-    public void deleteAll(List<VendorQuoteDetailEntity> vendorQuoteDetailEntities, String userUuid) {
+    public void deleteAll(List<VendorQuoteDetailEntity> vendorQuoteDetailEntities, UUID userUuid) {
         if(null == vendorQuoteDetailEntities || vendorQuoteDetailEntities.isEmpty()){
             return;
         }
@@ -43,7 +43,7 @@ public class VendorQuoteDetailServiceImpl implements VendorQuoteDetailService {
     }
 
     @Override
-    public List<VendorQuoteDetailEntity> findAllByVendorQuoteUuid(String vendorQuoteUuid) {
+    public List<VendorQuoteDetailEntity> findAllByVendorQuoteUuid(UUID vendorQuoteUuid) {
         return vendorQuoteDetailRepository.findByIsDeletedFalseAndVendorQuoteUuidOrderByPkAsc(vendorQuoteUuid);
     }
 

@@ -24,11 +24,11 @@
                     <div>
                         <div class="input-group mb-3">
                           <input type="text" class="form-control" id="vendor-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search">
-                          <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
+                          <button class="btn btn-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-vendor" aria-controls="add-vendor">新增廠商</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-vendor" aria-controls="add-vendor">新增廠商</button>
                     </div>
                 </div>
                 <table class="table table-striped" id="vendorList">
@@ -89,8 +89,8 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="addVendor();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="addVendor();">送出</button>
         </div>
     </div>
 
@@ -126,12 +126,12 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="updateVendor();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="updateVendor();">送出</button>
         </div>
     </div>
 
-    <div class="modal fade" id="delete-vendor-modal" tabindex="-1" aria-labelledby="delete-vendor-label" aria-hidden="true">
+    <div class="modal fade" id="delete-vendor" tabindex="-1" aria-labelledby="delete-vendor-label" aria-hidden="true">
         <div class="modal-dialog">
               <div class="modal-content">
                   <div class="modal-header">

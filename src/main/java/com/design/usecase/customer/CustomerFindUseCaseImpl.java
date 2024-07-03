@@ -1,6 +1,5 @@
 package com.design.usecase.customer;
 
-import com.design.controller.common.response.CommonCustomerFindAllResponse;
 import com.design.controller.customer.request.CustomerFindRequest;
 import com.design.controller.customer.response.CustomerFindAllResponse;
 import com.design.controller.customer.response.CustomerFindPageResponse;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
     private final CustomerService customerService;
 
     @Override
-    public CustomerFindResponse findByUuid(String customerUuid) {
+    public CustomerFindResponse findByUuid(UUID customerUuid) {
         CustomerEntity customerEntity = customerService.findByUuid(customerUuid);
         return format(customerEntity);
     }
@@ -46,12 +46,6 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
                 customerEntityPage.getSize(),
                 responses
         );
-    }
-
-    @Override
-    public List<CommonCustomerFindAllResponse> findAllCommon() {
-        List<CustomerEntity> customerEntities = customerService.findAll();
-        return formatCommon(customerEntities);
     }
 
     private CustomerFindResponse format(CustomerEntity customerEntity){
@@ -92,21 +86,6 @@ public class CustomerFindUseCaseImpl implements CustomerFindUseCase {
                     customerEntity.getGeneralAffairsManagerName(),
                     customerEntity.getGeneralAffairsManagerMobile(),
                     customerEntity.getGeneralAffairsManagerEmail()
-            ));
-        }
-        return responses;
-    }
-
-    private List<CommonCustomerFindAllResponse> formatCommon(List<CustomerEntity> customerEntities){
-        List<CommonCustomerFindAllResponse> responses = new ArrayList<>();
-        if(null == customerEntities || customerEntities.isEmpty()){
-            return responses;
-        }
-        for(CustomerEntity customerEntity : customerEntities){
-            responses.add(new CommonCustomerFindAllResponse(
-                    customerEntity.getUuid(),
-                    customerEntity.getName(),
-                    customerEntity.getAddress()
             ));
         }
         return responses;

@@ -1,10 +1,12 @@
 package com.design.controller.vendor_product.response;
 
+import java.util.UUID;
+
 public record VendorProductFindAllResponse(
 
-        String vendorProductUuid,
+        UUID vendorProductUuid,
 
-        String vendorUuid,
+        UUID vendorUuid,
 
         String name,
 

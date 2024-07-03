@@ -6,10 +6,11 @@ import com.design.controller.quote.response.QuoteFindPageResponse;
 import com.design.controller.quote.response.QuoteFindResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface QuoteFindUseCase {
 
-    QuoteFindResponse findByUuid(String quoteUuid);
+    QuoteFindResponse findByUuid(UUID quoteUuid);
 
     List<QuoteFindAllResponse> findAll(QuoteFindRequest request);
 

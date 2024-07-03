@@ -29,11 +29,11 @@
                             <select class="form-select" id="customer-name-select">
                             </select>
                             <input type="text" class="form-control" id="quote-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search">
-                            <button class="btn btn-outline-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
+                            <button class="btn btn-secondary" type="button" id="vendor-search" onclick="search();">搜尋</button>
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" onclick="addQuote();">新增報價單</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" onclick="addQuote();">新增報價單</button>
                     </div>
                 </div>
                 <table class="table table-striped" id="quoteList">
@@ -190,7 +190,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="delete-quote-modal" tabindex="-1" aria-labelledby="delete-quote-label" aria-hidden="true">
+    <div class="modal fade" id="delete-quote" tabindex="-1" aria-labelledby="delete-quote-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

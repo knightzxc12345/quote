@@ -16,11 +16,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserEntity create(UserEntity userEntity, String userUuid) {
-        userEntity.setUuid(UUID.randomUUID().toString());
+    public UserEntity create(UserEntity userEntity, UUID userUuid) {
+        userEntity.setUuid(UUID.randomUUID());
+        userEntity.setIsDeleted(false);
         userEntity.setCreateUser(userUuid);
         userEntity.setCreateTime(Instant.now());
-        userEntity.setIsDeleted(false);
         return userRepository.save(userEntity);
     }
 
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findByUuid(String userUuid) {
+    public UserEntity findByUuid(UUID userUuid) {
         return userRepository.findByIsDeletedFalseAndUuid(userUuid);
     }
 
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> findByRoleUuid(String roleUuid) {
+    public List<UserEntity> findByRoleUuid(UUID roleUuid) {
         return userRepository.findByIsDeletedFalseAndRoleUuidOrderByNameAsc(roleUuid);
     }
 

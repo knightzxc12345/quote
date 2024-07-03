@@ -1,6 +1,5 @@
 package com.design.repository.vendor_product;
 
-import com.design.entity.vendor.VendorEntity;
 import com.design.entity.vendor_product.VendorProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,13 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface VendorProductRepository extends JpaRepository<VendorProductEntity, Long> {
 
-    VendorProductEntity findByIsDeletedFalseAndVendorUuidAndName(String vendorUuid, String name);
+    VendorProductEntity findByIsDeletedFalseAndVendorUuidAndName(UUID vendorUuid, String name);
 
-    VendorProductEntity findByIsDeletedFalseAndUuid(String vendorProductUuid);
+    VendorProductEntity findByIsDeletedFalseAndUuid(UUID vendorProductUuid);
 
     @Query(value =
             """
@@ -26,7 +26,7 @@ public interface VendorProductRepository extends JpaRepository<VendorProductEnti
                 VendorProductEntity v
             WHERE
                 v.isDeleted = false
-                AND (:vendorUuid IS NULL OR v.vendorUuid = :vendorUuid)
+                AND (:vendorUuid IS NULL OR CAST(v.vendorUuid AS String) = :vendorUuid)
                 AND
                 (
                     (:keyword IS NULL OR v.name LIKE CONCAT('%', :keyword, '%'))
@@ -48,7 +48,7 @@ public interface VendorProductRepository extends JpaRepository<VendorProductEnti
                 VendorProductEntity v
             WHERE
                 v.isDeleted = false
-                AND (:vendorUuid IS NULL OR v.vendorUuid = :vendorUuid)
+                AND (:vendorUuid IS NULL OR CAST(v.vendorUuid AS String) = :vendorUuid)
                 AND
                 (
                     (:keyword IS NULL OR v.name LIKE CONCAT('%', :keyword, '%'))

@@ -17,11 +17,16 @@ public class VendorProductCreateUseCaseImpl implements VendorProductCreateUseCas
 
     @Override
     public void create(VendorProductCreateRequest request) {
+        VendorProductEntity vendorProductEntity = init(request);
+        vendorProductService.create(vendorProductEntity, JwtUtil.extractUserUuid());
+    }
+
+    private VendorProductEntity init(VendorProductCreateRequest request){
         VendorProductEntity vendorProductEntity = new VendorProductEntity();
         vendorProductEntity.setVendorUuid(request.vendorUuid());
         vendorProductEntity.setName(request.name());
         vendorProductEntity.setUnitPrice(new BigDecimal(request.unitPrice()));
-        vendorProductService.create(vendorProductEntity, JwtUtil.extractUsername());
+        return vendorProductEntity;
     }
 
 }

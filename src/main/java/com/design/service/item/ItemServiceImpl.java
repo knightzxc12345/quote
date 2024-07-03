@@ -22,7 +22,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ItemEntity create(ItemEntity itemEntity, String userUuid) {
+    public ItemEntity create(ItemEntity itemEntity, UUID userUuid) {
         ItemEntity isExists = itemRepository.findByIsDeletedFalseAndNoAndName(
                 itemEntity.getNo(),
                 itemEntity.getName()
@@ -30,7 +30,7 @@ public class ItemServiceImpl implements ItemService {
         if(null != isExists){
             throw new BusinessException(ItemEnum.IT0001);
         }
-        itemEntity.setUuid(UUID.randomUUID().toString());
+        itemEntity.setUuid(UUID.randomUUID());
         itemEntity.setIsDeleted(false);
         itemEntity.setCreateTime(Instant.now());
         itemEntity.setCreateUser(userUuid);
@@ -38,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void update(ItemEntity itemEntity, String userUuid) {
+    public void update(ItemEntity itemEntity, UUID userUuid) {
         ItemEntity isExists = itemRepository.findByIsDeletedFalseAndNoAndName(
                 itemEntity.getNo(),
                 itemEntity.getName()
@@ -52,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void delete(ItemEntity itemEntity, String userUuid) {
+    public void delete(ItemEntity itemEntity, UUID userUuid) {
         itemEntity.setIsDeleted(true);
         itemEntity.setDeletedTime(Instant.now());
         itemEntity.setDeletedUser(userUuid);
@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemEntity findByUuid(String itemUuid) {
+    public ItemEntity findByUuid(UUID itemUuid) {
         return itemRepository.findByIsDeletedFalseAndUuid(itemUuid);
     }
 
@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemEntity> findAllItemUuidIn(List<String> itemUuids) {
+    public List<ItemEntity> findAllItemUuidIn(List<UUID> itemUuids) {
         return itemRepository.findByIsDeletedFalseAndUuidIn(itemUuids);
     }
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +22,13 @@ public class QuoteDeleteUseCaseImpl implements QuoteDeleteUseCase {
     private final QuoteDetailService quoteDetailService;
 
     @Override
-    public void delete(String quoteUuid) {
+    public void delete(UUID quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
         // 刪除報價單
-        quoteService.delete(quoteEntity, JwtUtil.extractUsername());
+        quoteService.delete(quoteEntity, JwtUtil.extractUserUuid());
         // 刪除報價單明細
-        quoteDetailService.deleteAll(quoteDetailEntities, JwtUtil.extractUsername());
+        quoteDetailService.deleteAll(quoteDetailEntities, JwtUtil.extractUserUuid());
     }
 
 }

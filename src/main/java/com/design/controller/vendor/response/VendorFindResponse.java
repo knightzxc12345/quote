@@ -1,8 +1,10 @@
 package com.design.controller.vendor.response;
 
+import java.util.UUID;
+
 public record VendorFindResponse(
 
-        String vendorUuid,
+        UUID vendorUuid,
 
         String name,
 

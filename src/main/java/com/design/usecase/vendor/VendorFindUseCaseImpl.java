@@ -1,6 +1,5 @@
 package com.design.usecase.vendor;
 
-import com.design.controller.common.response.CommonVendorFindAllResponse;
 import com.design.controller.vendor.request.VendorFindRequest;
 import com.design.controller.vendor.response.VendorFindAllResponse;
 import com.design.controller.vendor.response.VendorFindPageResponse;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class VendorFindUseCaseImpl implements VendorFindUseCase {
     private final VendorService vendorService;
 
     @Override
-    public VendorFindResponse findByUuid(String vendorUuid) {
+    public VendorFindResponse findByUuid(UUID vendorUuid) {
         VendorEntity vendorEntity = vendorService.findByUuid(vendorUuid);
         return format(vendorEntity);
     }
@@ -50,12 +50,6 @@ public class VendorFindUseCaseImpl implements VendorFindUseCase {
         );
     }
 
-    @Override
-    public List<CommonVendorFindAllResponse> findAllCommon() {
-        List<VendorEntity> vendorEntities = vendorService.findAll();
-        return formatCommon(vendorEntities);
-    }
-
     private VendorFindResponse format(VendorEntity vendorEntity){
         return new VendorFindResponse(
                 vendorEntity.getUuid(),
@@ -80,20 +74,6 @@ public class VendorFindUseCaseImpl implements VendorFindUseCase {
                     vendorEntity.getMobile(),
                     vendorEntity.getTel(),
                     vendorEntity.getFax()
-            ));
-        }
-        return responses;
-    }
-
-    private List<CommonVendorFindAllResponse> formatCommon(List<VendorEntity> vendorEntities){
-        List<CommonVendorFindAllResponse> responses = new ArrayList<>();
-        if(null == vendorEntities || vendorEntities.isEmpty()){
-            return responses;
-        }
-        for(VendorEntity vendorEntity : vendorEntities){
-            responses.add(new CommonVendorFindAllResponse(
-                    vendorEntity.getUuid(),
-                    vendorEntity.getName()
             ));
         }
         return responses;

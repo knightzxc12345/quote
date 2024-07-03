@@ -1,12 +1,13 @@
 package com.design.controller.vendor_quote.response;
 
 import java.util.List;
+import java.util.UUID;
 
 public record VendorQuoteFindResponse(
 
-        String vendorUuid,
+        UUID vendorUuid,
 
-        String customerUuid,
+        UUID customerUuid,
 
         Integer status,
 
@@ -16,9 +17,9 @@ public record VendorQuoteFindResponse(
 
         public record Product(
 
-                String itemUuid,
+                UUID itemUuid,
 
-                String productUuid,
+                UUID productUuid,
 
                 Integer qty
 

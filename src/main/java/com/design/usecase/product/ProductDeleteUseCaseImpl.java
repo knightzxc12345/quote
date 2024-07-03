@@ -6,6 +6,8 @@ import com.design.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ProductDeleteUseCaseImpl implements ProductDeleteUseCase {
@@ -13,9 +15,9 @@ public class ProductDeleteUseCaseImpl implements ProductDeleteUseCase {
     private final ProductService productService;
 
     @Override
-    public void delete(String productUuid) {
+    public void delete(UUID productUuid) {
         ProductEntity productEntity = productService.findByUuid(productUuid);
-        productService.delete(productEntity, JwtUtil.extractUsername());
+        productService.delete(productEntity, JwtUtil.extractUserUuid());
     }
 
 }

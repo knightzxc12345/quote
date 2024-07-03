@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/vendor-quote")
 @RestController
@@ -29,7 +30,7 @@ public class VendorQuoteController {
             value = "v1/{vendorQuoteUuid}"
     )
     public ResponseBody findByUuid(
-            @PathVariable("vendorQuoteUuid") @NotNull final String vendorQuoteUuid) {
+            @PathVariable("vendorQuoteUuid") @NotNull UUID vendorQuoteUuid) {
         VendorQuoteFindResponse response = vendorQuoteFindUseCase.findByUuid(vendorQuoteUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }

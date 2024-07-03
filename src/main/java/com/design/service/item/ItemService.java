@@ -4,20 +4,21 @@ import com.design.entity.item.ItemEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ItemService {
 
-    ItemEntity create(ItemEntity itemEntity, String userUuid);
+    ItemEntity create(ItemEntity itemEntity, UUID userUuid);
 
-    void update(ItemEntity itemEntity, String userUuid);
+    void update(ItemEntity itemEntity, UUID userUuid);
 
-    void delete(ItemEntity itemEntity, String userUuid);
+    void delete(ItemEntity itemEntity, UUID userUuid);
 
-    ItemEntity findByUuid(String itemUuid);
+    ItemEntity findByUuid(UUID itemUuid);
 
     List<ItemEntity> findAll();
 
-    List<ItemEntity> findAllItemUuidIn(List<String> itemUuids);
+    List<ItemEntity> findAllItemUuidIn(List<UUID> itemUuids);
 
     List<ItemEntity> findAllCommon();
 

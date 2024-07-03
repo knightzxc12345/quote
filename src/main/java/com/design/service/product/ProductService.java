@@ -4,24 +4,25 @@ import com.design.entity.product.ProductEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProductService {
 
-    ProductEntity create(ProductEntity productEntity, String userUuid);
+    ProductEntity create(ProductEntity productEntity, UUID userUuid);
 
-    void update(ProductEntity productEntity, String userUuid);
+    void update(ProductEntity productEntity, UUID userUuid);
 
-    void delete(ProductEntity productEntity, String userUuid);
+    void delete(ProductEntity productEntity, UUID userUuid);
 
-    void deleteAll(List<ProductEntity> productEntities, String userUuid);
+    void deleteAll(List<ProductEntity> productEntities, UUID userUuid);
 
-    ProductEntity findByUuid(String productUuid);
+    ProductEntity findByUuid(UUID productUuid);
 
     List<ProductEntity> findAll();
 
-    List<ProductEntity> findAllByProductUuidIn(List<String> productUuids);
+    List<ProductEntity> findAllByProductUuidIn(List<UUID> productUuids);
 
-    List<ProductEntity> findAllByItemUuid(String itemUuid);
+    List<ProductEntity> findAllByItemUuid(UUID itemUuid);
 
     List<ProductEntity> findAllLike(
             String keyword

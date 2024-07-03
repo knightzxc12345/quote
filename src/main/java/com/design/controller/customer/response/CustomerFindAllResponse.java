@@ -1,8 +1,10 @@
 package com.design.controller.customer.response;
 
+import java.util.UUID;
+
 public record CustomerFindAllResponse(
 
-        String customerUuid,
+        UUID customerUuid,
 
         String name,
 

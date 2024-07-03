@@ -1,12 +1,13 @@
 package com.design.controller.common.response;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record CommonProductFindAllResponse(
 
-        String productUuid,
+        UUID productUuid,
 
-        String itemUuid,
+        UUID itemUuid,
 
         String itemNo,
 
@@ -14,9 +15,7 @@ public record CommonProductFindAllResponse(
 
         String unit,
 
-        BigDecimal unitPrice,
-
-        BigDecimal costPrice
+        BigDecimal unitPrice
 
 ) {
 }

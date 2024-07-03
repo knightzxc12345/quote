@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/vendor")
 @RestController
@@ -37,7 +38,7 @@ public class VendorController {
             value = "v1"
     )
     public ResponseBody create(
-            @RequestBody @Validated @NotNull final VendorCreateRequest request) {
+            @RequestBody @Validated @NotNull VendorCreateRequest request) {
         vendorCreateUseCase.create(request);
         return new ResponseBody(CommonEnum.C00003);
     }
@@ -46,8 +47,8 @@ public class VendorController {
             value = "v1/{vendorUuid}"
     )
     public ResponseBody update(
-            @PathVariable("vendorUuid") @NotNull final String vendorUuid,
-            @RequestBody @Validated @NotNull final VendorUpdateRequest request) {
+            @PathVariable("vendorUuid") @NotNull UUID vendorUuid,
+            @RequestBody @Validated @NotNull VendorUpdateRequest request) {
         vendorUpdateUseCase.update(request, vendorUuid);
         return new ResponseBody(CommonEnum.C00004);
     }
@@ -56,7 +57,7 @@ public class VendorController {
             value = "v1/{vendorUuid}"
     )
     public ResponseBody delete(
-            @PathVariable("vendorUuid") @NotNull final String vendorUuid) {
+            @PathVariable("vendorUuid") @NotNull UUID vendorUuid) {
         vendorDeleteUseCase.delete(vendorUuid);
         return new ResponseBody(CommonEnum.C00005);
     }
@@ -65,7 +66,7 @@ public class VendorController {
             value = "v1/{vendorUuid}"
     )
     public ResponseBody findByUuid(
-            @PathVariable("vendorUuid") @NotNull final String vendorUuid) {
+            @PathVariable("vendorUuid") @NotNull UUID vendorUuid) {
         VendorFindResponse response = vendorFindUseCase.findByUuid(vendorUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }
@@ -74,7 +75,7 @@ public class VendorController {
             value = "v1"
     )
     public ResponseBody findAll(
-            @Validated final VendorFindRequest request) {
+            @Validated VendorFindRequest request) {
         if(null == request.page() || null == request.size()){
             List<VendorFindAllResponse> responses = vendorFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);

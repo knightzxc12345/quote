@@ -2,6 +2,8 @@ package com.design.controller.quote.request;
 
 import jakarta.validation.constraints.Min;
 
+import java.util.UUID;
+
 public record QuoteFindRequest(
 
         @Min(value = 0, message = "頁數不得小於0")
@@ -10,9 +12,9 @@ public record QuoteFindRequest(
         @Min(value = 0, message = "每頁筆數不得小於0")
         Integer size,
 
-        String userUuid,
+        UUID userUuid,
 
-        String customerUuid,
+        UUID customerUuid,
 
         String keyword
 

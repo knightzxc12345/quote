@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,7 +24,7 @@ public class User implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public User(UserEntity userEntity){
-        this.username = userEntity.getUuid();
+        this.username = userEntity.getUuid().toString();
         this.account = userEntity.getAccount();
         this.password = userEntity.getPassword();
     }

@@ -4,16 +4,17 @@ import com.design.entity.vendor_product.VendorProductEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VendorProductService {
 
-    VendorProductEntity create(VendorProductEntity vendorProductEntity, String userUuid);
+    VendorProductEntity create(VendorProductEntity vendorProductEntity, UUID userUuid);
 
-    void update(VendorProductEntity vendorProductEntity, String userUuid);
+    void update(VendorProductEntity vendorProductEntity, UUID userUuid);
 
-    void delete(VendorProductEntity vendorProductEntity, String userUuid);
+    void delete(VendorProductEntity vendorProductEntity, UUID userUuid);
 
-    VendorProductEntity findByUuid(String vendorProductUuid);
+    VendorProductEntity findByUuid(UUID vendorProductUuid);
 
     List<VendorProductEntity> findAllLike(
             String vendorUuid,

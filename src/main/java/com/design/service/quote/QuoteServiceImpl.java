@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class QuoteServiceImpl implements QuoteService {
     private final QuoteRepository quoteRepository;
 
     @Override
-    public QuoteEntity create(QuoteEntity quoteEntity, String userUuid) {
+    public QuoteEntity create(QuoteEntity quoteEntity, UUID userUuid) {
         quoteEntity.setIsDeleted(false);
         quoteEntity.setCreateTime(Instant.now());
         quoteEntity.setCreateUser(userUuid);
@@ -27,14 +28,14 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public void update(QuoteEntity quoteEntity, String userUuid) {
+    public void update(QuoteEntity quoteEntity, UUID userUuid) {
         quoteEntity.setModifiedTime(Instant.now());
         quoteEntity.setModifiedUser(userUuid);
         quoteRepository.save(quoteEntity);
     }
 
     @Override
-    public void delete(QuoteEntity quoteEntity, String userUuid) {
+    public void delete(QuoteEntity quoteEntity, UUID userUuid) {
         quoteEntity.setIsDeleted(true);
         quoteEntity.setDeletedTime(Instant.now());
         quoteEntity.setDeletedUser(userUuid);
@@ -42,7 +43,7 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public QuoteEntity findByUuid(String quoteUuid) {
+    public QuoteEntity findByUuid(UUID quoteUuid) {
         return quoteRepository.findByIsDeletedFalseAndUuid(quoteUuid);
     }
 

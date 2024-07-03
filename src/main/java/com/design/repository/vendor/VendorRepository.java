@@ -9,17 +9,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
 
     VendorEntity findByIsDeletedFalseAndName(String name);
 
-    VendorEntity findByIsDeletedFalseAndUuid(String vendorUuid);
+    VendorEntity findByIsDeletedFalseAndUuid(UUID vendorUuid);
 
     List<VendorEntity> findByIsDeletedFalseOrderByNameAsc();
 
-    List<VendorEntity> findByIsDeletedFalseAndUuidIn(List<String> vendorUuids);
+    List<VendorEntity> findByIsDeletedFalseAndUuidIn(List<UUID> vendorUuids);
 
     @Query(value =
             """
@@ -37,7 +38,9 @@ public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
                 v.name
             """
     )
-    List<VendorEntity> findAll(@Param("keyword") String keyword);
+    List<VendorEntity> findAll(
+            @Param("keyword") String keyword
+    );
 
     @Query(value =
             """
@@ -53,6 +56,9 @@ public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
                 )
             """
     )
-    Page<VendorEntity> findAllByPage(@Param("keyword") String keyword, Pageable pageable);
+    Page<VendorEntity> findAllByPage(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 
 }

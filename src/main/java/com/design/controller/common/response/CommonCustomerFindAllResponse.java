@@ -1,8 +1,10 @@
 package com.design.controller.common.response;
 
+import java.util.UUID;
+
 public record CommonCustomerFindAllResponse(
 
-        String customerUuid,
+        UUID customerUuid,
 
         String name,
 

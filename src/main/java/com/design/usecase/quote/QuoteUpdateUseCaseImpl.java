@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,11 +45,34 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
     private final VendorService vendorService;
 
     @Override
-    public void update(QuoteUpdateRequest request, String quoteUuid) {
+    public void update(QuoteUpdateRequest request, UUID quoteUuid) {
         List<QuoteUpdateRequest.Product> products = request.products();
+        // 取得使用者
         UserEntity userEntity = userService.findByUuid(request.userUuid());
+        // 取得客戶
         CustomerEntity customerEntity = customerService.findByUuid(request.customerUuid());
+        // 取得報價單
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
+        quoteEntity = update(quoteEntity, userEntity, customerEntity, request);
+        // 取得舊的報價單明細清單
+        List<QuoteDetailEntity> oldQuoteDetailEntities = quoteDetailService.findAll(quoteUuid);
+        // 取得新的報價單明細清單
+        List<QuoteDetailEntity> quoteDetailEntities = getQuoteDetails(products, quoteEntity);
+        // 設定金額
+        quoteEntity = setAmount(quoteDetailEntities, quoteEntity);
+        // 建立報價單
+        quoteService.create(quoteEntity, JwtUtil.extractUserUuid());
+        // 刪除舊的報價單明細清單
+        quoteDetailService.deleteAll(oldQuoteDetailEntities, JwtUtil.extractUserUuid());
+        // 建立報價單明細清單
+        quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUserUuid());
+    }
+
+    private QuoteEntity update(
+            QuoteEntity quoteEntity,
+            UserEntity userEntity,
+            CustomerEntity customerEntity,
+            QuoteUpdateRequest request){
         quoteEntity.setUserUuid(userEntity.getUuid());
         quoteEntity.setUserName(userEntity.getName());
         quoteEntity.setCustomerUuid(customerEntity.getUuid());
@@ -58,42 +82,26 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         quoteEntity.setUnderTakerName(request.underTakerName());
         quoteEntity.setUnderTakerTel(request.underTakerTel());
         quoteEntity.setQuoteStatus(QuoteStatus.CREATE);
-        // 取得舊的報價單明細清單
-        List<QuoteDetailEntity> oldQuoteDetailEntities = quoteDetailService.findAll(quoteUuid);
-        // 取得新的報價單明細清單
-        List<QuoteDetailEntity> quoteDetailEntities = getQuoteDetails(products, quoteEntity);
-        // 設定金額
-        quoteEntity = setAmount(quoteDetailEntities, quoteEntity);
-        // 建立報價單
-        quoteService.create(quoteEntity, JwtUtil.extractUsername());
-        // 刪除舊的報價單明細清單
-        quoteDetailService.deleteAll(oldQuoteDetailEntities, JwtUtil.extractUsername());
-        // 建立報價單明細清單
-        quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUsername());
+        return quoteEntity;
     }
 
     // 取得報價單明細清單
     private List<QuoteDetailEntity> getQuoteDetails(
             List<QuoteUpdateRequest.Product> products,
             QuoteEntity quoteEntity){
-        List<VendorEntity> vendorEntities = vendorService.findAll();
         List<QuoteDetailEntity> quoteDetailEntities = new ArrayList<>();
         QuoteDetailEntity quoteDetailEntity;
         ItemEntity itemEntity;
         ProductEntity productEntity;
-        VendorEntity vendorEntity;
         BigDecimal amount;
         BigDecimal customAmount;
-        BigDecimal costAmount;
         for(QuoteUpdateRequest.Product product : products){
             productEntity = productService.findByUuid(product.productUuid());
+            itemEntity = itemService.findByUuid(productEntity.getItemUuid());
             amount = productEntity.getUnitPrice();
             amount = amount.multiply(new BigDecimal(product.quantity()));
             customAmount = product.customUnitPrice();
             customAmount = customAmount.multiply(new BigDecimal(product.quantity()));
-            costAmount = productEntity.getCostPrice();
-            costAmount = costAmount.multiply(new BigDecimal(product.quantity()));
-            itemEntity = itemService.findByUuid(productEntity.getItemUuid());
             quoteDetailEntity = new QuoteDetailEntity();
             quoteDetailEntity.setQuoteUuid(quoteEntity.getUuid());
             quoteDetailEntity.setItemUuid(itemEntity.getUuid());
@@ -104,11 +112,9 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
             quoteDetailEntity.setProductSpecification(productEntity.getSpecification());
             quoteDetailEntity.setProductUnitPrice(productEntity.getUnitPrice());
             quoteDetailEntity.setProductCustomUnitPrice(product.customUnitPrice());
-            quoteDetailEntity.setProductCostPrice(productEntity.getCostPrice());
             quoteDetailEntity.setProductQuantity(product.quantity());
             quoteDetailEntity.setProductAmount(amount);
             quoteDetailEntity.setProductCustomAmount(customAmount);
-            quoteDetailEntity.setProductCostAmount(costAmount);
             quoteDetailEntities.add(quoteDetailEntity);
         }
         return quoteDetailEntities;
@@ -138,13 +144,9 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         BigDecimal customAmount = new BigDecimal(0);
         BigDecimal customTax = new BigDecimal(0);
         BigDecimal customTotalAmount = new BigDecimal(0);
-        BigDecimal costAmount = new BigDecimal(0);
-        BigDecimal costTax = new BigDecimal(0);
-        BigDecimal costTotalAmount = new BigDecimal(0);
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             amount = amount.add(quoteDetailEntity.getProductAmount());
             customAmount = customAmount.add(quoteDetailEntity.getProductCustomAmount());
-            costAmount = costAmount.add(quoteDetailEntity.getProductCostAmount());
         }
         tax = amount.multiply(new BigDecimal(0.05));
         tax = tax.setScale(0, RoundingMode.HALF_UP);
@@ -156,20 +158,12 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         customTotalAmount = customTotalAmount.add(customAmount);
         customTotalAmount = customTotalAmount.add(customTax);
 
-        costTax = costAmount.multiply(new BigDecimal(0.05));
-        costTax = costTax.setScale(0, RoundingMode.HALF_UP);
-        costTotalAmount = costTotalAmount.add(costAmount);
-        costTotalAmount = costTotalAmount.add(costTax);
-
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);
         quoteEntity.setTotalAmount(totalAmount);
         quoteEntity.setCustomAmount(customAmount);
         quoteEntity.setCustomTax(customTax);
         quoteEntity.setCustomTotalAmount(customTotalAmount);
-        quoteEntity.setCostAmount(costAmount);
-        quoteEntity.setCostTax(costTax);
-        quoteEntity.setCostTotalAmount(costTotalAmount);
         return quoteEntity;
     }
 

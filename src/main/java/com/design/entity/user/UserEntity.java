@@ -11,11 +11,12 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.UUID;
 
 // 使用者
 @ToString(callSuper = true)
 @Data
-@Table(name = "user", indexes = {
+@Table(name = "[user]", indexes = {
         @Index(name = "user_find_all", columnList = "is_deleted, account, password"),
 })
 @Entity
@@ -73,8 +74,8 @@ public class UserEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String roleUuid;
+    @NotNull
+    private UUID roleUuid;
 
     // 是否刪除
     @Column(
@@ -106,6 +107,6 @@ public class UserEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

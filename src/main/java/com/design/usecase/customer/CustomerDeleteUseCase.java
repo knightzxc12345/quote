@@ -1,7 +1,9 @@
 package com.design.usecase.customer;
 
+import java.util.UUID;
+
 public interface CustomerDeleteUseCase {
 
-    void delete(String customerUuid);
+    void delete(UUID customerUuid);
 
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,27 +24,31 @@ public class ProductUpdateUseCaseImpl implements ProductUpdateUseCase {
     private final ProductVendorService productVendorService;
 
     @Override
-    public void update(ProductUpdateRequest request, String productUuid) {
+    public void update(ProductUpdateRequest request, UUID productUuid) {
         ProductEntity productEntity = productService.findByUuid(productUuid);
+        List<ProductVendorEntity> oldProductVendorEntities = productVendorService.findAll(productUuid);
+        productEntity = update(productEntity, request);
+        List<ProductVendorEntity> newProductVendorEntities = initProductVendors(request, productEntity);
+        // 更新產品
+        productService.update(productEntity, JwtUtil.extractUserUuid());
+        // 刪除產品廠商清單
+        productVendorService.deleteAll(oldProductVendorEntities, JwtUtil.extractUserUuid());
+        // 新增產品廠商清單
+        productVendorService.createAll(newProductVendorEntities, JwtUtil.extractUserUuid());
+    }
+
+    private ProductEntity update(ProductEntity productEntity, ProductUpdateRequest request){
         productEntity.setItemUuid(request.itemUuid());
         productEntity.setSpecification(request.specification());
         productEntity.setUnit(request.unit());
         productEntity.setUnitPrice(request.unitPrice());
-        productEntity.setCostPrice(request.costPrice());
-        List<ProductVendorEntity> oldProductVendorEntities = productVendorService.findAll(productUuid);
-        List<ProductVendorEntity> newProductVendorEntities = getProductVendors(request, productEntity);
-        // 更新產品
-        productService.update(productEntity, JwtUtil.extractUsername());
-        // 刪除產品廠商清單
-        productVendorService.deleteAll(oldProductVendorEntities, JwtUtil.extractUsername());
-        // 新增產品廠商清單
-        productVendorService.createAll(newProductVendorEntities, JwtUtil.extractUsername());
+        return productEntity;
     }
 
-    private List<ProductVendorEntity> getProductVendors(ProductUpdateRequest request, ProductEntity productEntity){
+    private List<ProductVendorEntity> initProductVendors(ProductUpdateRequest request, ProductEntity productEntity){
         List<ProductVendorEntity> productVendorEntities = new ArrayList<>();
         ProductVendorEntity productVendorEntity;
-        for(String vendorUuid : request.vendors()){
+        for(UUID vendorUuid : request.vendors()){
             productVendorEntity = new ProductVendorEntity();
             productVendorEntity.setProductUuid(productEntity.getUuid());
             productVendorEntity.setVendorUuid(vendorUuid);

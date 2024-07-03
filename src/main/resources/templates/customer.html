@@ -22,11 +22,11 @@
                     <div>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="customer-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="customer-search">
-                            <button class="btn btn-outline-secondary" type="button" id="customer-search" onclick="search();">搜尋</button>
+                            <button class="btn btn-secondary" type="button" id="customer-search" onclick="search();">搜尋</button>
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-customer" aria-controls="add-customer">新增客戶</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-customer" aria-controls="add-customer">新增客戶</button>
                     </div>
                 </div>
                 <table class="table table-striped vertical-align-middle" id="customerList">
@@ -116,8 +116,8 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="addCustomer();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="addCustomer();">送出</button>
         </div>
     </div>
 
@@ -181,12 +181,12 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-            <button type="button" class="btn btn-outline-success btn-sm" onclick="updateCustomer();">送出</button>
+            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="updateCustomer();">送出</button>
         </div>
     </div>
 
-    <div class="modal fade" id="delete-customer-modal" tabindex="-1" aria-labelledby="delete-customer-label" aria-hidden="true">
+    <div class="modal fade" id="delete-customer" tabindex="-1" aria-labelledby="delete-customer-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

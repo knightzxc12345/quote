@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 // 報價單
 @ToString(callSuper = true)
@@ -28,8 +29,8 @@ public class QuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String userUuid;
+    @NotNull
+    private UUID userUuid;
 
     // 業務名稱
     @Column(
@@ -42,7 +43,7 @@ public class QuoteEntity extends BaseEntity {
     @NotBlank
     private String userName;
 
-    // 業務uuid
+    // 客戶uuid
     @Column(
             name = "customer_uuid",
             nullable = false,
@@ -50,8 +51,8 @@ public class QuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String customerUuid;
+    @NotNull
+    private UUID customerUuid;
 
     // 客戶名稱
     @Column(
@@ -236,6 +237,6 @@ public class QuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

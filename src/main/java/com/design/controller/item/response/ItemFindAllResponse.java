@@ -1,8 +1,10 @@
 package com.design.controller.item.response;
 
+import java.util.UUID;
+
 public record ItemFindAllResponse(
 
-        String itemUuid,
+        UUID itemUuid,
 
         String no,
 

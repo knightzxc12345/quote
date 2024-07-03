@@ -22,20 +22,20 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public CustomerEntity create(CustomerEntity customerEntity, String userUuid) {
+    public CustomerEntity create(CustomerEntity customerEntity, UUID userUuid) {
         CustomerEntity isExists = customerRepository.findByIsDeletedFalseAndName(customerEntity.getName());
         if(null != isExists){
             throw new BusinessException(CustomerEnum.CU0001);
         }
-        customerEntity.setUuid(UUID.randomUUID().toString());
+        customerEntity.setUuid(UUID.randomUUID());
+        customerEntity.setIsDeleted(false);
         customerEntity.setCreateTime(Instant.now());
         customerEntity.setCreateUser(userUuid);
-        customerEntity.setIsDeleted(false);
         return customerRepository.save(customerEntity);
     }
 
     @Override
-    public void update(CustomerEntity customerEntity, String userUuid) {
+    public void update(CustomerEntity customerEntity, UUID userUuid) {
         CustomerEntity isExists = customerRepository.findByIsDeletedFalseAndName(customerEntity.getName());
         if(null != isExists && !customerEntity.getUuid().equals(isExists.getUuid())){
             throw new BusinessException(CustomerEnum.CU0001);
@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void delete(CustomerEntity customerEntity, String userUuid) {
+    public void delete(CustomerEntity customerEntity, UUID userUuid) {
         customerEntity.setIsDeleted(true);
         customerEntity.setDeletedTime(Instant.now());
         customerEntity.setDeletedUser(userUuid);
@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerEntity findByUuid(String customerUuid) {
+    public CustomerEntity findByUuid(UUID customerUuid) {
         return customerRepository.findByIsDeletedFalseAndUuid(customerUuid);
     }
 
@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerEntity> findAllCustomerUuidIn(List<String> customerUuids) {
+    public List<CustomerEntity> findAllCustomerUuidIn(List<UUID> customerUuids) {
         return customerRepository.findByIsDeletedFalseAndUuidIn(customerUuids);
     }
 

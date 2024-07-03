@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -32,27 +33,31 @@ public class JwtUtil implements InitializingBean {
         key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public static UUID extractUserUuid() {
+        return UUID.fromString(extractUsername());
+    }
+
     public static String extractUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
     // 取得使用者名稱
-    public static String extractUsername(final String token) {
+    public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     // 取得指定Claim參數
-    public static <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaim(token);
         return claimsResolver.apply(claims);
     }
 
     // 產生Token
-    public static String generateToken(final String userUuid) {
+    public static String generateToken(UUID userUuid) {
         return Jwts.builder()
                 .setClaims(new HashMap<>())
-                .setSubject(userUuid)
+                .setSubject(userUuid.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Common.JWT_TOKEN_VALIDITY))
                 .signWith(key)
@@ -65,7 +70,7 @@ public class JwtUtil implements InitializingBean {
     }
 
     // 取得所有Claim
-    private static Claims extractAllClaim(final String token) {
+    private static Claims extractAllClaim(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(key)

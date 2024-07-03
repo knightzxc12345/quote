@@ -22,20 +22,20 @@ public class VendorServiceImpl implements VendorService {
     private final VendorRepository vendorRepository;
 
     @Override
-    public VendorEntity create(VendorEntity vendorEntity, String userUuid) {
+    public VendorEntity create(VendorEntity vendorEntity, UUID userUuid) {
         VendorEntity isExists = vendorRepository.findByIsDeletedFalseAndName(vendorEntity.getName());
         if(null != isExists){
             throw new BusinessException(VendorEnum.VE0001);
         }
         vendorEntity.setIsDeleted(false);
-        vendorEntity.setUuid(UUID.randomUUID().toString());
+        vendorEntity.setUuid(UUID.randomUUID());
         vendorEntity.setCreateTime(Instant.now());
         vendorEntity.setCreateUser(userUuid);
         return vendorRepository.save(vendorEntity);
     }
 
     @Override
-    public void update(VendorEntity vendorEntity, String userUuid) {
+    public void update(VendorEntity vendorEntity, UUID userUuid) {
         VendorEntity isExists = vendorRepository.findByIsDeletedFalseAndName(vendorEntity.getName());
         if(null != isExists && !vendorEntity.getUuid().equals(isExists.getUuid())){
             throw new BusinessException(VendorEnum.VE0001);
@@ -46,7 +46,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public void delete(VendorEntity vendorEntity, String userUuid) {
+    public void delete(VendorEntity vendorEntity, UUID userUuid) {
         vendorEntity.setIsDeleted(true);
         vendorEntity.setDeletedTime(Instant.now());
         vendorEntity.setDeletedUser(userUuid);
@@ -54,7 +54,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public VendorEntity findByUuid(String vendorUuid) {
+    public VendorEntity findByUuid(UUID vendorUuid) {
         return vendorRepository.findByIsDeletedFalseAndUuid(vendorUuid);
     }
 
@@ -64,7 +64,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<VendorEntity> findAllVendorUuidIn(List<String> vendorUuids) {
+    public List<VendorEntity> findAllVendorUuidIn(List<UUID> vendorUuids) {
         return vendorRepository.findByIsDeletedFalseAndUuidIn(vendorUuids);
     }
 

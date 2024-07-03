@@ -5,14 +5,15 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public record QuoteCreateRequest(
 
         @NotBlank(message = "業務uuid不得為空")
-        String userUuid,
+        UUID userUuid,
 
         @NotBlank(message = "客戶uuid不得為空")
-        String customerUuid,
+        UUID customerUuid,
 
         String underTakerName,
 
@@ -26,7 +27,7 @@ public record QuoteCreateRequest(
         public record Product(
 
                 @NotBlank(message = "產品uuid不得為空")
-                String productUuid,
+                UUID productUuid,
 
                 @NotNull(message = "產品數量")
                 Integer quantity,

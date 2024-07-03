@@ -1,14 +1,15 @@
 package com.design.controller.quote.response;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record QuoteFindAllResponse(
 
-        String quoteUuid,
+        UUID quoteUuid,
 
-        String userUuid,
+        UUID userUuid,
 
-        String customerUuid,
+        UUID customerUuid,
 
         BigDecimal totalAmount,
 

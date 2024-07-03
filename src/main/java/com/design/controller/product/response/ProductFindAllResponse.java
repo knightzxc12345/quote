@@ -2,12 +2,13 @@ package com.design.controller.product.response;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public record ProductFindAllResponse(
 
-        String productUuid,
+        UUID productUuid,
 
-        String itemUuid,
+        UUID itemUuid,
 
         String itemNo,
 
@@ -19,7 +20,7 @@ public record ProductFindAllResponse(
 
         BigDecimal costPrice,
 
-        List<String> vendorUuids
+        List<UUID> vendorUuids
 
 ) {
 }

@@ -6,6 +6,8 @@ import com.design.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class VendorDeleteUseCaseImpl implements VendorDeleteUseCase {
@@ -13,9 +15,9 @@ public class VendorDeleteUseCaseImpl implements VendorDeleteUseCase {
     private final VendorService vendorService;
 
     @Override
-    public void delete(String vendorUuid) {
+    public void delete(UUID vendorUuid) {
         VendorEntity vendorEntity = vendorService.findByUuid(vendorUuid);
-        vendorService.delete(vendorEntity, JwtUtil.extractUsername());
+        vendorService.delete(vendorEntity, JwtUtil.extractUserUuid());
     }
 
 }

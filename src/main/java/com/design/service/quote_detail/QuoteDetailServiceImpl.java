@@ -16,13 +16,13 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
     private final QuoteDetailRepository quoteDetailRepository;
 
     @Override
-    public void createAll(List<QuoteDetailEntity> quoteDetailEntities, String userUuid) {
+    public void createAll(List<QuoteDetailEntity> quoteDetailEntities, UUID userUuid) {
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return;
         }
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             quoteDetailEntity.setIsDeleted(false);
-            quoteDetailEntity.setUuid(UUID.randomUUID().toString());
+            quoteDetailEntity.setUuid(UUID.randomUUID());
             quoteDetailEntity.setCreateTime(Instant.now());
             quoteDetailEntity.setCreateUser(userUuid);
         }
@@ -30,7 +30,7 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
     }
 
     @Override
-    public void updateAll(List<QuoteDetailEntity> quoteDetailEntities, String userUuid) {
+    public void updateAll(List<QuoteDetailEntity> quoteDetailEntities, UUID userUuid) {
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return;
         }
@@ -42,7 +42,7 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
     }
 
     @Override
-    public void deleteAll(List<QuoteDetailEntity> quoteDetailEntities, String userUuid) {
+    public void deleteAll(List<QuoteDetailEntity> quoteDetailEntities, UUID userUuid) {
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
             return;
         }
@@ -55,7 +55,7 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
     }
 
     @Override
-    public List<QuoteDetailEntity> findAll(String quoteUuid) {
+    public List<QuoteDetailEntity> findAll(UUID quoteUuid) {
         return quoteDetailRepository.findByIsDeletedFalseAndQuoteUuidOrderByPkAsc(quoteUuid);
     }
 

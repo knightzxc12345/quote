@@ -1,6 +1,5 @@
 package com.design.usecase.product;
 
-import com.design.controller.common.response.CommonProductFindAllResponse;
 import com.design.controller.product.request.ProductFindRequest;
 import com.design.controller.product.response.ProductFindAllResponse;
 import com.design.controller.product.response.ProductFindPageResponse;
@@ -11,12 +10,14 @@ import com.design.entity.product_vendor.ProductVendorEntity;
 import com.design.service.item.ItemService;
 import com.design.service.product.ProductService;
 import com.design.service.product_vendor.ProductVendorService;
+import com.design.utils.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
     private final ProductVendorService productVendorService;
 
     @Override
-    public ProductFindResponse findByUuid(String productUuid) {
+    public ProductFindResponse findByUuid(UUID productUuid) {
         ProductEntity productEntity = productService.findByUuid(productUuid);
         return format(productEntity);
     }
@@ -58,12 +59,6 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
         );
     }
 
-    @Override
-    public List<CommonProductFindAllResponse> findAllCommon() {
-        List<ProductEntity> productEntities = productService.findAll();
-        return formatCommon(productEntities);
-    }
-
     private ProductFindResponse format(ProductEntity productEntity){
         ItemEntity itemEntity = itemService.findByUuid(productEntity.getItemUuid());
         return new ProductFindResponse(
@@ -73,7 +68,7 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
                 productEntity.getSpecification(),
                 productEntity.getUnit(),
                 productEntity.getUnitPrice(),
-                productEntity.getCostPrice()
+                null
         );
     }
 
@@ -85,9 +80,9 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
         List<ItemEntity> itemEntities = itemService.findAll();
         ItemEntity itemEntity;
         List<ProductVendorEntity> productVendorEntities;
-        List<String> vendorUuids;
+        List<UUID> vendorUuids;
         for(ProductEntity productEntity : productEntities){
-            itemEntity = getItem(itemEntities, productEntity.getItemUuid());
+            itemEntity = CommonUtil.getEntityByUuid(itemEntities, productEntity.getItemUuid());
             productVendorEntities = productVendorService.findAll(productEntity.getUuid());
             vendorUuids = getVendorUuids(productVendorEntities);
             responses.add(new ProductFindAllResponse(
@@ -97,15 +92,15 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
                     productEntity.getSpecification(),
                     productEntity.getUnit(),
                     productEntity.getUnitPrice(),
-                    productEntity.getCostPrice(),
+                    null,
                     vendorUuids
             ));
         }
         return responses;
     }
 
-    private List<String> getVendorUuids(List<ProductVendorEntity> productVendorEntities){
-        List<String> vendorUuids = new ArrayList<>();
+    private List<UUID> getVendorUuids(List<ProductVendorEntity> productVendorEntities){
+        List<UUID> vendorUuids = new ArrayList<>();
         if(null == productVendorEntities || productVendorEntities.isEmpty()){
             return vendorUuids;
         }
@@ -113,40 +108,6 @@ public class ProductFindUseCaseImpl implements ProductFindUseCase {
             vendorUuids.add(productVendorEntity.getVendorUuid());
         }
         return vendorUuids;
-    }
-
-    private ItemEntity getItem(List<ItemEntity> itemEntities, String itemUuid){
-        if(null == itemEntities || itemEntities.isEmpty()){
-            return null;
-        }
-        for(ItemEntity itemEntity : itemEntities){
-            if(itemEntity.getUuid().equals(itemUuid)){
-                return itemEntity;
-            }
-        }
-        return null;
-    }
-
-    private List<CommonProductFindAllResponse> formatCommon(List<ProductEntity> productEntities){
-        List<CommonProductFindAllResponse> responses = new ArrayList<>();
-        if(null == productEntities || productEntities.isEmpty()){
-            return responses;
-        }
-        List<ItemEntity> itemEntities = itemService.findAll();
-        ItemEntity itemEntity;
-        for(ProductEntity productEntity : productEntities){
-            itemEntity = getItem(itemEntities, productEntity.getItemUuid());
-            responses.add(new CommonProductFindAllResponse(
-                    productEntity.getUuid(),
-                    productEntity.getItemUuid(),
-                    itemEntity.getNo(),
-                    productEntity.getSpecification(),
-                    productEntity.getUnit(),
-                    productEntity.getUnitPrice(),
-                    productEntity.getCostPrice()
-            ));
-        }
-        return responses;
     }
 
 }

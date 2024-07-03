@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
     private final QuoteDetailService quoteDetailService;
 
     @Override
-    public QuoteFindResponse findByUuid(String quoteUuid) {
+    public QuoteFindResponse findByUuid(UUID quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
         List<QuoteFindResponse.Product> products = getProducts(quoteDetailEntities);
@@ -41,9 +42,11 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
 
     @Override
     public List<QuoteFindAllResponse> findAll(QuoteFindRequest request) {
+        String userUuid = null == request.userUuid() ? null : request.userUuid().toString();
+        String customerUuid = null == request.customerUuid() ? null : request.customerUuid().toString();
         List<QuoteEntity> quoteEntities = quoteService.findAllLike(
-                request.userUuid(),
-                request.customerUuid(),
+                userUuid,
+                customerUuid,
                 request.keyword()
         );
         return format(quoteEntities);
@@ -51,9 +54,11 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
 
     @Override
     public QuoteFindPageResponse findAllByPage(QuoteFindRequest request) {
+        String userUuid = null == request.userUuid() ? null : request.userUuid().toString();
+        String customerUuid = null == request.customerUuid() ? null : request.customerUuid().toString();
         Page<QuoteEntity> quoteEntityPage = quoteService.findAllLikeByPage(
-                request.userUuid(),
-                request.customerUuid(),
+                userUuid,
+                customerUuid,
                 request.keyword(),
                 request.page(),
                 request.size()

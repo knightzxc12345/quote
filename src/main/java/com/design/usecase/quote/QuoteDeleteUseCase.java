@@ -1,7 +1,9 @@
 package com.design.usecase.quote;
 
+import java.util.UUID;
+
 public interface QuoteDeleteUseCase {
 
-    void delete(String quoteUuid);
+    void delete(UUID quoteUuid);
 
 }

@@ -4,14 +4,15 @@ import com.design.entity.vendor_quote.VendorQuoteEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VendorQuoteService {
 
-    void createAll(List<VendorQuoteEntity> vendorQuoteEntities, String userUuid);
+    void createAll(List<VendorQuoteEntity> vendorQuoteEntities, UUID userUuid);
 
-    void deleteAll(List<VendorQuoteEntity> vendorQuoteEntities, String userUuid);
+    void deleteAll(List<VendorQuoteEntity> vendorQuoteEntities, UUID userUuid);
 
-    VendorQuoteEntity findByUuid(String vendorQuoteUuid);
+    VendorQuoteEntity findByUuid(UUID vendorQuoteUuid);
 
     List<VendorQuoteEntity> findAll(
             String vendorUuid,

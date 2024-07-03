@@ -59,21 +59,13 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
 
     @Override
     public void create(QuoteCreateRequest request) {
-        // 取得使用者名稱
-        String userName = JwtUtil.extractUsername();
         List<QuoteCreateRequest.Product> products = request.products();
         // 取得產品uuid清單
-        List<String> productUuids = getProductUuids(products);
-        // 取得產品清單
-        List<ProductEntity> productEntities = productService.findAllByProductUuidIn(productUuids);
-        // 取得項目uuid清單
-        List<String> itemUuids = getItemUuids(productEntities);
-        // 取得項目清單
-        List<ItemEntity> itemEntities = itemService.findAllItemUuidIn(itemUuids);
+        List<UUID> productUuids = getProductUuids(products);
         // 取得產品廠商清單
         List<ProductVendorEntity> productVendorEntities = productVendorService.findAllProductUuidIn(productUuids);
         // 取得廠商uuid清單
-        List<String> vendorUuids = getVendorsUuids(productVendorEntities);
+        List<UUID> vendorUuids = getVendorsUuids(productVendorEntities);
         // 取得廠商清單
         List<VendorEntity> vendorEntities = vendorService.findAllVendorUuidIn(vendorUuids);
         // 取得使用者
@@ -83,7 +75,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         // 初始化報價單
         QuoteEntity quoteEntity = initQuote(request, userEntity, customerEntity);
         // 初始化報價單明細清單
-        List<QuoteDetailEntity> quoteDetailEntities = initQuoteDetails(products, productEntities, itemEntities, quoteEntity);
+        List<QuoteDetailEntity> quoteDetailEntities = initQuoteDetails(products, quoteEntity);
         // 設定金額
         quoteEntity = setAmount(quoteDetailEntities, quoteEntity);
         // 初始化廠商報價單
@@ -91,19 +83,19 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         // 初始化廠商報價明細清單
         List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = initVendorQuoteDetails(productVendorEntities, vendorQuoteEntities, quoteDetailEntities);
         // 建立報價單
-        quoteService.create(quoteEntity, userName);
+        quoteService.create(quoteEntity, JwtUtil.extractUserUuid());
         // 建立報價單明細清單
-        quoteDetailService.createAll(quoteDetailEntities, userName);
+        quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUserUuid());
         // 建立廠商報價單
-        vendorQuoteService.createAll(vendorQuoteEntities, userName);
+        vendorQuoteService.createAll(vendorQuoteEntities, JwtUtil.extractUserUuid());
         // 建立廠商報價單明細清單
-        vendorQuoteDetailService.createAll(vendorQuoteDetailEntities, userName);
+        vendorQuoteDetailService.createAll(vendorQuoteDetailEntities, JwtUtil.extractUserUuid());
     }
 
     // 初始化報價單
     private QuoteEntity initQuote(QuoteCreateRequest request, UserEntity userEntity, CustomerEntity customerEntity){
         QuoteEntity quoteEntity = new QuoteEntity();
-        quoteEntity.setUuid(UUID.randomUUID().toString());
+        quoteEntity.setUuid(UUID.randomUUID());
         quoteEntity.setUserUuid(userEntity.getUuid());
         quoteEntity.setUserName(userEntity.getName());
         quoteEntity.setCustomerUuid(customerEntity.getUuid());
@@ -119,8 +111,6 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
     // 取得報價單明細清單
     private List<QuoteDetailEntity> initQuoteDetails(
             List<QuoteCreateRequest.Product> products,
-            List<ProductEntity> productEntities,
-            List<ItemEntity> itemEntities,
             QuoteEntity quoteEntity){
         List<QuoteDetailEntity> quoteDetailEntities = new ArrayList<>();
         QuoteDetailEntity quoteDetailEntity;
@@ -128,16 +118,13 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         ItemEntity itemEntity;
         BigDecimal amount;
         BigDecimal customAmount;
-        BigDecimal costAmount;
         for(QuoteCreateRequest.Product product : products){
-            productEntity = getProduct(productEntities, product.productUuid());
-            itemEntity = getItem(itemEntities, productEntity.getItemUuid());
+            productEntity = productService.findByUuid(product.productUuid());
+            itemEntity = itemService.findByUuid(productEntity.getItemUuid());
             amount = productEntity.getUnitPrice();
             amount = amount.multiply(new BigDecimal(product.quantity()));
             customAmount = product.customUnitPrice();
             customAmount = customAmount.multiply(new BigDecimal(product.quantity()));
-            costAmount = productEntity.getCostPrice();
-            costAmount = costAmount.multiply(new BigDecimal(product.quantity()));
             quoteDetailEntity = new QuoteDetailEntity();
             quoteDetailEntity.setQuoteUuid(quoteEntity.getUuid());
             quoteDetailEntity.setItemUuid(itemEntity.getUuid());
@@ -148,44 +135,29 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             quoteDetailEntity.setProductSpecification(productEntity.getSpecification());
             quoteDetailEntity.setProductUnitPrice(productEntity.getUnitPrice());
             quoteDetailEntity.setProductCustomUnitPrice(product.customUnitPrice());
-            quoteDetailEntity.setProductCostPrice(productEntity.getCostPrice());
             quoteDetailEntity.setProductQuantity(product.quantity());
             quoteDetailEntity.setProductAmount(amount);
             quoteDetailEntity.setProductCustomAmount(customAmount);
-            quoteDetailEntity.setProductCostAmount(costAmount);
             quoteDetailEntities.add(quoteDetailEntity);
         }
         return quoteDetailEntities;
     }
 
     // 取得產品uuid清單
-    private List<String> getProductUuids(List<QuoteCreateRequest.Product> products){
-        List<String> productUuids = new ArrayList<>();
+    private List<UUID> getProductUuids(List<QuoteCreateRequest.Product> products){
+        Set<UUID> productUuids = new HashSet<>();
         if(null == products || products.isEmpty()){
-            return productUuids;
+            return new ArrayList<>();
         }
         for(QuoteCreateRequest.Product product : products){
             productUuids.add(product.productUuid());
         }
-        return productUuids;
-    }
-
-    // 取得產品
-    private ProductEntity getProduct(List<ProductEntity> productEntities, String productUuid){
-        if(null == productEntities || productEntities.isEmpty()){
-            return null;
-        }
-        for(ProductEntity productEntity : productEntities){
-            if(productEntity.getUuid().equals(productUuid)){
-                return productEntity;
-            }
-        }
-        return null;
+        return new ArrayList<>(productUuids);
     }
 
     // 取得項目uuid清單
-    private List<String> getItemUuids(List<ProductEntity> productEntities){
-        Set<String> itemUuids = new HashSet<>();
+    private List<UUID> getItemUuids(List<ProductEntity> productEntities){
+        Set<UUID> itemUuids = new HashSet<>();
         if(null == productEntities || productEntities.isEmpty()){
             return new ArrayList<>();
         }
@@ -195,22 +167,9 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         return new ArrayList<>(itemUuids);
     }
 
-    // 取得項目
-    private ItemEntity getItem(List<ItemEntity> itemEntities, String itemUuid){
-        if(null == itemEntities || itemEntities.isEmpty()){
-            return null;
-        }
-        for(ItemEntity itemEntity : itemEntities){
-            if(itemEntity.getUuid().equals(itemUuid)){
-                return itemEntity;
-            }
-        }
-        return null;
-    }
-
     // 取得廠商uuid清單
-    private List<String> getVendorsUuids(List<ProductVendorEntity> productVendorEntities){
-        Set<String> vendorUuids = new HashSet<>();
+    private List<UUID> getVendorsUuids(List<ProductVendorEntity> productVendorEntities){
+        Set<UUID> vendorUuids = new HashSet<>();
         if(null == productVendorEntities || productVendorEntities.isEmpty()){
             return new ArrayList<>();
         }
@@ -232,7 +191,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         VendorQuoteEntity vendorQuoteEntity;
         for (VendorEntity vendorEntity : vendorEntities) {
             vendorQuoteEntity = new VendorQuoteEntity();
-            vendorQuoteEntity.setUuid(UUID.randomUUID().toString());
+            vendorQuoteEntity.setUuid(UUID.randomUUID());
             vendorQuoteEntity.setVendorUuid(vendorEntity.getUuid());
             vendorQuoteEntity.setQuoteUuid(quoteEntity.getUuid());
             vendorQuoteEntity.setCustomerUuid(customerEntity.getUuid());
@@ -267,16 +226,17 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             vendorQuoteDetailEntity.setProductUuid(quoteDetailEntity.getProductUuid());
             vendorQuoteDetailEntity.setProductSpecification(quoteDetailEntity.getProductSpecification());
             vendorQuoteDetailEntity.setProductUnit(quoteDetailEntity.getProductUnit());
-            vendorQuoteDetailEntity.setProductUnitPrice(quoteDetailEntity.getProductCostPrice());
+            vendorQuoteDetailEntity.setProductUnitPrice(null);
             vendorQuoteDetailEntity.setProductQuantity(quoteDetailEntity.getProductQuantity());
-            vendorQuoteDetailEntity.setProductAmount(quoteDetailEntity.getProductCostAmount());
             vendorQuoteDetailEntities.add(vendorQuoteDetailEntity);
         }
         return vendorQuoteDetailEntities;
     }
 
     // 取得產品廠商
-    private ProductVendorEntity getProductVendor(List<ProductVendorEntity> productVendorEntities, String productUuid){
+    private ProductVendorEntity getProductVendor(
+            List<ProductVendorEntity> productVendorEntities,
+            UUID productUuid){
         if(null == productVendorEntities || productVendorEntities.isEmpty()){
             return null;
         }
@@ -291,7 +251,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
     // 取得廠商報價
     private VendorQuoteEntity getVendorQuote(
             List<VendorQuoteEntity> vendorQuoteEntities,
-            String vendorUuid){
+            UUID vendorUuid){
         if(null == vendorQuoteEntities || vendorQuoteEntities.isEmpty()){
             return null;
         }
@@ -314,13 +274,9 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal customAmount = new BigDecimal(0);
         BigDecimal customTax = new BigDecimal(0);
         BigDecimal customTotalAmount = new BigDecimal(0);
-        BigDecimal costAmount = new BigDecimal(0);
-        BigDecimal costTax = new BigDecimal(0);
-        BigDecimal costTotalAmount = new BigDecimal(0);
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             amount = amount.add(quoteDetailEntity.getProductAmount());
             customAmount = customAmount.add(quoteDetailEntity.getProductCustomAmount());
-            costAmount = costAmount.add(quoteDetailEntity.getProductCostAmount());
         }
         tax = amount.multiply(new BigDecimal(0.05));
         tax = tax.setScale(0, RoundingMode.HALF_UP);
@@ -332,20 +288,12 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         customTotalAmount = customTotalAmount.add(customAmount);
         customTotalAmount = customTotalAmount.add(customTax);
 
-        costTax = costAmount.multiply(new BigDecimal(0.05));
-        costTax = costTax.setScale(0, RoundingMode.HALF_UP);
-        costTotalAmount = costTotalAmount.add(costAmount);
-        costTotalAmount = costTotalAmount.add(costTax);
-
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);
         quoteEntity.setTotalAmount(totalAmount);
         quoteEntity.setCustomAmount(customAmount);
         quoteEntity.setCustomTax(customTax);
         quoteEntity.setCustomTotalAmount(customTotalAmount);
-        quoteEntity.setCostAmount(costAmount);
-        quoteEntity.setCostTax(costTax);
-        quoteEntity.setCostTotalAmount(costTotalAmount);
         return quoteEntity;
     }
 

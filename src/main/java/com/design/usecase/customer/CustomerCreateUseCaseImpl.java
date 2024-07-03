@@ -15,6 +15,11 @@ public class CustomerCreateUseCaseImpl implements CustomerCreateUseCase {
 
     @Override
     public void create(CustomerCreateRequest request) {
+        CustomerEntity customerEntity = init(request);
+        customerService.create(customerEntity, JwtUtil.extractUserUuid());
+    }
+
+    private CustomerEntity init(CustomerCreateRequest request){
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setName(request.name());
         customerEntity.setAddress(request.address());
@@ -28,7 +33,7 @@ public class CustomerCreateUseCaseImpl implements CustomerCreateUseCase {
         customerEntity.setGeneralAffairsManagerName(request.generalAffairsManagerName());
         customerEntity.setGeneralAffairsManagerMobile(request.generalAffairsManagerMobile());
         customerEntity.setGeneralAffairsManagerEmail(request.generalAffairsManagerEmail());
-        customerService.create(customerEntity, JwtUtil.extractUsername());
+        return customerEntity;
     }
 
 }

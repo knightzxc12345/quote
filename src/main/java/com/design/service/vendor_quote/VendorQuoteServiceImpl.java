@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class VendorQuoteServiceImpl implements VendorQuoteService {
      private final VendorQuoteRepository vendorQuoteRepository;
 
      @Override
-     public void createAll(List<VendorQuoteEntity> vendorQuoteEntities, String userUuid) {
+     public void createAll(List<VendorQuoteEntity> vendorQuoteEntities, UUID userUuid) {
           if(null == vendorQuoteEntities || vendorQuoteEntities.isEmpty()){
                return;
           }
@@ -34,7 +35,7 @@ public class VendorQuoteServiceImpl implements VendorQuoteService {
      }
 
      @Override
-     public void deleteAll(List<VendorQuoteEntity> vendorQuoteEntities, String userUuid) {
+     public void deleteAll(List<VendorQuoteEntity> vendorQuoteEntities, UUID userUuid) {
           if(null == vendorQuoteEntities || vendorQuoteEntities.isEmpty()){
                return;
           }
@@ -47,7 +48,7 @@ public class VendorQuoteServiceImpl implements VendorQuoteService {
      }
 
      @Override
-     public VendorQuoteEntity findByUuid(String vendorQuoteUuid) {
+     public VendorQuoteEntity findByUuid(UUID vendorQuoteUuid) {
           return vendorQuoteRepository.findByIsDeletedFalseAndUuid(vendorQuoteUuid);
      }
 

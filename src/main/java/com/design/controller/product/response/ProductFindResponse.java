@@ -1,12 +1,13 @@
 package com.design.controller.product.response;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record ProductFindResponse(
 
-        String productUuid,
+        UUID productUuid,
 
-        String itemUuid,
+        UUID itemUuid,
 
         String itemNo,
 

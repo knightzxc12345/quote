@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/item")
 @RestController
@@ -37,7 +38,7 @@ public class ItemController {
             value = "v1"
     )
     public ResponseBody create(
-            @RequestBody @Validated @NotNull final ItemCreateRequest request) {
+            @RequestBody @Validated @NotNull ItemCreateRequest request) {
         itemCreateUseCase.create(request);
         return new ResponseBody(CommonEnum.C00003);
     }
@@ -46,8 +47,8 @@ public class ItemController {
             value = "v1/{itemUuid}"
     )
     public ResponseBody update(
-            @PathVariable("itemUuid") @NotNull final String itemUuid,
-            @RequestBody @Validated @NotNull final ItemUpdateRequest request) {
+            @PathVariable("itemUuid") @NotNull UUID itemUuid,
+            @RequestBody @Validated @NotNull ItemUpdateRequest request) {
         itemUpdateUseCase.update(request, itemUuid);
         return new ResponseBody(CommonEnum.C00004);
     }
@@ -56,7 +57,7 @@ public class ItemController {
             value = "v1/{itemUuid}"
     )
     public ResponseBody delete(
-            @PathVariable("itemUuid") @NotNull final String itemUuid) {
+            @PathVariable("itemUuid") @NotNull UUID itemUuid) {
         itemDeleteUseCase.delete(itemUuid);
         return new ResponseBody(CommonEnum.C00005);
     }
@@ -65,7 +66,7 @@ public class ItemController {
             value = "v1/{itemUuid}"
     )
     public ResponseBody findByUuid(
-            @PathVariable("itemUuid") @NotNull final String itemUuid) {
+            @PathVariable("itemUuid") @NotNull UUID itemUuid) {
         ItemFindResponse response = itemFindUseCase.findByUuid(itemUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }

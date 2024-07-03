@@ -24,10 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +42,7 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     private final UserService userService;
 
     @Override
-    public QuotePreviewResponse preview(String quoteUuid) {
+    public QuotePreviewResponse preview(UUID quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         CustomerEntity customerEntity = customerService.findByUuid(quoteEntity.getCustomerUuid());
         UserEntity userEntity = userService.findByUuid(quoteEntity.getUserUuid());
@@ -71,7 +68,7 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     }
 
     @Override
-    public void download(String quoteUuid) {
+    public void download(UUID quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
         // 取得寫入excel陣列資料
@@ -119,8 +116,8 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
                     quoteDetailEntity.getProductAmount(),
                     quoteDetailEntity.getProductCustomUnitPrice(),
                     quoteDetailEntity.getProductCustomAmount(),
-                    quoteDetailEntity.getProductCostPrice(),
-                    quoteDetailEntity.getProductCostAmount()
+                    null,
+                    null
             ));
         }
         return products;

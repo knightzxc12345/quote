@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.UUID;
 
 // 廠商報價單
 @ToString(callSuper = true)
@@ -27,8 +28,8 @@ public class VendorQuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String vendorUuid;
+    @NotNull
+    private UUID vendorUuid;
 
     // 報價單uuid
     @Column(
@@ -38,8 +39,8 @@ public class VendorQuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String quoteUuid;
+    @NotNull
+    private UUID quoteUuid;
 
     // 客戶uuid
     @Column(
@@ -49,8 +50,8 @@ public class VendorQuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    @NotBlank
-    private String customerUuid;
+    @NotNull
+    private UUID customerUuid;
 
     // 廠商報價單狀態
     @Column(
@@ -94,6 +95,6 @@ public class VendorQuoteEntity extends BaseEntity {
             unique = false,
             length = 36
     )
-    private String deletedUser;
+    private UUID deletedUser;
 
 }

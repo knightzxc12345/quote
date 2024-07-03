@@ -16,12 +16,12 @@ public class ProductVendorServiceImpl implements ProductVendorService {
     private final ProductVendorRepository productVendorRepository;
 
     @Override
-    public void createAll(List<ProductVendorEntity> productVendorEntities, String userUuid) {
+    public void createAll(List<ProductVendorEntity> productVendorEntities, UUID userUuid) {
         if(null == productVendorEntities || productVendorEntities.isEmpty()){
             return;
         }
         for(ProductVendorEntity productVendorEntity : productVendorEntities){
-            productVendorEntity.setUuid(UUID.randomUUID().toString());
+            productVendorEntity.setUuid(UUID.randomUUID());
             productVendorEntity.setIsDeleted(false);
             productVendorEntity.setCreateTime(Instant.now());
             productVendorEntity.setCreateUser(userUuid);
@@ -30,7 +30,7 @@ public class ProductVendorServiceImpl implements ProductVendorService {
     }
 
     @Override
-    public void deleteAll(List<ProductVendorEntity> productVendorEntities, String userUuid) {
+    public void deleteAll(List<ProductVendorEntity> productVendorEntities, UUID userUuid) {
         if(null == productVendorEntities || productVendorEntities.isEmpty()){
             return;
         }
@@ -43,12 +43,12 @@ public class ProductVendorServiceImpl implements ProductVendorService {
     }
 
     @Override
-    public List<ProductVendorEntity> findAll(String productUuid) {
+    public List<ProductVendorEntity> findAll(UUID productUuid) {
         return productVendorRepository.findByIsDeletedFalseAndProductUuid(productUuid);
     }
 
     @Override
-    public List<ProductVendorEntity> findAllProductUuidIn(List<String> productUuids) {
+    public List<ProductVendorEntity> findAllProductUuidIn(List<UUID> productUuids) {
         return productVendorRepository.findByIsDeletedFalseAndProductUuidIn(productUuids);
     }
 

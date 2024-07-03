@@ -6,10 +6,11 @@ import com.design.controller.vendor_product.response.VendorProductFindPageRespon
 import com.design.controller.vendor_product.response.VendorProductFindResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VendorProductFindUseCase {
 
-    VendorProductFindResponse findByUuid(String vendorProductUuid);
+    VendorProductFindResponse findByUuid(UUID vendorProductUuid);
 
     List<VendorProductFindAllResponse> findAll(VendorProductFindRequest request);
 

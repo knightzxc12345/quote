@@ -26,11 +26,11 @@
                         <select class="selectpicker" id="vendor-name-search-select" data-live-search="true" title="請選擇...">
                         </select>
                         <input type="text" class="form-control" id="vendor-product-search-input" placeholder="關鍵字..." aria-label="關鍵字..." aria-describedby="v-search" style="margin-left: 1px;">
-                        <button class="btn btn-outline-secondary" type="button" id="vendor-product-search" onclick="search();">搜尋</button>
+                        <button class="btn btn-secondary" type="button" id="vendor-product-search" onclick="search();">搜尋</button>
                     </div>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#add-vendor-product" aria-controls="add-vendor-product">新增廠商產品</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-vendor-product" aria-controls="add-vendor-product">新增廠商產品</button>
                 </div>
             </div>
             <table class="table table-striped" id="vendorProductList">
@@ -86,8 +86,8 @@
         </div>
     </div>
     <div class="offcanvas-footer">
-        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-        <button type="button" class="btn btn-outline-success btn-sm" onclick="addVendorProduct();">送出</button>
+        <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="addVendorProduct();">送出</button>
     </div>
 </div>
 
@@ -120,12 +120,12 @@
         </div>
     </div>
     <div class="offcanvas-footer">
-        <button type="button" class="btn btn-outline-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
-        <button type="button" class="btn btn-outline-success btn-sm" onclick="updateVendorProduct();">送出</button>
+        <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="updateVendorProduct();">送出</button>
     </div>
 </div>
 
-<div class="modal fade" id="delete-vendor-product-modal" tabindex="-1" aria-labelledby="delete-vendor-product-label" aria-hidden="true">
+<div class="modal fade" id="delete-vendor-product" tabindex="-1" aria-labelledby="delete-vendor-product-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,7 +134,7 @@
             </div>
             <div class="modal-body">
                 <div class="hide" id="delete-vendor-product-uuid"></div>
-                確定要刪除此廠商?
+                確定要刪除此廠商產品嗎?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">取消</button>

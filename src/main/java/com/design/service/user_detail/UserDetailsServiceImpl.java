@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -15,7 +17,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserById(String userName) {
-        UserEntity userEntity = userService.findByUuid(userName);
+        UUID userUuid = UUID.fromString(userName);
+        UserEntity userEntity = userService.findByUuid(userUuid);
         return new User(userEntity);
     }
 

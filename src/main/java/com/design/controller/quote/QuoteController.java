@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/quote")
 @RestController
@@ -37,7 +38,7 @@ public class QuoteController {
             value = "v1"
     )
     public ResponseBody create(
-            @RequestBody @Validated @NotNull final QuoteCreateRequest request) {
+            @RequestBody @Validated @NotNull QuoteCreateRequest request) {
         quoteCreateUseCase.create(request);
         return new ResponseBody(CommonEnum.C00003);
     }
@@ -46,8 +47,8 @@ public class QuoteController {
             value = "v1/{quoteUuid}"
     )
     public ResponseBody update(
-            @PathVariable("quoteUuid") @NotNull final String quoteUuid,
-            @RequestBody @Validated @NotNull final QuoteUpdateRequest request) {
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid,
+            @RequestBody @Validated @NotNull QuoteUpdateRequest request) {
         quoteUpdateUseCase.update(request, quoteUuid);
         return new ResponseBody(CommonEnum.C00004);
     }
@@ -56,7 +57,7 @@ public class QuoteController {
             value = "v1/{quoteUuid}"
     )
     public ResponseBody delete(
-            @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid) {
         quoteDeleteUseCase.delete(quoteUuid);
         return new ResponseBody(CommonEnum.C00005);
     }
@@ -65,7 +66,7 @@ public class QuoteController {
             value = "v1/{quoteUuid}"
     )
     public ResponseBody findByUuid(
-            @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid) {
         QuoteFindResponse response = quoteFindUseCase.findByUuid(quoteUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }
@@ -74,7 +75,7 @@ public class QuoteController {
             value = "v1/preview/{quoteUuid}"
     )
     public ResponseBody preview(
-            @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid) {
         QuotePreviewResponse response = quoteFileUseCase.preview(quoteUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }
@@ -83,7 +84,7 @@ public class QuoteController {
             value = "v1/download/{quoteUuid}"
     )
     public void download(
-            @PathVariable("quoteUuid") @NotNull final String quoteUuid) {
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid) {
         quoteFileUseCase.download(quoteUuid);
     }
 
@@ -91,7 +92,7 @@ public class QuoteController {
             value = "v1"
     )
     public ResponseBody findAll(
-            @Validated final QuoteFindRequest request) {
+            @Validated QuoteFindRequest request) {
         if(null == request.page() || null == request.size()){
             List<QuoteFindAllResponse> responses = quoteFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);

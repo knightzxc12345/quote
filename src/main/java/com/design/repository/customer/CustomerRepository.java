@@ -8,19 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
     CustomerEntity findByIsDeletedFalseAndName(String name);
 
-    CustomerEntity findByIsDeletedFalseAndUuid(String customerUuid);
+    CustomerEntity findByIsDeletedFalseAndUuid(UUID customerUuid);
 
     List<CustomerEntity> findByIsDeletedFalseOrderByNameAsc();
 
-    List<CustomerEntity> findByIsDeletedFalseAndUuidIn(List<String> uuids);
+    List<CustomerEntity> findByIsDeletedFalseAndUuidIn(List<UUID> uuids);
 
     @Query(value =
             """

@@ -1,12 +1,14 @@
 package com.design.controller.vendor_quote.response;
 
+import java.util.UUID;
+
 public record VendorQuoteFindAllResponse(
 
-        String vendorQuoteUuid,
+        UUID vendorQuoteUuid,
 
-        String vendorUuid,
+        UUID vendorUuid,
 
-        String customerUuid,
+        UUID customerUuid,
 
         String status,
 

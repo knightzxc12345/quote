@@ -56,6 +56,41 @@ function offcanvasEvent(){
     });
 }
 
+// 關閉新增畫布
+function closeAdd() {
+    let offcanvasElement = document.getElementById('add-customer');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#add-customer input').val('');
+    $('#add-customer input').removeClass('is-valid');
+    $('#add-customer input').removeClass('is-invalid');
+}
+
+// 關閉更新畫布
+function closeUpdate() {
+    let offcanvasElement = document.getElementById('update-customer');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    }
+    offcanvas.hide();
+    $('#update-customer input').removeClass('is-valid');
+    $('#update-customer input').removeClass('is-invalid');
+}
+
+// 關閉刪除畫布
+function closeDelete() {
+    let modalElement = document.getElementById('delete-customer');
+    let modal = bootstrap.Modal.getInstance(modalElement);
+    if (!modal) {
+        modal = new bootstrap.Modal(modalElement);
+    }
+    modal.hide();
+}
+
 // 取得客戶清單
 function getCustomers() {
     $.ajax({
@@ -96,7 +131,7 @@ function getCustomers() {
                         </td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-customer-json' data-bs-toggle='offcanvas' data-bs-target='#update-customer' aria-controls='update-customer'>編輯</button>
-                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-customer-json' data-bs-toggle="modal" data-bs-target="#delete-customer-modal">刪除</button>
+                            <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-customer-json' data-bs-toggle="modal" data-bs-target="#delete-customer">刪除</button>
                         </td>
                     </tr>
                 `);
@@ -163,7 +198,8 @@ function addCustomer() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeAdd();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -222,7 +258,8 @@ function updateCustomer() {
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeUpdate();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;
@@ -249,7 +286,8 @@ function deleteCustomer(){
                 alertError('系統錯誤');
                 return;
             }
-            location.reload();
+            closeDelete();
+            search();
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

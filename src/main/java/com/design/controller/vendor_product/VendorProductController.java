@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/vendor-product")
 @RestController
@@ -37,7 +38,7 @@ public class VendorProductController {
             value = "v1"
     )
     public ResponseBody create(
-            @RequestBody @Validated @NotNull final VendorProductCreateRequest request) {
+            @RequestBody @Validated @NotNull VendorProductCreateRequest request) {
         vendorProductCreateUseCase.create(request);
         return new ResponseBody(CommonEnum.C00003);
     }
@@ -46,8 +47,8 @@ public class VendorProductController {
             value = "v1/{vendorProductUuid}"
     )
     public ResponseBody update(
-            @PathVariable("vendorProductUuid") @NotNull final String vendorProductUuid,
-            @RequestBody @Validated @NotNull final VendorProductUpdateRequest request) {
+            @PathVariable("vendorProductUuid") @NotNull UUID vendorProductUuid,
+            @RequestBody @Validated @NotNull VendorProductUpdateRequest request) {
         vendorProductUpdateUseCase.update(request, vendorProductUuid);
         return new ResponseBody(CommonEnum.C00004);
     }
@@ -56,7 +57,7 @@ public class VendorProductController {
             value = "v1/{vendorProductUuid}"
     )
     public ResponseBody delete(
-            @PathVariable("vendorProductUuid") @NotNull final String vendorProductUuid) {
+            @PathVariable("vendorProductUuid") @NotNull UUID vendorProductUuid) {
         vendorProductDeleteUseCase.delete(vendorProductUuid);
         return new ResponseBody(CommonEnum.C00005);
     }
@@ -65,7 +66,7 @@ public class VendorProductController {
             value = "v1/{vendorProductUuid}"
     )
     public ResponseBody findByUuid(
-            @PathVariable("vendorProductUuid") @NotNull final String vendorProductUuid) {
+            @PathVariable("vendorProductUuid") @NotNull UUID vendorProductUuid) {
         VendorProductFindResponse response = vendorProductFindUseCase.findByUuid(vendorProductUuid);
         return new ResponseBody(CommonEnum.C00001, response);
     }
@@ -74,7 +75,7 @@ public class VendorProductController {
             value = "v1"
     )
     public ResponseBody findAll(
-            @Validated final VendorProductFindRequest request) {
+            @Validated VendorProductFindRequest request) {
         if(null == request.page() || null == request.size()){
             List<VendorProductFindAllResponse> responses = vendorProductFindUseCase.findAll(request);
             return new ResponseBody(CommonEnum.C00002, responses);

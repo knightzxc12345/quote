@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
     private final VendorQuoteDetailService vendorQuoteDetailService;
 
     @Override
-    public VendorQuoteFindResponse findByUuid(String vendorQuoteUuid) {
+    public VendorQuoteFindResponse findByUuid(UUID vendorQuoteUuid) {
         // 取得廠商報價單
         VendorQuoteEntity vendorQuoteEntity = vendorQuoteService.findByUuid(vendorQuoteUuid);
         // 取得廠商報價單明細清單
@@ -57,18 +58,22 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
 
     @Override
     public List<VendorQuoteFindAllResponse> findAll(VendorQuoteFindRequest request) {
+        String vendorUuid = null == request.vendorUuid() ? null : request.vendorUuid().toString();
+        String customerUuid = null == request.customerUuid() ? null : request.customerUuid().toString();
         List<VendorQuoteEntity> vendorQuoteEntities = vendorQuoteService.findAll(
-                request.vendorUuid(),
-                request.customerUuid()
+                vendorUuid,
+                customerUuid
         );
         return format(vendorQuoteEntities);
     }
 
     @Override
     public VendorQuoteFindPageResponse findAllByPage(VendorQuoteFindRequest request) {
+        String vendorUuid = null == request.vendorUuid() ? null : request.vendorUuid().toString();
+        String customerUuid = null == request.customerUuid() ? null : request.customerUuid().toString();
         Page<VendorQuoteEntity> vendorQuoteEntityPage = vendorQuoteService.findAllByPage(
-                request.vendorUuid(),
-                request.customerUuid(),
+                vendorUuid,
+                customerUuid,
                 request.page(),
                 request.size()
         );

@@ -9,11 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface VendorQuoteRepository extends JpaRepository<VendorQuoteEntity, Long> {
 
-    VendorQuoteEntity findByIsDeletedFalseAndUuid(String uuid);
+    VendorQuoteEntity findByIsDeletedFalseAndUuid(UUID vendorQuoteUuid);
 
     @Query(value =
             """
@@ -25,8 +26,8 @@ public interface VendorQuoteRepository extends JpaRepository<VendorQuoteEntity, 
                 v.isDeleted = false
                 AND 
                 (
-                    (:vendorUuid IS NULL OR v.vendorUuid = :vendorUuid) OR
-                    (:customerUuid IS NULL OR v.customerUuid = :customerUuid)
+                    (:vendorUuid IS NULL OR CAST(v.vendorUuid AS String) = :vendorUuid) OR
+                    (:customerUuid IS NULL OR CAST(v.customerUuid AS String) = :customerUuid)
                 )
             ORDER BY 
                 v.createTime
@@ -47,8 +48,8 @@ public interface VendorQuoteRepository extends JpaRepository<VendorQuoteEntity, 
                 v.isDeleted = false
                 AND 
                 (
-                    (:vendorUuid IS NULL OR v.vendorUuid = :vendorUuid) OR
-                    (:customerUuid IS NULL OR v.customerUuid = :customerUuid)
+                    (:vendorUuid IS NULL OR CAST(v.vendorUuid AS String) = :vendorUuid) OR
+                    (:customerUuid IS NULL OR CAST(v.customerUuid AS String) = :customerUuid)
                 )
             """
     )
