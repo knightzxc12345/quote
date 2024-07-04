@@ -18,10 +18,10 @@ public class CommonVendorFindUseCaseImpl implements CommonVendorFindUseCase {
     @Override
     public List<CommonVendorFindAllResponse> findAll() {
         List<VendorEntity> vendorEntities = vendorService.findAll();
-        return formatCommon(vendorEntities);
+        return format(vendorEntities);
     }
 
-    private List<CommonVendorFindAllResponse> formatCommon(List<VendorEntity> vendorEntities){
+    private List<CommonVendorFindAllResponse> format(List<VendorEntity> vendorEntities){
         List<CommonVendorFindAllResponse> responses = new ArrayList<>();
         if(null == vendorEntities || vendorEntities.isEmpty()){
             return responses;

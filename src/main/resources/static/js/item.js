@@ -1,11 +1,15 @@
 let globalKeyword = '';
+let globalVendor = '';
+let globalVendorProduct = '';
 
 window.onload = function () {
     init();
+    getVendors();
     getItems();
     searchEnter();
     pageEvent(getItems);
     offcanvasEvent();
+    vendorSelectChange();
 };
 
 // 點擊搜尋
@@ -126,6 +130,165 @@ function getItems() {
             }
             console.log(jsonResponse);
         }
+    });
+}
+
+// 取得廠商
+function getVendors(){
+    $.ajax({
+        url: `/common/vendor/v1`,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00002') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            globalVendor = response.data;
+            getVendorProducts();
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
+// 取得廠商產品清單
+function getVendorProducts() {
+    $.ajax({
+        url: `/common/vendor-product/v1`,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00002') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            globalVendorProduct = response.data;
+            setSelect();
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
+// 設定下拉選單
+function setSelect(){
+    appendColumn();
+    let selectVendor = $('.add-item-vendor-select:last');
+    $.each(globalVendor, function(key, value) {
+        selectVendor.append(`
+            <option value='${value.vendorUuid}'>${value.name}</option>
+        `);
+    });
+    selectVendor.selectpicker('render');
+}
+
+// 加入欄位
+function appendColumn(){
+    $('#item-vendor-product-tbody').append(`
+        <tr>
+            <td>
+                <div class="align-self-center" style="margin-left: 1px;">
+                    <button class="btn btn-sm btn-danger add-item-vendor-product-cancel">X</button>
+                </div>
+            </td>
+            <td>
+                <select class="selectpicker add-item-vendor-select" data-live-search="true">
+
+                </select>
+            </td>
+            <td class="add-item-vendor-product-select-td">
+
+            </td>
+            <td>
+                <input type="text" class="form-control add-product-vendor-product-qty" style="margin-left: 1px;"/>
+            </td>
+            <td>
+                <input type="text" class="form-control add-product-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
+            </td>
+            <td>
+            </td>
+        </tr>
+    `);
+    vendorSelectChange();
+}
+
+// 廠商選項調整
+function vendorSelectChange(){
+    $('.add-item-vendor-select').change(function() {
+        let tr = $(this).closest('tr');
+        addVendorSelect(tr);
+    });
+}
+
+// 廠商產品選項調整
+function vendorProductSelectChange(){
+    $('.add-item-vendor-product-select').change(function() {
+        let tr = $(this).closest('tr');
+        addVendorProductSelect(tr);
+    });
+}
+
+// 新增項目廠商產品選單
+function addVendorSelect(tr){
+    let selectVendor = tr.find('.add-item-vendor-select select');
+    let selectedVendorUuid = selectVendor.val();
+    let selectVendorProductTd = tr.find('.add-item-vendor-product-select-td');
+    selectVendorProductTd.empty();
+    selectVendorProductTd.append(`
+        <select class="selectpicker add-item-vendor-product-select" data-live-search="true">
+
+        </select>
+    `);
+    let selectVendorProduct = tr.find('.add-item-vendor-product-select');
+    $.each(globalVendorProduct, function(key, value) {
+        if(value.vendorUuid != selectedVendorUuid){
+            return;
+        }
+        selectVendorProduct.append(`
+            <option value='${value.vendorProductUuid}'>${value.name}</option>
+        `);
+    });
+    selectVendorProduct.selectpicker('render');
+    vendorProductSelectChange();
+}
+
+// 新增項目廠商產品選單
+function addVendorProductSelect(tr){
+    let selectVendorProduct = tr.find('.add-item-vendor-product-select select');
+    let selectedVendorProductUuid = selectVendorProduct.val();
+    let qty = tr.find('.add-product-vendor-product-qty');
+    let unitPrice = tr.find('.add-product-vendor-product-unit-price');
+    if(isEmpty(qty.val())){
+        qty.val(1);
+    }
+    $.each(globalVendorProduct, function(key, value) {
+        if(value.vendorProductUuid != selectedVendorProductUuid){
+            return;
+        }
+        unitPrice.val(value.unitPrice);
     });
 }
 

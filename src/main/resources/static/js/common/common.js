@@ -203,3 +203,13 @@ function pageEvent(action){
         action();
     });
 }
+
+function generateUUID() {
+    let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    for (var i = 0; i < 10; i++) {
+        var randomIndex = Math.floor(Math.random() * chars.length);
+        result += chars.charAt(randomIndex);
+    }
+    return result;
+}

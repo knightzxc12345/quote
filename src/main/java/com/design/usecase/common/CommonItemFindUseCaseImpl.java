@@ -18,10 +18,10 @@ public class CommonItemFindUseCaseImpl implements CommonItemFindUseCase {
     @Override
     public List<CommonItemFindAllResponse> findAll() {
         List<ItemEntity> itemEntities = itemService.findAllCommon();
-        return formatCommon(itemEntities);
+        return format(itemEntities);
     }
 
-    private List<CommonItemFindAllResponse> formatCommon(List<ItemEntity> itemEntities){
+    private List<CommonItemFindAllResponse> format(List<ItemEntity> itemEntities){
         List<CommonItemFindAllResponse> responses = new ArrayList<>();
         if(null == itemEntities || itemEntities.isEmpty()){
             return responses;

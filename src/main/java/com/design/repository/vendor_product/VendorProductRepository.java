@@ -18,6 +18,8 @@ public interface VendorProductRepository extends JpaRepository<VendorProductEnti
 
     VendorProductEntity findByIsDeletedFalseAndUuid(UUID vendorProductUuid);
 
+    List<VendorProductEntity> findByIsDeletedFalse();
+
     @Query(value =
             """
             SELECT

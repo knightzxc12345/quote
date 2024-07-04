@@ -18,10 +18,10 @@ public class CommonCustomerFindUseCaseImpl implements CommonCustomerFindUseCase 
     @Override
     public List<CommonCustomerFindAllResponse> findAll() {
         List<CustomerEntity> customerEntities = customerService.findAll();
-        return formatCommon(customerEntities);
+        return format(customerEntities);
     }
 
-    private List<CommonCustomerFindAllResponse> formatCommon(List<CustomerEntity> customerEntities){
+    private List<CommonCustomerFindAllResponse> format(List<CustomerEntity> customerEntities){
         List<CommonCustomerFindAllResponse> responses = new ArrayList<>();
         if(null == customerEntities || customerEntities.isEmpty()){
             return responses;
