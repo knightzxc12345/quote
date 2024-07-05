@@ -10,6 +10,8 @@ window.onload = function () {
     pageEvent(getItems);
     offcanvasEvent();
     selectChange();
+    inputChange();
+    buttonClick();
 };
 
 // 點擊搜尋
@@ -233,8 +235,9 @@ function appendColumn(){
             </td>
         </tr>
     `);
-    buttonClick();
     selectChange();
+    inputChange();
+    buttonClick();
 }
 
 function buttonClick(){
@@ -287,8 +290,8 @@ function addItemVendorSelect(tr){
         `);
     });
     selectVendorProduct.selectpicker('render');
+    updateItemQtyInput(tr);
     selectChange();
-    inputChange();
 }
 
 // 新增項目廠商產品數量及成本及總金額
