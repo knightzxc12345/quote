@@ -9,7 +9,7 @@ window.onload = function () {
     searchEnter();
     pageEvent(getItems);
     offcanvasEvent();
-    vendorSelectChange();
+    selectChange();
 };
 
 // 點擊搜尋
@@ -203,17 +203,15 @@ function setSelect(){
         `);
     });
     selectVendor.selectpicker('render');
+    let tr = selectVendor.closest('tr');
+    addItemVendorSelect(tr);
+    updateItemQtyInput(tr);
 }
 
 // 加入欄位
 function appendColumn(){
     $('#item-vendor-product-tbody').append(`
         <tr>
-            <td>
-                <div class="align-self-center" style="margin-left: 1px;">
-                    <button class="btn btn-sm btn-danger add-item-vendor-product-cancel">X</button>
-                </div>
-            </td>
             <td>
                 <select class="selectpicker add-item-vendor-select" data-live-search="true">
 
@@ -223,36 +221,53 @@ function appendColumn(){
 
             </td>
             <td>
-                <input type="text" class="form-control add-product-vendor-product-qty" style="margin-left: 1px;"/>
+                <input type="text" class="form-control add-item-vendor-product-qty" style="margin-left: 1px;"/>
             </td>
             <td>
-                <input type="text" class="form-control add-product-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
+                <input type="text" class="form-control add-item-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
             </td>
             <td>
+                <div class="align-self-center" style="margin-left: 1px;">
+                    <button class="btn btn-sm btn-danger add-item-vendor-product-cancel">x</button>
+                </div>
             </td>
         </tr>
     `);
-    vendorSelectChange();
+    buttonClick();
+    selectChange();
 }
 
-// 廠商選項調整
-function vendorSelectChange(){
-    $('.add-item-vendor-select').change(function() {
-        let tr = $(this).closest('tr');
-        addVendorSelect(tr);
+function buttonClick(){
+    $('.add-item-vendor-product-add').click(function() {
+
+    });
+    $('.add-item-vendor-product-cancel').click(function() {
+
     });
 }
 
-// 廠商產品選項調整
-function vendorProductSelectChange(){
+// 廠商選項調整
+function selectChange(){
+    $('.add-item-vendor-select').change(function() {
+        let tr = $(this).closest('tr');
+        addItemVendorSelect(tr);
+    });
     $('.add-item-vendor-product-select').change(function() {
         let tr = $(this).closest('tr');
-        addVendorProductSelect(tr);
+        updateItemQtyInput(tr);
+    });
+}
+
+// 廠商產品數量調整
+function inputChange(){
+    $('.add-item-vendor-product-qty').change(function() {
+        let tr = $(this).closest('tr');
+        updateItemQtyInput(tr);
     });
 }
 
 // 新增項目廠商產品選單
-function addVendorSelect(tr){
+function addItemVendorSelect(tr){
     let selectVendor = tr.find('.add-item-vendor-select select');
     let selectedVendorUuid = selectVendor.val();
     let selectVendorProductTd = tr.find('.add-item-vendor-product-select-td');
@@ -272,24 +287,33 @@ function addVendorSelect(tr){
         `);
     });
     selectVendorProduct.selectpicker('render');
-    vendorProductSelectChange();
+    selectChange();
+    inputChange();
 }
 
-// 新增項目廠商產品選單
-function addVendorProductSelect(tr){
+// 新增項目廠商產品數量及成本及總金額
+function updateItemQtyInput(tr){
     let selectVendorProduct = tr.find('.add-item-vendor-product-select select');
     let selectedVendorProductUuid = selectVendorProduct.val();
-    let qty = tr.find('.add-product-vendor-product-qty');
-    let unitPrice = tr.find('.add-product-vendor-product-unit-price');
+    let qty = tr.find('.add-item-vendor-product-qty');
+    let unitPrice = tr.find('.add-item-vendor-product-unit-price');
     if(isEmpty(qty.val())){
         qty.val(1);
     }
+    let price = 0;
     $.each(globalVendorProduct, function(key, value) {
         if(value.vendorProductUuid != selectedVendorProductUuid){
             return;
         }
-        unitPrice.val(value.unitPrice);
+        price = parseInt(value.unitPrice) * parseInt(qty.val());
+        unitPrice.val(price.toLocaleString());
     });
+    let totalAmount = $('#add-item-total-amount');
+    let amount = 0;
+    $.each($('.add-item-vendor-product-unit-price'), function(key, value){
+        amount += parseInt($(this).val().replace(/,/g, ''));
+    });
+    totalAmount.text(amount.toLocaleString());
 }
 
 // 新增項目

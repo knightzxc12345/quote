@@ -85,13 +85,12 @@
             <table class="table table-striped vertical-align-middle" id="itemVendorProductList">
                 <thead>
                 <tr>
-                    <th></th>
                     <th scope="col" style="width: 30%;">廠商</th>
                     <th scope="col" style="width: 30%;">廠商產品</th>
                     <th scope="col" style="width: 15%;">數量</th>
                     <th scope="col" style="width: 15%;">成本</th>
                     <th scope="col" style="width: 10%;">
-                        <button class="btn btn-sm btn-success add-item-vendor-product-cancel">+</button>
+                        <button class="btn btn-sm btn-success add-item-vendor-product-add">+</button>
                     </th>
                 </tr>
                 </thead>
@@ -99,6 +98,13 @@
 
                 </tbody>
             </table>
+            <div class="d-flex justify-content-end">
+                <div class="p-2 col-1 total-title">總計</div>
+                <div class="p-2 col-2">
+                    <span>$</span>
+                    <span id="add-item-total-amount">0</span>
+                </div>
+            </div>
         </div>
         <div class="offcanvas-footer">
             <button type="button" class="btn btn-primary" onclick="addItem();">送出</button>
