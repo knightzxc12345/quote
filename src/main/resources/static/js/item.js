@@ -11,7 +11,6 @@ window.onload = function () {
     offcanvasEvent();
     selectChange();
     inputChange();
-    buttonClick();
 };
 
 // 點擊搜尋
@@ -66,13 +65,6 @@ function closeDelete() {
 
 // 事件配置
 function offcanvasEvent(){
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('[data-bs-dismiss="offcanvas"]')) {
-            $('.offcanvas-body .form-control').val('');
-            $('.offcanvas-body .form-control').removeClass('is-valid');
-            $('.offcanvas-body .form-control').removeClass('is-invalid');
-        }
-    });
     $('#itemList').on('click', '.get-update-item-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
@@ -84,6 +76,9 @@ function offcanvasEvent(){
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
         $('#delete-item-uuid').val(jsonData.itemUuid);
+    });
+    $('.add-item-vendor-product-add').click(function() {
+        setSelect();
     });
 }
 
@@ -237,16 +232,7 @@ function appendColumn(){
     `);
     selectChange();
     inputChange();
-    buttonClick();
-}
-
-function buttonClick(){
-    $('.add-item-vendor-product-add').click(function() {
-
-    });
-    $('.add-item-vendor-product-cancel').click(function() {
-
-    });
+    cancelClick();
 }
 
 // 廠商選項調整
@@ -266,6 +252,19 @@ function inputChange(){
     $('.add-item-vendor-product-qty').change(function() {
         let tr = $(this).closest('tr');
         updateItemQtyInput(tr);
+    });
+}
+
+// 點擊取消事件
+function cancelClick(){
+    $('.add-item-vendor-product-cancel').click(function() {
+        let length = $('#item-vendor-product-tbody tr').length;
+        if(length <= 1){
+            return;
+        }
+        let tr = $(this).closest('tr');
+        tr.remove();
+        countAmount();
     });
 }
 
@@ -311,6 +310,11 @@ function updateItemQtyInput(tr){
         price = parseInt(value.unitPrice) * parseInt(qty.val());
         unitPrice.val(price.toLocaleString());
     });
+    countAmount();
+}
+
+// 計算總計
+function countAmount(){
     let totalAmount = $('#add-item-total-amount');
     let amount = 0;
     $.each($('.add-item-vendor-product-unit-price'), function(key, value){
@@ -323,15 +327,20 @@ function updateItemQtyInput(tr){
 function addItem() {
     const no = $("#add-item-no").val();
     const name = $("#add-item-name").val();
+    const spec = $("#add-item-spec").val();
+    const vendorProducts = getItemVendorProducts($("#item-vendor-product-tbody tr"));
     // 驗證
     const noValid = validateInput(no, "#add-item-no");
     const nameValid = validateInput(name, "#add-item-name");
-    if (!noValid || !nameValid) {
+    const specValid = validateInput(name, "#add-item-spec");
+    if (!noValid || !nameValid || !specValid) {
         return;
     }
     let data = {
         no: no,
-        name: name
+        name: name,
+        spec: spec,
+        vendorProducts : vendorProducts
     };
     $.ajax({
         url: '/item/v1',
@@ -357,6 +366,19 @@ function addItem() {
             alertError(message);
         }
     });
+}
+
+function getItemVendorProducts(vendorProductTrs){
+    let vendorProducts = [];
+    let vendorProduct;
+    $.each(vendorProductTrs, function(key, value){
+        vendorProduct = {
+            "vendorProductUuid" : value.find('.add-item-vendor-product-select').val(),
+            "qty" : value.find('.add-item-vendor-product-qty').val()
+        };
+        vendorProducts.push(vendorProduct);
+    });
+    return vendorProducts;
 }
 
 // 更新項目
