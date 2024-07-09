@@ -30,8 +30,6 @@ public class CommonController {
 
     private final CommonVendorProductFindUseCase commonVendorProductFindUseCase;
 
-    private final CommonProductFindUseCase commonProductFindUseCase;
-
     private final CommonItemFindUseCase commonItemFindUseCase;
 
     @PostMapping(
@@ -72,14 +70,6 @@ public class CommonController {
     )
     public ResponseBody findAllVendorProduct() {
         List<CommonVendorProductFindAllResponse> responses = commonVendorProductFindUseCase.findAll();
-        return new ResponseBody(CommonEnum.C00002, responses);
-    }
-
-    @GetMapping(
-            value = "product/v1"
-    )
-    public ResponseBody findAllProduct() {
-        List<CommonProductFindAllResponse> responses = commonProductFindUseCase.findAll();
         return new ResponseBody(CommonEnum.C00002, responses);
     }
 

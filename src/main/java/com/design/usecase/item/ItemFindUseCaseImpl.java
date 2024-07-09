@@ -35,8 +35,11 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
 
     @Override
     public ItemFindResponse findByUuid(UUID itemUuid) {
+        // 取得品項
         ItemEntity itemEntity = itemService.findByUuid(itemUuid);
-        return format(itemEntity);
+        // 取得品項廠商產品清單
+        List<ItemVendorProductEntity> itemVendorProductEntities = itemVendorProductService.findAllByItemUuid(itemEntity.getUuid());
+        return format(itemEntity, itemVendorProductEntities);
     }
 
     @Override
@@ -63,11 +66,16 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         );
     }
 
-    private ItemFindResponse format(ItemEntity itemEntity){
+    private ItemFindResponse format(
+            ItemEntity itemEntity,
+            List<ItemVendorProductEntity> itemVendorProductEntities){
+        // 取得品項廠商產品uuid清單
+        List<UUID> itemVendorProductUuids = CommonUtil.getEntityUuids(itemVendorProductEntities);
         return new ItemFindResponse(
                 itemEntity.getUuid(),
                 itemEntity.getNo(),
-                itemEntity.getName()
+                itemEntity.getName(),
+                itemVendorProductUuids
         );
     }
 

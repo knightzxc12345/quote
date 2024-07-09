@@ -1,5 +1,6 @@
 package com.design.controller.item.response;
 
+import java.util.List;
 import java.util.UUID;
 
 public record ItemFindResponse(
@@ -8,7 +9,9 @@ public record ItemFindResponse(
 
         String no,
 
-        String name
+        String name,
+
+        List<UUID> itemVendorProductUuids
 
 ) {
 }

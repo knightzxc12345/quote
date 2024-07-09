@@ -1,9 +1,9 @@
 package com.design.usecase.item;
 
 import com.design.entity.item.ItemEntity;
-import com.design.entity.product.ProductEntity;
+import com.design.entity.item_vendor_product.ItemVendorProductEntity;
 import com.design.service.item.ItemService;
-import com.design.service.product.ProductService;
+import com.design.service.item_vendor_producct.ItemVendorProductService;
 import com.design.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,18 @@ public class ItemDeleteUseCaseImpl implements ItemDeleteUseCase {
 
     private final ItemService itemService;
 
-    private final ProductService productService;
+    private final ItemVendorProductService itemVendorProductService;
 
     @Override
     public void delete(UUID itemUuid) {
+        // 取得品項
         ItemEntity itemEntity = itemService.findByUuid(itemUuid);
-        List<ProductEntity> productEntities = productService.findAllByItemUuid(itemUuid);
-        // 刪除項目
+        // 取得品項廠商產品清單
+        List<ItemVendorProductEntity> itemVendorProductEntities = itemVendorProductService.findAllByItemUuid(itemEntity.getUuid());
+        // 刪除品項
         itemService.delete(itemEntity, JwtUtil.extractUserUuid());
-        // 刪除產品
-        productService.deleteAll(productEntities, JwtUtil.extractUserUuid());
+        // 刪除品項廠商產品清單
+        itemVendorProductService.deleteAll(itemVendorProductEntities, JwtUtil.extractUserUuid());
     }
 
 }

@@ -31,7 +31,7 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
         // 初始化品項
         ItemEntity itemEntity = init(request);
         // 初始化品項廠商產品清單
-        List<ItemVendorProductEntity> itemVendorProductEntities = initItemVendorProducts(request, itemEntity.getUuid());
+        List<ItemVendorProductEntity> itemVendorProductEntities = initItemVendorProducts(request, itemEntity);
         // 寫入品項
         itemService.create(itemEntity, JwtUtil.extractUserUuid());
         // 寫入品項廠商產品清單
@@ -49,7 +49,7 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
     }
 
     // 初始化品項廠商產品清單
-    private List<ItemVendorProductEntity> initItemVendorProducts(ItemCreateRequest request, UUID itemUuid){
+    private List<ItemVendorProductEntity> initItemVendorProducts(ItemCreateRequest request, ItemEntity itemEntity){
         List<ItemVendorProductEntity> itemVendorProductEntities = new ArrayList<>();
         List<ItemCreateRequest.VendorProduct> vendorProducts = request.vendorProducts();
         if(null == vendorProducts || vendorProducts.isEmpty()){
@@ -68,7 +68,7 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
             }
             itemVendorProductEntity = new ItemVendorProductEntity();
             itemVendorProductEntity.setVendorProductUuid(vendorProduct.vendorProductUuid());
-            itemVendorProductEntity.setItemUuid(itemUuid);
+            itemVendorProductEntity.setItemUuid(itemEntity.getUuid());
             itemVendorProductEntity.setQty(vendorProduct.qty());
             itemVendorProductEntities.add(itemVendorProductEntity);
         }

@@ -88,7 +88,7 @@
                     規格不得為空!
                 </div>
             </div>
-            <table class="table table-striped vertical-align-middle" id="itemVendorProductList">
+            <table class="table table-striped vertical-align-middle">
                 <thead>
                 <tr>
                     <th scope="col" style="width: 30%;">廠商</th>
@@ -100,7 +100,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody id="item-vendor-product-tbody">
+                <tbody id="add-item-vendor-product-tbody">
 
                 </tbody>
             </table>
@@ -138,9 +138,38 @@
                     品名不得為空!
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">規格</span>
+                <input type="text" class="form-control" id="update-item-spec">
+                <div class="invalid-feedback">
+                    規格不得為空!
+                </div>
+            </div>
+            <table class="table table-striped vertical-align-middle">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 30%;">廠商</th>
+                    <th scope="col" style="width: 30%;">廠商產品</th>
+                    <th scope="col" style="width: 15%;">數量</th>
+                    <th scope="col" style="width: 15%;">成本</th>
+                    <th scope="col" style="width: 10%;">
+                        <button class="btn btn-sm btn-success add-item-vendor-product-add">+</button>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="update-item-vendor-product-tbody">
+
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+                <div class="p-2 col-1 total-title">總計</div>
+                <div class="p-2 col-2">
+                    <span>$</span>
+                    <span id="update-item-total-amount">0</span>
+                </div>
+            </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-danger btn-sm margin-right-3" data-bs-dismiss="offcanvas">關閉</button>
             <button type="button" class="btn btn-success btn-sm" onclick="updateItem();">送出</button>
         </div>
     </div>
