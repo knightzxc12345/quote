@@ -18,6 +18,8 @@ public interface VendorProductService {
 
     List<VendorProductEntity> findAll();
 
+    List<VendorProductEntity> findAllIn(List<UUID> vendorProductUuids);
+
     List<VendorProductEntity> findAllLike(
             String vendorUuid,
             String keyword

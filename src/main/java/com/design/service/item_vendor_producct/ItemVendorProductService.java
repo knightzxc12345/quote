@@ -15,4 +15,6 @@ public interface ItemVendorProductService {
 
     List<ItemVendorProductEntity> findAllByItemUuid(UUID itemUuid);
 
+    List<ItemVendorProductEntity> findAllByItemUuidIn(List<UUID> itemUuids);
+
 }

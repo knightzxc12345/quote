@@ -52,4 +52,9 @@ public class ItemVendorProductServiceImpl implements ItemVendorProductService {
         return itemVendorProductRepository.findByIsDeletedFalseAndItemUuid(itemUuid);
     }
 
+    @Override
+    public List<ItemVendorProductEntity> findAllByItemUuidIn(List<UUID> itemUuids) {
+        return itemVendorProductRepository.findByIsDeletedFalseAndItemUuidInOrderByCreateTimeAsc(itemUuids);
+    }
+
 }

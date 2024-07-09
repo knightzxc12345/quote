@@ -5,8 +5,14 @@ import com.design.controller.item.response.ItemFindAllResponse;
 import com.design.controller.item.response.ItemFindPageResponse;
 import com.design.controller.item.response.ItemFindResponse;
 import com.design.entity.item.ItemEntity;
+import com.design.entity.item_vendor_product.ItemVendorProductEntity;
+import com.design.entity.vendor.VendorEntity;
+import com.design.entity.vendor_product.VendorProductEntity;
 import com.design.service.item.ItemService;
-import com.design.service.product.ProductService;
+import com.design.service.item_vendor_producct.ItemVendorProductService;
+import com.design.service.vendor.VendorService;
+import com.design.service.vendor_product.VendorProductService;
+import com.design.utils.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,7 +27,11 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
 
     private final ItemService itemService;
 
-    private final ProductService productService;
+    private final ItemVendorProductService itemVendorProductService;
+
+    private final VendorProductService vendorProductService;
+
+    private final VendorService vendorService;
 
     @Override
     public ItemFindResponse findByUuid(UUID itemUuid) {
@@ -66,14 +76,98 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
         if(null == itemEntities || itemEntities.isEmpty()){
             return responses;
         }
+        // 取得品項uuid清單
+        List<UUID> itemUuids = CommonUtil.getEntityUuids(itemEntities);
+        // 取得品項廠商產品清單
+        List<ItemVendorProductEntity> itemVendorProductEntities = itemVendorProductService.findAllByItemUuidIn(itemUuids);
+        // 取得廠商產品uuid清單
+        List<UUID> vendorProductUuids = getVendorProductUuids(itemVendorProductEntities);
+        // 取得廠商產品清單
+        List<VendorProductEntity> vendorProductEntities = vendorProductService.findAllIn(vendorProductUuids);
+        // 取得廠商清單
+        List<VendorEntity> vendorEntities = vendorService.findAll();
+        List<ItemVendorProductEntity> tempItemVendorProductEntities;
+        List<ItemFindAllResponse.VendorProduct> vendorProducts;
         for(ItemEntity itemEntity : itemEntities){
+            // 取得回傳品項廠商產品清單
+            tempItemVendorProductEntities = getItemVendorProducts(
+                    itemVendorProductEntities,
+                    itemEntity
+            );
+            // 取得回傳廠商產品
+            vendorProducts = getVendorProducts(
+                    tempItemVendorProductEntities,
+                    vendorProductEntities,
+                    vendorEntities
+            );
             responses.add(new ItemFindAllResponse(
                     itemEntity.getUuid(),
                     itemEntity.getNo(),
-                    itemEntity.getName()
+                    itemEntity.getName(),
+                    itemEntity.getSpec(),
+                    vendorProducts
             ));
         }
         return responses;
+    }
+
+    // 取得回傳品項廠商產品清單
+    private List<ItemVendorProductEntity> getItemVendorProducts(List<ItemVendorProductEntity> itemVendorProductEntities, ItemEntity itemEntity){
+        List<ItemVendorProductEntity> result = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return result;
+        }
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            if(!itemVendorProductEntity.getItemUuid().equals(itemEntity.getUuid())){
+                continue;
+            }
+            result.add(itemVendorProductEntity);
+        }
+        return result;
+    }
+
+    // 取得廠商產品uuid清單
+    private List<UUID> getVendorProductUuids(List<ItemVendorProductEntity> itemVendorProductEntities){
+        List<UUID> vendorProductUuids = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return vendorProductUuids;
+        }
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            vendorProductUuids.add(itemVendorProductEntity.getVendorProductUuid());
+        }
+        return vendorProductUuids;
+    }
+
+    // 取得回傳廠商產品
+    private List<ItemFindAllResponse.VendorProduct> getVendorProducts(
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            List<VendorProductEntity> vendorProductEntities,
+            List<VendorEntity> vendorEntities){
+        List<ItemFindAllResponse.VendorProduct> vendorProducts = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return vendorProducts;
+        }
+        VendorProductEntity vendorProductEntity;
+        VendorEntity vendorEntity;
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
+            if(null == vendorProductEntity){
+                continue;
+            }
+            vendorEntity = CommonUtil.getEntityByUuid(vendorEntities, vendorProductEntity.getVendorUuid());
+            if(null == vendorEntity){
+                continue;
+            }
+            vendorProducts.add(new ItemFindAllResponse.VendorProduct(
+                    vendorEntity.getUuid(),
+                    vendorEntity.getName(),
+                    vendorProductEntity.getUuid(),
+                    vendorProductEntity.getName(),
+                    itemVendorProductEntity.getQty(),
+                    vendorProductEntity.getUnitPrice()
+            ));
+        }
+        return vendorProducts;
     }
 
 }

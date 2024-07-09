@@ -5,7 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
@@ -43,6 +42,16 @@ public class ItemVendorProductEntity extends BaseEntity {
     )
     @NotNull
     private UUID vendorProductUuid;
+
+    // 數量
+    @Column(
+            name = "qty",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private Integer qty;
 
     // 是否刪除
     @Column(

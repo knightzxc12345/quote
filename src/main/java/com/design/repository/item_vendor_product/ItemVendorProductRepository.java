@@ -14,4 +14,6 @@ public interface ItemVendorProductRepository extends JpaRepository<ItemVendorPro
 
     List<ItemVendorProductEntity> findByIsDeletedFalseAndItemUuid(UUID itemUuid);
 
+    List<ItemVendorProductEntity> findByIsDeletedFalseAndItemUuidInOrderByCreateTimeAsc(List<UUID> itemUuids);
+
 }

@@ -30,7 +30,6 @@ public class ItemServiceImpl implements ItemService {
         if(null != isExists){
             throw new BusinessException(ItemEnum.IT0001);
         }
-        itemEntity.setUuid(UUID.randomUUID());
         itemEntity.setIsDeleted(false);
         itemEntity.setCreateTime(Instant.now());
         itemEntity.setCreateUser(userUuid);

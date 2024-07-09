@@ -1,5 +1,7 @@
 package com.design.controller.item.response;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public record ItemFindAllResponse(
@@ -8,7 +10,29 @@ public record ItemFindAllResponse(
 
         String no,
 
-        String name
+        String name,
+
+        String spec,
+
+        List<ItemFindAllResponse.VendorProduct> vendorProducts
 
 ) {
+
+        public record VendorProduct(
+
+                UUID vendorUuid,
+
+                String vendorName,
+
+                UUID vendorProductUuid,
+
+                String vendorProductName,
+
+                Integer qty,
+
+                BigDecimal unitPrice
+
+        ){
+        }
+
 }

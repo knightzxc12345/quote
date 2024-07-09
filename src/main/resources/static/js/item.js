@@ -39,6 +39,8 @@ function closeAdd() {
     $('#add-item input').val('');
     $('#add-item input').removeClass('is-valid');
     $('#add-item input').removeClass('is-invalid');
+    $('#item-vendor-product-tbody').empty();
+    setSelect();
 }
 
 // 關閉更新畫布
@@ -100,12 +102,31 @@ function getItems() {
                 return;
             }
             $("#item-tbody").empty();
+            let vendors;
+            let vendorProducts;
+            let qty;
+            let unitPrice;
+            let amount;
+            let totalAmount;
             $.each(response.data.responses, function (key, value) {
+                vendors = formatVendor(value.vendorProducts);
+                vendorProducts = formatVendorProduct(value.vendorProducts);
+                qty = formatQty(value.vendorProducts);
+                unitPrice = formatUnitPrice(value.vendorProducts);
+                amount = formatAmount(value.vendorProducts);
+                totalAmount = formatTotalAmount(value.vendorProducts);
                 $("#item-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
-                        <td>${value.no}</td>
-                        <td>${value.name}</td>
-                        <td>
+                        <td style='vertical-align: middle;'>${value.no}</td>
+                        <td style='vertical-align: middle;'>${value.name}</td>
+                        <td style='vertical-align: middle;'>${value.spec}</td>
+                        <td>${vendors}</td>
+                        <td>${vendorProducts}</td>
+                        <td>${qty}</td>
+                        <td>${unitPrice}</td>
+                        <td>${amount}</td>
+                        <td style='vertical-align: middle;'>${totalAmount}</td>
+                        <td style='vertical-align: middle;'>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-item-json' data-bs-toggle='offcanvas' data-bs-target='#update-item' aria-controls='update-item'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-item-json' data-bs-toggle="modal" data-bs-target="#delete-item">刪除</button>
                         </td>
@@ -128,6 +149,88 @@ function getItems() {
             console.log(jsonResponse);
         }
     });
+}
+
+// 轉換廠商清單
+function formatVendor(value){
+    let result = '';
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        result += `
+            <div class='row'>
+                <div class='col'>${value[i].vendorName}</div>
+            </div>
+        `;
+    }
+    return result;
+}
+
+// 轉換廠商產品清單
+function formatVendorProduct(value){
+    let result = '';
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        result += `
+            <div class='row'>
+                <div class='col'>${value[i].vendorProductName}</div>
+            </div>
+        `;
+    }
+    return result;
+}
+
+// 轉換數量清單
+function formatQty(value){
+    let result = '';
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        result += `
+            <div class='row'>
+                <div class='col'>${value[i].qty}</div>
+            </div>
+        `;
+    }
+    return result;
+}
+
+// 轉換數量清單
+function formatUnitPrice(value){
+    let result = '';
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        result += `
+            <div class='row'>
+                <div class='col'>${value[i].unitPrice.toLocaleString()}</div>
+            </div>
+        `;
+    }
+    return result;
+}
+
+// 轉換數量清單
+function formatAmount(value){
+    let result = '';
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        amount = parseInt(value[i].qty) * parseInt(value[i].unitPrice);
+        result += `
+            <div class='row'>
+                <div class='col'>${amount.toLocaleString()}</div>
+            </div>
+        `;
+    }
+    return result;
+}
+
+// 轉換總計
+function formatTotalAmount(value){
+    let totalAmount = 0;
+    let amount;
+    for(let i = 0; i < value.length; i ++){
+        amount = parseInt(value[i].qty) * parseInt(value[i].unitPrice);
+        totalAmount += amount;
+    }
+    return totalAmount.toLocaleString();
 }
 
 // 取得廠商
@@ -368,13 +471,14 @@ function addItem() {
     });
 }
 
+// 取得廠商產品清單
 function getItemVendorProducts(vendorProductTrs){
     let vendorProducts = [];
     let vendorProduct;
     $.each(vendorProductTrs, function(key, value){
         vendorProduct = {
-            "vendorProductUuid" : value.find('.add-item-vendor-product-select').val(),
-            "qty" : value.find('.add-item-vendor-product-qty').val()
+            "vendorProductUuid" : $(value).find('.add-item-vendor-product-select select').val(),
+            "qty" : $(value).find('.add-item-vendor-product-qty').val()
         };
         vendorProducts.push(vendorProduct);
     });

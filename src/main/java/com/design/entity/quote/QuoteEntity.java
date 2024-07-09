@@ -3,6 +3,8 @@ package com.design.entity.quote;
 import com.design.entity.base.BaseEntity;
 import com.design.entity.enums.QuoteStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -112,6 +114,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal amount;
 
@@ -122,6 +126,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal tax;
 
@@ -132,6 +138,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal totalAmount;
 
@@ -142,6 +150,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal customAmount;
 
@@ -152,6 +162,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal customTax;
 
@@ -162,6 +174,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal customTotalAmount;
 
@@ -172,6 +186,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal costAmount;
 
@@ -182,6 +198,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal costTax;
 
@@ -192,6 +210,8 @@ public class QuoteEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal costTotalAmount;
 

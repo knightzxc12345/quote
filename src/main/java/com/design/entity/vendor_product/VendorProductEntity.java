@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -52,6 +54,8 @@ public class VendorProductEntity extends BaseEntity {
             updatable = true,
             unique = false
     )
+    @Digits(integer = 8, fraction = 0)
+    @Min(0)
     @NotNull
     private BigDecimal unitPrice;
 

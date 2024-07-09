@@ -43,6 +43,17 @@ public class ItemEntity extends BaseEntity {
     @NotBlank
     private String name;
 
+    // 規格
+    @Column(
+            name = "spec",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 256
+    )
+    @NotBlank
+    private String spec;
+
     // 是否刪除
     @Column(
             name = "is_deleted",

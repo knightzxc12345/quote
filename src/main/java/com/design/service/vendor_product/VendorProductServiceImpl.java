@@ -70,6 +70,11 @@ public class VendorProductServiceImpl implements VendorProductService {
     }
 
     @Override
+    public List<VendorProductEntity> findAllIn(List<UUID> vendorProductUuids) {
+        return vendorProductRepository.findByIsDeletedFalseAndUuidInOrderByNameAsc(vendorProductUuids);
+    }
+
+    @Override
     public List<VendorProductEntity> findAllLike(
             String vendorUuid,
             String keyword) {
