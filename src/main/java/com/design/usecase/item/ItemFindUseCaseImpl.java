@@ -69,14 +69,28 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
     private ItemFindResponse format(
             ItemEntity itemEntity,
             List<ItemVendorProductEntity> itemVendorProductEntities){
-        // 取得品項廠商產品uuid清單
-        List<UUID> itemVendorProductUuids = CommonUtil.getEntityUuids(itemVendorProductEntities);
+        List<ItemFindResponse.vendorProduct> vendorProducts = getItemVendorProducts(itemVendorProductEntities);
         return new ItemFindResponse(
                 itemEntity.getUuid(),
                 itemEntity.getNo(),
                 itemEntity.getName(),
-                itemVendorProductUuids
+                vendorProducts
         );
+    }
+
+    // 取得品項廠商產品
+    private List<ItemFindResponse.vendorProduct> getItemVendorProducts(List<ItemVendorProductEntity> itemVendorProductEntities){
+        List<ItemFindResponse.vendorProduct> vendorProducts = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return vendorProducts;
+        }
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            vendorProducts.add(new ItemFindResponse.vendorProduct(
+                    itemVendorProductEntity.getVendorUuid(),
+                    itemVendorProductEntity.getVendorProductUuid()
+            ));
+        }
+        return vendorProducts;
     }
 
     private List<ItemFindAllResponse> format(List<ItemEntity> itemEntities){

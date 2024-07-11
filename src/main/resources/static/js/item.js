@@ -51,8 +51,10 @@ function closeUpdate() {
         offcanvas = new bootstrap.Offcanvas(offcanvasElement);
     }
     offcanvas.hide();
+    $('#update-item input').val('');
     $('#update-item input').removeClass('is-valid');
     $('#update-item input').removeClass('is-invalid');
+    $('#update-item-vendor-product-tbody').empty();
 }
 
 // 關閉刪除畫布
@@ -70,10 +72,13 @@ function offcanvasEvent(){
     $('#itemList').on('click', '.get-update-item-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
+        const vendorProducts = jsonData.vendorProducts;
         $('#update-item-uuid').val(jsonData.itemUuid);
         $('#update-item-no').val(jsonData.no);
         $('#update-item-name').val(jsonData.name);
         $('#update-item-spec').val(jsonData.spec);
+        $('#update-item-vendor-product-tbody').empty();
+        updateAppend(vendorProducts);
     });
     $('#itemList').on('click', '.get-delete-item-json', function() {
         const row = $(this).closest('tr');
@@ -83,6 +88,16 @@ function offcanvasEvent(){
     $('.add-item-vendor-product-add').click(function() {
         setAddSelect();
     });
+    $('.update-item-vendor-product-add').click(function() {
+        setUpdateSelect();
+    });
+}
+
+// 更新廠商產品清單
+function updateAppend(vendorProducts){
+    for(let i = 0; i < vendorProducts.length; i++){
+        setUpdateSelect(vendorProducts[i]);
+    }
 }
 
 // 取得項目清單
@@ -294,9 +309,9 @@ function getVendorProducts() {
     });
 }
 
-// 設定下拉選單
+// 設定新增下拉選單
 function setAddSelect(){
-    appendColumn();
+    addAppendColumn();
     let selectVendor = $('.add-item-vendor-select:last');
     $.each(globalVendor, function(key, value) {
         selectVendor.append(`
@@ -309,8 +324,26 @@ function setAddSelect(){
     addItemQtyInput(tr);
 }
 
+// 設定編輯下拉選單
+function setUpdateSelect(vendorProduct){
+    updateAppendColumn();
+    let selectVendor = $('.update-item-vendor-select:last');
+    let vendorUuid = null == vendorProduct ? null : vendorProduct.vendorUuid;
+    let selected;
+    $.each(globalVendor, function(key, value) {
+        selected = (null != vendorUuid && value.vendorUuid == vendorUuid) ? 'selected' : '';
+        selectVendor.append(`
+            <option value='${value.vendorUuid}' ${selected}>${value.name}</option>
+        `);
+    });
+    selectVendor.selectpicker('render');
+    let tr = selectVendor.closest('tr');
+    updateItemVendorSelect(tr, vendorProduct);
+    updateItemQtyInput(tr, vendorProduct);
+}
+
 // 加入欄位
-function appendColumn(){
+function addAppendColumn(){
     $('#add-item-vendor-product-tbody').append(`
         <tr>
             <td>
@@ -339,7 +372,37 @@ function appendColumn(){
     addCancelClick();
 }
 
-// 廠商選項調整
+// 編輯欄位
+function updateAppendColumn(){
+    $('#update-item-vendor-product-tbody').append(`
+        <tr>
+            <td>
+                <select class="selectpicker update-item-vendor-select" data-live-search="true">
+
+                </select>
+            </td>
+            <td class="update-item-vendor-product-select-td">
+
+            </td>
+            <td>
+                <input type="text" class="form-control update-item-vendor-product-qty" style="margin-left: 1px;"/>
+            </td>
+            <td>
+                <input type="text" class="form-control update-item-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
+            </td>
+            <td>
+                <div class="align-self-center" style="margin-left: 1px;">
+                    <button class="btn btn-sm btn-danger update-item-vendor-product-cancel">x</button>
+                </div>
+            </td>
+        </tr>
+    `);
+    updateSelectChange();
+    updateInputChange();
+    updateCancelClick();
+}
+
+// 新增廠商選項調整
 function addSelectChange(){
     $('.add-item-vendor-select').change(function() {
         let tr = $(this).closest('tr');
@@ -351,7 +414,19 @@ function addSelectChange(){
     });
 }
 
-// 廠商產品數量調整
+// 變更廠商選項調整
+function updateSelectChange(){
+    $('.update-item-vendor-select').change(function() {
+        let tr = $(this).closest('tr');
+        updateItemVendorSelect(tr, null);
+    });
+    $('.update-item-vendor-product-select').change(function() {
+        let tr = $(this).closest('tr');
+        updateItemQtyInput(tr, null);
+    });
+}
+
+// 新增廠商產品數量調整
 function addInputChange(){
     $('.add-item-vendor-product-qty').change(function() {
         let tr = $(this).closest('tr');
@@ -359,7 +434,15 @@ function addInputChange(){
     });
 }
 
-// 點擊取消事件
+// 變更廠商產品數量調整
+function updateInputChange(){
+    $('.update-item-vendor-product-qty').change(function() {
+        let tr = $(this).closest('tr');
+        updateItemQtyInput(tr, null);
+    });
+}
+
+// 新增點擊取消事件
 function addCancelClick(){
     $('.add-item-vendor-product-cancel').click(function() {
         let length = $('#add-item-vendor-product-tbody tr').length;
@@ -369,6 +452,19 @@ function addCancelClick(){
         let tr = $(this).closest('tr');
         tr.remove();
         addCountAmount();
+    });
+}
+
+// 編輯點擊取消事件
+function updateCancelClick(){
+    $('.update-item-vendor-product-cancel').click(function() {
+        let length = $('#update-item-vendor-product-tbody tr').length;
+        if(length <= 1){
+            return;
+        }
+        let tr = $(this).closest('tr');
+        tr.remove();
+        updateCountAmount();
     });
 }
 
@@ -396,6 +492,33 @@ function addItemVendorSelect(tr){
     addSelectChange();
 }
 
+// 變更項目廠商產品選單
+function updateItemVendorSelect(tr, vendorProduct){
+    let selectVendor = tr.find('.update-item-vendor-select select');
+    let selectedVendorUuid = selectVendor.val();
+    let selectVendorProductTd = tr.find('.update-item-vendor-product-select-td');
+    selectVendorProductTd.empty();
+    selectVendorProductTd.append(`
+        <select class="selectpicker update-item-vendor-product-select" data-live-search="true">
+        </select>
+    `);
+    let selectVendorProduct = tr.find('.update-item-vendor-product-select');
+    let vendorProductUuid = null == vendorProduct ? null : vendorProduct.vendorProductUuid;
+    let selected;
+    $.each(globalVendorProduct, function(key, value) {
+        if(value.vendorUuid != selectedVendorUuid){
+            return;
+        }
+        selected = (null != vendorProductUuid && value.vendorProductUuid == vendorProductUuid) ? 'selected' : '';
+        selectVendorProduct.append(`
+            <option value='${value.vendorProductUuid}' ${selected}>${value.name}</option>
+        `);
+    });
+    selectVendorProduct.selectpicker('render');
+    updateItemQtyInput(tr, vendorProduct);
+    updateSelectChange();
+}
+
 // 新增項目廠商產品數量及成本及總金額
 function addItemQtyInput(tr){
     let selectVendorProduct = tr.find('.add-item-vendor-product-select select');
@@ -416,11 +539,44 @@ function addItemQtyInput(tr){
     addCountAmount();
 }
 
-// 計算總計
+// 變更項目廠商產品數量及成本及總金額
+function updateItemQtyInput(tr, vendorProduct){
+    let selectVendorProduct = tr.find('.update-item-vendor-product-select select');
+    let selectedVendorProductUuid = selectVendorProduct.val();
+    let qty = tr.find('.update-item-vendor-product-qty');
+    let unitPrice = tr.find('.update-item-vendor-product-unit-price');
+    if(isEmpty(qty.val())){
+        qty.val(1);
+    }
+    if(null != vendorProduct){
+        qty.val(parseInt(vendorProduct.qty));
+    }
+    let price = 0;
+    $.each(globalVendorProduct, function(key, value) {
+        if(value.vendorProductUuid != selectedVendorProductUuid){
+            return;
+        }
+        price = parseInt(value.unitPrice) * parseInt(qty.val());
+        unitPrice.val(price.toLocaleString());
+    });
+    updateCountAmount();
+}
+
+// 新增計算總計
 function addCountAmount(){
     let totalAmount = $('#add-item-total-amount');
     let amount = 0;
     $.each($('.add-item-vendor-product-unit-price'), function(key, value){
+        amount += parseInt($(this).val().replace(/,/g, ''));
+    });
+    totalAmount.text(amount.toLocaleString());
+}
+
+// 變更計算總計
+function updateCountAmount(){
+    let totalAmount = $('#update-item-total-amount');
+    let amount = 0;
+    $.each($('.update-item-vendor-product-unit-price'), function(key, value){
         amount += parseInt($(this).val().replace(/,/g, ''));
     });
     totalAmount.text(amount.toLocaleString());
@@ -471,29 +627,17 @@ function addItem() {
     });
 }
 
-// 取得廠商產品清單
-function getAddItemVendorProducts(vendorProductTrs){
-    let vendorProducts = [];
-    let vendorProduct;
-    $.each(vendorProductTrs, function(key, value){
-        vendorProduct = {
-            "vendorProductUuid" : $(value).find('.add-item-vendor-product-select select').val(),
-            "qty" : $(value).find('.add-item-vendor-product-qty').val()
-        };
-        vendorProducts.push(vendorProduct);
-    });
-    return vendorProducts;
-}
-
 // 更新項目
 function updateItem() {
     const itemUuid = $('#update-item-uuid').val();
     const no = $("#update-item-no").val();
-    const name = $("#update-item-name").val();
+    const spec = $("#update-item-spec").val();
+    const vendorProducts = getAddItemVendorProducts($("#update-item-vendor-product-tbody tr"));
     // 驗證
     const noValid = validateInput(no, "#update-item-no");
     const nameValid = validateInput(name, "#update-item-name");
-    if (!noValid || !nameValid) {
+    const specValid = validateInput(name, "#update-item-spec");
+    if (!noValid || !nameValid || !specValid) {
         return;
     }
     let data = {
@@ -524,6 +668,20 @@ function updateItem() {
             alertError(message);
         }
     });
+}
+
+// 取得廠商產品清單
+function getAddItemVendorProducts(vendorProductTrs){
+    let vendorProducts = [];
+    let vendorProduct;
+    $.each(vendorProductTrs, function(key, value){
+        vendorProduct = {
+            "vendorProductUuid" : $(value).find('.add-item-vendor-product-select select').val(),
+            "qty" : $(value).find('.add-item-vendor-product-qty').val()
+        };
+        vendorProducts.push(vendorProduct);
+    });
+    return vendorProducts;
 }
 
 // 刪除項目

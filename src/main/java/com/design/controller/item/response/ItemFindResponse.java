@@ -11,7 +11,17 @@ public record ItemFindResponse(
 
         String name,
 
-        List<UUID> itemVendorProductUuids
+        List<vendorProduct> vendorProducts
 
 ) {
+
+        public record vendorProduct(
+
+                UUID vendorUuid,
+
+                UUID itemVendorProductUuid
+
+        ){
+        }
+
 }

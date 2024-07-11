@@ -62,6 +62,7 @@ public class ItemUpdateUseCaseImpl implements ItemUpdateUseCase {
                 continue;
             }
             itemVendorProductEntity = new ItemVendorProductEntity();
+            itemVendorProductEntity.setVendorUuid(vendorProductEntity.getVendorUuid());
             itemVendorProductEntity.setVendorProductUuid(vendorProduct.vendorProductUuid());
             itemVendorProductEntity.setItemUuid(itemEntity.getUuid());
             itemVendorProductEntity.setQty(vendorProduct.qty());

@@ -32,6 +32,17 @@ public class ItemVendorProductEntity extends BaseEntity {
     @NotNull
     private UUID itemUuid;
 
+    // 廠商uuid
+    @Column(
+            name = "vendor_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotNull
+    private UUID vendorUuid;
+
     // 廠商產品uuid
     @Column(
             name = "vendor_product_uuid",
