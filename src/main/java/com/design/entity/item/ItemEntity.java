@@ -5,11 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -53,6 +56,29 @@ public class ItemEntity extends BaseEntity {
     )
     @NotBlank
     private String spec;
+
+    // 單位
+    @Column(
+            name = "unit",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 64
+    )
+    @NotBlank
+    private String unit;
+
+    // 總計
+    @Column(
+            name = "amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
+    @NotNull
+    private BigDecimal amount;
 
     // 是否刪除
     @Column(

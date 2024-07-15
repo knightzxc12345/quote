@@ -109,13 +109,13 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
                     index++,
                     quoteDetailEntity.getItemNo(),
                     quoteDetailEntity.getItemName(),
-                    quoteDetailEntity.getProductSpecification(),
-                    quoteDetailEntity.getProductUnit(),
-                    quoteDetailEntity.getProductQuantity(),
-                    quoteDetailEntity.getProductUnitPrice(),
-                    quoteDetailEntity.getProductAmount(),
-                    quoteDetailEntity.getProductCustomUnitPrice(),
-                    quoteDetailEntity.getProductCustomAmount(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
                     null,
                     null
             ));
@@ -135,11 +135,11 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
             quoteDetail.setIndex(index++);
             quoteDetail.setProductItemNo(quoteDetailEntity.getItemNo());
             quoteDetail.setProductItemName(quoteDetailEntity.getItemName());
-            quoteDetail.setProductSpecification(quoteDetailEntity.getProductSpecification());
-            quoteDetail.setProductQuantity(quoteDetailEntity.getProductQuantity().toString());
-            quoteDetail.setProductUnit(quoteDetailEntity.getProductUnit());
-            quoteDetail.setProductCustomUnitPrice(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getProductCustomUnitPrice()));
-            quoteDetail.setProductCustomAmount(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getProductCustomAmount()));
+            quoteDetail.setProductSpecification(null);
+            quoteDetail.setProductQuantity(null);
+            quoteDetail.setProductUnit(null);
+            quoteDetail.setProductCustomUnitPrice(Common.DECIMAL_FORMAT.format(null));
+            quoteDetail.setProductCustomAmount(Common.DECIMAL_FORMAT.format(null));
             quoteDetails.add(quoteDetail);
         }
         return quoteDetails;

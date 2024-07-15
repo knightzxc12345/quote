@@ -27,22 +27,24 @@
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-item" aria-controls="add-item">新增品項</button>
+                        <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" data-bs-target="#add-item" aria-controls="add-item">新增品項</button>
                     </div>
                 </div>
                 <table class="table table-striped" id="itemList">
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 5%;">編號</th>
+                        <th scope="col" style="width: 5%;">品項</th>
                         <th scope="col" style="width: 10%;">品名</th>
                         <th scope="col" style="width: 15%;">規格</th>
+                        <th scope="col" style="width: 5%;">單位</th>
                         <th scope="col" style="width: 10%;">廠商</th>
                         <th scope="col" style="width: 15%;">產品</th>
                         <th scope="col" style="width: 5%;">數量</th>
-                        <th scope="col" style="width: 10%;">單位金額</th>
-                        <th scope="col" style="width: 10%;">合計</th>
-                        <th scope="col" style="width: 10%;">總計</th>
-                        <th scope="col" style="width: 10%;"></th>
+                        <th scope="col" style="width: 6%;">成本單價</th>
+                        <th scope="col" style="width: 6%;">成本合計</th>
+                        <th scope="col" style="width: 6%;">成本總計</th>
+                        <th scope="col" style="width: 6%;">銷售金額</th>
+                        <th scope="col" style="width: 8%;"></th>
                     </tr>
                     </thead>
                     <tbody id="item-tbody">
@@ -88,14 +90,29 @@
                     規格不得為空!
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單位</span>
+                <input type="text" class="form-control" id="add-item-unit">
+                <div class="invalid-feedback">
+                    單位不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總計</span>
+                <input type="text" class="form-control" id="add-item-amount">
+                <div class="invalid-feedback">
+                    總計不得為空!
+                </div>
+            </div>
             <table class="table table-striped vertical-align-middle">
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 30%;">廠商</th>
+                    <th scope="col" style="width: 25%;">廠商</th>
                     <th scope="col" style="width: 30%;">廠商產品</th>
-                    <th scope="col" style="width: 15%;">數量</th>
+                    <th scope="col" style="width: 8%;">數量</th>
+                    <th scope="col" style="width: 15%;">單價</th>
                     <th scope="col" style="width: 15%;">成本</th>
-                    <th scope="col" style="width: 10%;">
+                    <th scope="col" style="width: 7%;">
                         <button class="btn btn-sm btn-success add-item-vendor-product-add">+</button>
                     </th>
                 </tr>
@@ -113,7 +130,7 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-primary" onclick="addItem();">送出</button>
+            <button type="button" class="btn btn-dark" onclick="addItem();">送出</button>
         </div>
     </div>
 
@@ -145,14 +162,29 @@
                     規格不得為空!
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">單位</span>
+                <input type="text" class="form-control" id="update-item-unit">
+                <div class="invalid-feedback">
+                    單位不得為空!
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">總計</span>
+                <input type="text" class="form-control" id="update-item-amount">
+                <div class="invalid-feedback">
+                    總計不得為空!
+                </div>
+            </div>
             <table class="table table-striped vertical-align-middle">
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 30%;">廠商</th>
+                    <th scope="col" style="width: 25%;">廠商</th>
                     <th scope="col" style="width: 30%;">廠商產品</th>
-                    <th scope="col" style="width: 15%;">數量</th>
+                    <th scope="col" style="width: 8%;">數量</th>
+                    <th scope="col" style="width: 15%;">單價</th>
                     <th scope="col" style="width: 15%;">成本</th>
-                    <th scope="col" style="width: 10%;">
+                    <th scope="col" style="width: 7%;">
                         <button class="btn btn-sm btn-success update-item-vendor-product-add">+</button>
                     </th>
                 </tr>
@@ -170,7 +202,7 @@
             </div>
         </div>
         <div class="offcanvas-footer">
-            <button type="button" class="btn btn-success btn-sm" onclick="updateItem();">送出</button>
+            <button type="button" class="btn btn-dark btn-sm" onclick="updateItem();">送出</button>
         </div>
     </div>
 

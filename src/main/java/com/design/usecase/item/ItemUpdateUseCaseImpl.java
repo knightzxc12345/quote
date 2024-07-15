@@ -43,6 +43,16 @@ public class ItemUpdateUseCaseImpl implements ItemUpdateUseCase {
         itemVendorProductService.createAll(newItemVendorProductEntities, JwtUtil.extractUserUuid());
     }
 
+    // 更新品項
+    private ItemEntity update(ItemEntity itemEntity, ItemUpdateRequest request){
+        itemEntity.setNo(request.no());
+        itemEntity.setName(request.name());
+        itemEntity.setSpec(request.spec());
+        itemEntity.setUnit(request.unit());
+        itemEntity.setAmount(request.amount());
+        return itemEntity;
+    }
+
     // 初始化品項廠商產品清單
     private List<ItemVendorProductEntity> initVendorProducts(ItemUpdateRequest request, ItemEntity itemEntity){
         List<ItemVendorProductEntity> itemVendorProductEntities = new ArrayList<>();
@@ -81,14 +91,6 @@ public class ItemUpdateUseCaseImpl implements ItemUpdateUseCase {
             vendorProductUuids.add(vendorProduct.vendorProductUuid());
         }
         return CommonUtil.removeDuplicates(vendorProductUuids);
-    }
-
-    // 更新品項
-    private ItemEntity update(ItemEntity itemEntity, ItemUpdateRequest request){
-        itemEntity.setNo(request.no());
-        itemEntity.setName(request.name());
-        itemEntity.setSpec(request.spec());
-        return itemEntity;
     }
 
 }

@@ -14,6 +14,10 @@ public record ItemFindAllResponse(
 
         String spec,
 
+        String unit,
+
+        BigDecimal amount,
+
         List<ItemFindAllResponse.VendorProduct> vendorProducts
 
 ) {

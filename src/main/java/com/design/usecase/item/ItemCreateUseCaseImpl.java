@@ -45,6 +45,8 @@ public class ItemCreateUseCaseImpl implements ItemCreateUseCase {
         itemEntity.setNo(request.no());
         itemEntity.setName(request.name());
         itemEntity.setSpec(request.spec());
+        itemEntity.setUnit(request.unit());
+        itemEntity.setAmount(request.amount());
         return itemEntity;
     }
 

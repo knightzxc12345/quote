@@ -77,6 +77,8 @@ function offcanvasEvent(){
         $('#update-item-no').val(jsonData.no);
         $('#update-item-name').val(jsonData.name);
         $('#update-item-spec').val(jsonData.spec);
+        $('#update-item-unit').val(jsonData.unit);
+        $('#update-item-amount').val(jsonData.amount);
         $('#update-item-vendor-product-tbody').empty();
         updateAppend(vendorProducts);
     });
@@ -95,6 +97,9 @@ function offcanvasEvent(){
 
 // 更新廠商產品清單
 function updateAppend(vendorProducts){
+    if(vendorProducts.length == 0){
+        updateCountAmount();
+    }
     for(let i = 0; i < vendorProducts.length; i++){
         setUpdateSelect(vendorProducts[i]);
     }
@@ -121,27 +126,31 @@ function getItems() {
             let vendors;
             let vendorProducts;
             let qty;
-            let unitPrice;
-            let amount;
+            let costPrice;
+            let costAmount;
+            let costTotalAmount;
             let totalAmount;
             $.each(response.data.responses, function (key, value) {
                 vendors = formatVendor(value.vendorProducts);
                 vendorProducts = formatVendorProduct(value.vendorProducts);
                 qty = formatQty(value.vendorProducts);
-                unitPrice = formatUnitPrice(value.vendorProducts);
-                amount = formatAmount(value.vendorProducts);
-                totalAmount = formatTotalAmount(value.vendorProducts);
+                costPrice = formatCostPrice(value.vendorProducts);
+                costAmount = formatCostAmount(value.vendorProducts);
+                costTotalAmount = formatCostTotalAmount(value.vendorProducts);
+                totalAmount = value.amount.toLocaleString();
                 $("#item-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td style='vertical-align: middle;'>${value.no}</td>
                         <td style='vertical-align: middle;'>${value.name}</td>
                         <td style='vertical-align: middle;'>${value.spec}</td>
+                        <td style='vertical-align: middle;'>${value.unit}</td>
                         <td>${vendors}</td>
                         <td>${vendorProducts}</td>
                         <td>${qty}</td>
-                        <td>${unitPrice}</td>
-                        <td>${amount}</td>
-                        <td style='vertical-align: middle;'>${totalAmount}</td>
+                        <td>${costPrice}</td>
+                        <td>${costAmount}</td>
+                        <td style='vertical-align: middle;'>${costTotalAmount}</td>
+                        <td style='vertical-align: middle; color: blue;'>${totalAmount}</td>
                         <td style='vertical-align: middle;'>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-update-item-json' data-bs-toggle='offcanvas' data-bs-target='#update-item' aria-controls='update-item'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-item-json' data-bs-toggle="modal" data-bs-target="#delete-item">刪除</button>
@@ -210,7 +219,7 @@ function formatQty(value){
 }
 
 // 轉換數量清單
-function formatUnitPrice(value){
+function formatCostPrice(value){
     let result = '';
     let amount;
     for(let i = 0; i < value.length; i ++){
@@ -224,7 +233,7 @@ function formatUnitPrice(value){
 }
 
 // 轉換數量清單
-function formatAmount(value){
+function formatCostAmount(value){
     let result = '';
     let amount;
     for(let i = 0; i < value.length; i ++){
@@ -239,7 +248,7 @@ function formatAmount(value){
 }
 
 // 轉換總計
-function formatTotalAmount(value){
+function formatCostTotalAmount(value){
     let totalAmount = 0;
     let amount;
     for(let i = 0; i < value.length; i ++){
@@ -361,6 +370,9 @@ function addAppendColumn(){
                 <input type="text" class="form-control add-item-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
             </td>
             <td>
+                <input type="text" class="form-control add-item-vendor-product-cost" style="margin-left: 1px;" disabled/>
+            </td>
+            <td>
                 <div class="align-self-center" style="margin-left: 1px;">
                     <button class="btn btn-sm btn-danger add-item-vendor-product-cancel">x</button>
                 </div>
@@ -389,6 +401,9 @@ function updateAppendColumn(){
             </td>
             <td>
                 <input type="text" class="form-control update-item-vendor-product-unit-price" style="margin-left: 1px;" disabled/>
+            </td>
+            <td>
+                <input type="text" class="form-control update-item-vendor-product-cost" style="margin-left: 1px;" disabled/>
             </td>
             <td>
                 <div class="align-self-center" style="margin-left: 1px;">
@@ -525,6 +540,7 @@ function addItemQtyInput(tr){
     let selectedVendorProductUuid = selectVendorProduct.val();
     let qty = tr.find('.add-item-vendor-product-qty');
     let unitPrice = tr.find('.add-item-vendor-product-unit-price');
+    let cost = tr.find('.add-item-vendor-product-cost');
     if(isEmpty(qty.val())){
         qty.val(1);
     }
@@ -534,7 +550,8 @@ function addItemQtyInput(tr){
             return;
         }
         price = parseInt(value.unitPrice) * parseInt(qty.val());
-        unitPrice.val(price.toLocaleString());
+        unitPrice.val(value.unitPrice.toLocaleString());
+        cost.val(price.toLocaleString());
     });
     addCountAmount();
 }
@@ -545,6 +562,7 @@ function updateItemQtyInput(tr, vendorProduct){
     let selectedVendorProductUuid = selectVendorProduct.val();
     let qty = tr.find('.update-item-vendor-product-qty');
     let unitPrice = tr.find('.update-item-vendor-product-unit-price');
+    let cost = tr.find('.update-item-vendor-product-cost');
     if(isEmpty(qty.val())){
         qty.val(1);
     }
@@ -557,7 +575,8 @@ function updateItemQtyInput(tr, vendorProduct){
             return;
         }
         price = parseInt(value.unitPrice) * parseInt(qty.val());
-        unitPrice.val(price.toLocaleString());
+        unitPrice.val(value.unitPrice.toLocaleString());
+        cost.val(price.toLocaleString());
     });
     updateCountAmount();
 }
@@ -566,7 +585,7 @@ function updateItemQtyInput(tr, vendorProduct){
 function addCountAmount(){
     let totalAmount = $('#add-item-total-amount');
     let amount = 0;
-    $.each($('.add-item-vendor-product-unit-price'), function(key, value){
+    $.each($('.add-item-vendor-product-cost'), function(key, value){
         amount += parseInt($(this).val().replace(/,/g, ''));
     });
     totalAmount.text(amount.toLocaleString());
@@ -576,7 +595,7 @@ function addCountAmount(){
 function updateCountAmount(){
     let totalAmount = $('#update-item-total-amount');
     let amount = 0;
-    $.each($('.update-item-vendor-product-unit-price'), function(key, value){
+    $.each($('.update-item-vendor-product-cost'), function(key, value){
         amount += parseInt($(this).val().replace(/,/g, ''));
     });
     totalAmount.text(amount.toLocaleString());
@@ -587,18 +606,24 @@ function addItem() {
     const no = $("#add-item-no").val();
     const name = $("#add-item-name").val();
     const spec = $("#add-item-spec").val();
-    const vendorProducts = getAddItemVendorProducts($("#add-item-vendor-product-tbody tr"));
+    const unit = $("#add-item-unit").val();
+    const amount = $("#add-item-amount").val();
+    const vendorProducts = getAddItemVendorProducts();
     // 驗證
     const noValid = validateInput(no, "#add-item-no");
     const nameValid = validateInput(name, "#add-item-name");
-    const specValid = validateInput(name, "#add-item-spec");
-    if (!noValid || !nameValid || !specValid) {
+    const specValid = validateInput(spec, "#add-item-spec");
+    const unitValid = validateInput(unit, "#add-item-unit");
+    const amountValid = validateNumberInput(amount, "#add-item-amount");
+    if (!noValid || !nameValid || !specValid || !unitValid || !amountValid) {
         return;
     }
     let data = {
         no: no,
         name: name,
         spec: spec,
+        unit: unit,
+        amount: amount,
         vendorProducts : vendorProducts
     };
     $.ajax({
@@ -631,18 +656,27 @@ function addItem() {
 function updateItem() {
     const itemUuid = $('#update-item-uuid').val();
     const no = $("#update-item-no").val();
+    const name = $("#update-item-name").val();
     const spec = $("#update-item-spec").val();
-    const vendorProducts = getAddItemVendorProducts($("#update-item-vendor-product-tbody tr"));
+    const unit = $("#update-item-unit").val();
+    const amount = $("#update-item-amount").val();
+    const vendorProducts = getUpdateItemVendorProducts();
     // 驗證
     const noValid = validateInput(no, "#update-item-no");
     const nameValid = validateInput(name, "#update-item-name");
-    const specValid = validateInput(name, "#update-item-spec");
-    if (!noValid || !nameValid || !specValid) {
+    const specValid = validateInput(spec, "#update-item-spec");
+    const unitValid = validateInput(unit, "#update-item-unit");
+    const amountValid = validateNumberInput(amount, "#update-item-amount");
+    if (!noValid || !nameValid || !specValid || !unitValid || !amountValid) {
         return;
     }
     let data = {
         no: no,
-        name: name
+        name: name,
+        spec: spec,
+        unit: unit,
+        amount: amount,
+        vendorProducts : vendorProducts
     };
     $.ajax({
         url: '/item/v1/' + itemUuid,
@@ -670,14 +704,28 @@ function updateItem() {
     });
 }
 
-// 取得廠商產品清單
-function getAddItemVendorProducts(vendorProductTrs){
+// 取得新增廠商產品清單
+function getAddItemVendorProducts(){
     let vendorProducts = [];
     let vendorProduct;
-    $.each(vendorProductTrs, function(key, value){
+    $.each($("#add-item-vendor-product-tbody tr"), function(key, value){
         vendorProduct = {
             "vendorProductUuid" : $(value).find('.add-item-vendor-product-select select').val(),
             "qty" : $(value).find('.add-item-vendor-product-qty').val()
+        };
+        vendorProducts.push(vendorProduct);
+    });
+    return vendorProducts;
+}
+
+// 取得變更廠商產品清單
+function getUpdateItemVendorProducts(){
+    let vendorProducts = [];
+    let vendorProduct;
+    $.each($("#update-item-vendor-product-tbody tr"), function(key, value){
+        vendorProduct = {
+            "vendorProductUuid" : $(value).find('.update-item-vendor-product-select select').val(),
+            "qty" : $(value).find('.update-item-vendor-product-qty').val()
         };
         vendorProducts.push(vendorProduct);
     });

@@ -74,6 +74,8 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
                 itemEntity.getUuid(),
                 itemEntity.getNo(),
                 itemEntity.getName(),
+                itemEntity.getUnit(),
+                itemEntity.getAmount(),
                 vendorProducts
         );
     }
@@ -127,6 +129,8 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
                     itemEntity.getNo(),
                     itemEntity.getName(),
                     itemEntity.getSpec(),
+                    itemEntity.getUnit(),
+                    itemEntity.getAmount(),
                     vendorProducts
             ));
         }

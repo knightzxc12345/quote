@@ -47,7 +47,9 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
                 i.isDeleted = false
                 AND 
                 (
-                    (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%'))
+                    (:keyword IS NULL OR i.no LIKE CONCAT('%', :keyword, '%')) OR
+                    (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%')) OR
+                    (:keyword IS NULL OR i.spec LIKE CONCAT('%', :keyword, '%'))
                 )
             ORDER BY 
                 i.no,
@@ -68,7 +70,9 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
                 i.isDeleted = false
                 AND 
                 (
-                    (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%'))
+                    (:keyword IS NULL OR i.no LIKE CONCAT('%', :keyword, '%')) OR
+                    (:keyword IS NULL OR i.name LIKE CONCAT('%', :keyword, '%')) OR
+                    (:keyword IS NULL OR i.spec LIKE CONCAT('%', :keyword, '%'))
                 )
             """
     )

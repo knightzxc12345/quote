@@ -19,15 +19,15 @@ public record QuoteCreateRequest(
 
         String underTakerTel,
 
-        @NotNull(message = "產品清單")
-        List<QuoteCreateRequest.Product> products
+        @NotNull(message = "品項清單")
+        List<QuoteCreateRequest.Item> items
 
 ) {
 
-        public record Product(
+        public record Item(
 
-                @NotBlank(message = "產品uuid不得為空")
-                UUID productUuid,
+                @NotNull(message = "品項uuid不得為空")
+                UUID itemUuid,
 
                 @NotNull(message = "產品數量")
                 Integer quantity,

@@ -68,41 +68,31 @@ public class QuoteDetailEntity extends BaseEntity {
     @NotBlank
     private String itemName;
 
-    // 產品uuid
+    // 品項規格
     @Column(
-            name = "product_uuid",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotNull
-    private UUID productUuid;
-
-    // 產品規格
-    @Column(
-            name = "product_specification",
+            name = "item_spec",
             nullable = false,
             updatable = true,
             unique = false,
             length = 256
     )
     @NotBlank
-    private String productSpecification;
+    private String itemSpec;
 
-    // 產品單位
+    // 品項單位
     @Column(
-            name = "product_unit",
-            nullable = true,
+            name = "item_unit",
+            nullable = false,
             updatable = true,
             unique = false,
             length = 32
     )
-    private String productUnit;
+    @NotBlank
+    private String itemUnit;
 
-    // 產品單價
+    // 品項廠商產品單價
     @Column(
-            name = "product_unit_price",
+            name = "item_vendor_product_unit_price",
             nullable = false,
             updatable = true,
             unique = false
@@ -110,11 +100,11 @@ public class QuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productUnitPrice;
+    private BigDecimal itemVendorProductUnitPrice;
 
-    // 產品客製單價
+    // 品項廠商產品客製單價
     @Column(
-            name = "product_custom_unit_price",
+            name = "item_vendor_product_custom_price",
             nullable = false,
             updatable = true,
             unique = false
@@ -122,21 +112,11 @@ public class QuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productCustomUnitPrice;
+    private BigDecimal itemVendorProductCustomPrice;
 
-    // 產品數量
+    // 品項廠商產品成本單價
     @Column(
-            name = "product_quantity",
-            nullable = false,
-            updatable = true,
-            unique = false
-    )
-    @NotNull
-    private Integer productQuantity;
-
-    // 產品總計
-    @Column(
-            name = "product_amount",
+            name = "item_vendor_product_cost_price",
             nullable = false,
             updatable = true,
             unique = false
@@ -144,11 +124,21 @@ public class QuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productAmount;
+    private BigDecimal itemVendorProductCostPrice;
 
-    // 產品客製總計
+    // 數量
     @Column(
-            name = "product_custom_amount",
+            name = "quantity",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @NotNull
+    private Integer quantity;
+
+    // 品項廠商產品總計
+    @Column(
+            name = "item_vendor_product_amount",
             nullable = false,
             updatable = true,
             unique = false
@@ -156,7 +146,31 @@ public class QuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productCustomAmount;
+    private BigDecimal itemVendorProductAmount;
+
+    // 品項廠商產品客製總計
+    @Column(
+            name = "item_vendor_product_custom_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
+    @NotNull
+    private BigDecimal itemVendorProductCustomAmount;
+
+    // 品項廠商產品成本總計
+    @Column(
+            name = "item_vendor_product_cost_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
+    @NotNull
+    private BigDecimal itemVendorProductCostAmount;
 
     // 是否刪除
     @Column(

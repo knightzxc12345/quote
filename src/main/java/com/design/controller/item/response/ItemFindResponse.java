@@ -1,5 +1,6 @@
 package com.design.controller.item.response;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,10 @@ public record ItemFindResponse(
         String no,
 
         String name,
+
+        String unit,
+
+        BigDecimal amount,
 
         List<vendorProduct> vendorProducts
 

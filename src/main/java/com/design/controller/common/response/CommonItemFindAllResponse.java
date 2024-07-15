@@ -1,5 +1,6 @@
 package com.design.controller.common.response;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CommonItemFindAllResponse(
@@ -8,7 +9,15 @@ public record CommonItemFindAllResponse(
 
         String itemNo,
 
-        String name
+        String name,
+
+        String spec,
+
+        String unit,
+
+        BigDecimal unitPrice,
+
+        BigDecimal amount
 
 ) {
 }

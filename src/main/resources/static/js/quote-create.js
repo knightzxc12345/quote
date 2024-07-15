@@ -1,5 +1,4 @@
 let globalItem = '';
-let globalProduct = '';
 let globalCustomer = '';
 let globalUser = '';
 let productIndex = 1;
@@ -11,12 +10,7 @@ window.onload = function () {
     getUsers();
     selectChange();
     inputChange();
-    select2Init();
 };
-
-function select2Init(){
-    $(".select2").select2();
-}
 
 function backQuote(){
     location.href = "/quote"
@@ -39,36 +33,6 @@ function getItems(){
                 return;
             }
             globalItem = response.data;
-            getProducts();
-        },
-        error: function (xhr, status, error) {
-            let code = xhr.responseJSON.code;
-            if (code == 'A00006') {
-                goBack();
-                return;
-            }
-            console.log(jsonResponse);
-        }
-    });
-}
-
-// 取得產品
-function getProducts(){
-    $.ajax({
-        url: `/common/product/v1`,
-        contentType: 'application/json',
-        type: 'GET',
-        headers: headers,
-        success: function (response) {
-            if (response.code != 'C00002') {
-                alertError('系統錯誤');
-                return;
-            }
-            // 空陣列
-            if ($.isEmptyObject(response.data)) {
-                return;
-            }
-            globalProduct = response.data;
             setSelect();
         },
         error: function (xhr, status, error) {
@@ -114,28 +78,36 @@ function getCustomers(){
 
 // 設定使用者
 function setCustomer(){
+    let customerSelect = $('#customer-select');
+    customerSelect.empty();
+    let selected;
     $.each(globalCustomer, function(key, value) {
-        let selectCustomer = $(".add-product-customer-name-select");
-        selectCustomer.append(`
-            <option value='${value.customerUuid}'>${value.name}</option>
+        selected = key == 0 ? 'selected' : '';
+        customerSelect.append(`
+            <option value='${value.customerUuid}' ${selected}>${value.name}</option>
         `);
-        if(key == 0){
-            $(".add-product-customer-address").text(value.address);
-        }
     });
+    customerSelect.selectpicker('refresh');
+    customerSelect.selectpicker('render');
     customerChange();
+    setAddress();
 }
 
 // 客戶變化時
 function customerChange(){
-    $(".add-product-customer-name-select").on("select2:select", function() {
-        let selectedCustomer = $(".add-product-customer-name-select").val();
-        $.each(globalCustomer, function(key, value) {
-            if(value.customerUuid != selectedCustomer){
-                return;
-            }
-            $(".add-product-customer-address").text(value.address);
-        });
+    $("#customer-select").change(function() {
+        setAddress();
+    });
+}
+
+// 設定地址
+function setAddress(){
+    let customerSelect = $("#customer-select").val();
+    $.each(globalCustomer, function(key, value) {
+        if(value.customerUuid != customerSelect){
+            return;
+        }
+        $("#customer-address").text(value.address);
     });
 }
 
@@ -171,12 +143,14 @@ function getUsers(){
 
 // 設定使用者
 function setUser(){
-    let selectUser = $(".add-product-user-name-select");
+    let selectUser = $("#user-select");
     $.each(globalUser, function(key, value) {
         selectUser.append(`
             <option value='${value.userUuid}'>${value.name}</option>
         `);
     });
+    selectUser.selectpicker('refresh');
+    selectUser.selectpicker('render');
 }
 
 // 設定下拉選單
@@ -185,20 +159,10 @@ function setSelect(){
     let selectItem = $('.add-item-name-select:last');
     $.each(globalItem, function(key, value) {
         selectItem.append(`
-            <option value='${value.itemUuid}'>${value.itemNo}-${value.name}</option>
+            <option value='${value.itemUuid}'>${value.itemNo}</option>
         `);
     });
-    let selectedItemUuid = selectItem.val();
-    let selectProduct = $('.add-product-specification-select:last');
-    $.each(globalProduct, function(key, value) {
-        if(value.itemUuid != selectedItemUuid){
-            return;
-        }
-        selectProduct.append(`
-            <option value='${value.productUuid}'>${value.specification}</option>
-        `);
-    });
-    let tr = selectProduct.closest('tr');
+    let tr = selectItem.closest('tr');
     addColumnChange(tr);
 }
 
@@ -207,32 +171,30 @@ function appendColumn(){
     $('#quote-tbody').append(`
         <tr>
             <td>
-                <button class="btn btn-danger btn-sm add-product-cancel">x</button>
+                <button class="btn btn-danger btn-sm add-item-cancel">x</button>
             </td>
-            <td class="add-product-uuid hide"></td>
-            <td class="add-product-index">${productIndex}</td>
+            <td class="add-item-uuid hide"></td>
+            <td class="add-item-index">${productIndex}</td>
             <td>
                 <select class="form-select select2 add-item-name-select">
                 </select>
             </td>
+            <td class="add-item-name"></td>
+            <td class="add-item-spec"></td>
             <td>
-                <select class="form-select select2 add-product-specification-select">
-                </select>
+                <input class="form-control form-control-sm add-item-quantity" value="1"/>
             </td>
+            <td class="add-item-unit"></td>
+            <td class="add-item-unit-price">0</td>
+            <td class="add-item-amount">0</td>
             <td>
-                <input class="form-control form-control-sm add-product-quantity" value="1"/>
+                <input class="form-control form-control-sm add-item-custom-unit-price red-text"/>
             </td>
-            <td class="add-product-unit"></td>
-            <td class="add-product-unit-price">0</td>
-            <td class="add-product-amount">0</td>
+            <td class="add-item-custom-amount" style="color: red;">0</td>
+            <td class="add-item-cost-price"  style="color: green;">0</td>
+            <td class="add-item-cost-amount"  style="color: green;">0</td>
             <td>
-                <input class="form-control form-control-sm add-product-custom-unit-price red-text"/>
-            </td>
-            <td class="add-product-custom-amount" style="color: red;">0</td>
-            <td class="add-product-cost-price"  style="color: green;">0</td>
-            <td class="add-product-cost-amount"  style="color: green;">0</td>
-            <td>
-                <button class="btn btn-success btn-sm add-product-add">+</button>
+                <button class="btn btn-success btn-sm add-item-add">+</button>
             </td>
         </tr>
     `);
@@ -244,11 +206,11 @@ function appendColumn(){
 
 // 按鈕事件
 function buttonClick(){
-    $('.add-product-add').off('click').on('click', function() {
+    $('.add-item-add').off('click').on('click', function() {
         $(this).addClass('hide');
         setSelect();
     });
-    $('.add-product-cancel').off('click').on('click', function() {
+    $('.add-item-cancel').off('click').on('click', function() {
         let tr = $(this).closest('tr');
         let nextTr = tr.next('tr');
         let prevTr = tr.prev('tr');
@@ -259,7 +221,7 @@ function buttonClick(){
             productIndex--;
         }
         if (nextTr.length <= 0 && prevTr.length > 0) {
-            prevTr.find('.add-product-add').removeClass('hide');
+            prevTr.find('.add-item-add').removeClass('hide');
         }
     });
 }
@@ -268,7 +230,7 @@ function buttonClick(){
 function resetIndex(){
     let index = 1;
     $('#quote-tbody tr').each(function() {
-        $(this).find('td.add-product-index').text(index++);
+        $(this).find('td.add-item-index').text(index++);
     });
 }
 
@@ -276,18 +238,13 @@ function resetIndex(){
 function selectChange(){
     $('.add-item-name-select').change(function() {
         let tr = $(this).closest('tr');
-        selectItemChange(tr);
-        addColumnChange(tr);
-    });
-    $('.add-product-specification-select').change(function() {
-        let tr = $(this).closest('tr');
         addColumnChange(tr);
     });
 }
 
 // 修改數量或客製單價
 function inputChange(){
-    $(".add-product-quantity").change(function() {
+    $(".add-item-quantity").change(function() {
         let tr = $(this).closest('tr');
         let inputValue = $(this).val();
         if(!/^\d+$/.test(inputValue)){
@@ -295,85 +252,73 @@ function inputChange(){
         }
         columnChange(tr);
     });
-    $(".add-product-custom-unit-price").change(function() {
+    $(".add-item-custom-unit-price").change(function() {
         let tr = $(this).closest('tr');
         let inputValue = $(this).val().replace(/,/g, '');
         if(!/^\d+$/.test(inputValue)){
-            let unitPrice = tr.find('.add-product-unit-price');
+            let unitPrice = tr.find('.add-item-unit-price');
             $(this).text(unitPrice);
         }
         columnChange(tr);
     });
 }
 
-// 品項變化時產品變動
-function selectItemChange(tr){
+// 新增新的row
+function addColumnChange(tr){
     let selectItem = tr.find('.add-item-name-select');
     let selectedItemUuid = selectItem.val();
-    let selectProduct = tr.find('.add-product-specification-select');
-    selectProduct.empty();
-    $.each(globalProduct, function(key, value) {
+    let itemName = tr.find('.add-item-name');
+    let itemSpec = tr.find('.add-item-spec');
+    let itemUnit = tr.find('.add-item-unit');
+    let inputQuantity = tr.find('.add-item-quantity');
+    let tdUnitPrice = tr.find('.add-item-unit-price');
+    let tdAmount = tr.find('.add-item-amount');
+    let inputCustomUnitPrice = tr.find('.add-item-custom-unit-price');
+    let tdCustomAmount = tr.find('.add-item-custom-amount');
+    let tdCostPrice = tr.find('.add-item-cost-price');
+    let tdCostAmount = tr.find('.add-item-cost-amount');
+    $.each(globalItem, function(key, value){
         if(value.itemUuid != selectedItemUuid){
             return;
         }
-        selectProduct.append(`
-            <option value='${value.productUuid}'>${value.specification}</option>
-        `);
-    });
-}
-
-// 新增新的row
-function addColumnChange(tr){
-    let selectProduct = tr.find('.add-product-specification-select');
-    let selectedProductUuid = selectProduct.val();
-    let tdUnit = tr.find('.add-product-unit');
-    let inputQuantity = tr.find('.add-product-quantity');
-    let tdUnitPrice = tr.find('.add-product-unit-price');
-    let tdAmount = tr.find('.add-product-amount');
-    let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
-    let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostPrice = tr.find('.add-product-cost-price');
-    let tdCostAmount = tr.find('.add-product-cost-amount');
-    $.each(globalProduct, function(key, value) {
-        if(value.productUuid != selectedProductUuid){
-            return;
-        }
+        itemName.text(value.name);
+        itemSpec.text(value.spec);
+        itemUnit.text(value.unit);
         let quantity = parseInt(inputQuantity.val());
-        let unitPrice = parseInt(value.unitPrice);
+        let unitPrice = parseInt(value.amount);
         let customUnitPrice = unitPrice;
-        let costPrice = parseInt(value.costPrice);
-        tdUnit.text(value.unit);
+        let costPrice = parseInt(value.unitPrice);
         tdUnitPrice.text(unitPrice.toLocaleString());
         tdAmount.text((quantity * unitPrice).toLocaleString());
         inputCustomUnitPrice.val(customUnitPrice.toLocaleString());
         tdCustomAmount.text((quantity * customUnitPrice).toLocaleString());
         tdCostPrice.text(costPrice.toLocaleString());
         tdCostAmount.text((quantity * costPrice).toLocaleString());
+        countTotal();
     });
-    countTotal();
 }
 
 // 欄位變化時
 function columnChange(tr){
-    let selectProduct = tr.find('.add-product-specification-select');
-    let selectedProductUuid = selectProduct.val();
-    let tdNo = tr.find('.add-product-no');
-    let tdUnit = tr.find('.add-product-unit');
-    let inputQuantity = tr.find('.add-product-quantity');
-    let tdUnitPrice = tr.find('.add-product-unit-price');
-    let tdAmount = tr.find('.add-product-amount');
-    let inputCustomUnitPrice = tr.find('.add-product-custom-unit-price');
-    let tdCustomAmount = tr.find('.add-product-custom-amount');
-    let tdCostPrice = tr.find('.add-product-cost-price');
-    let tdCostAmount = tr.find('.add-product-cost-amount');
-    $.each(globalProduct, function(key, value) {
-        if(value.productUuid != selectedProductUuid){
+    let selectItem = tr.find('.add-item-name-select');
+    let selectedItemUuid = selectItem.val();
+    let tdNo = tr.find('.add-item-no');
+    let tdUnit = tr.find('.add-item-unit');
+    let inputQuantity = tr.find('.add-item-quantity');
+    let tdUnitPrice = tr.find('.add-item-unit-price');
+    let tdAmount = tr.find('.add-item-amount');
+    let inputCustomUnitPrice = tr.find('.add-item-custom-unit-price');
+    let tdCustomAmount = tr.find('.add-item-custom-amount');
+    let tdCostPrice = tr.find('.add-item-cost-price');
+    let tdCostAmount = tr.find('.add-item-cost-amount');
+    $.each(globalItem, function(key, value) {
+        if(value.itemUuid != selectedItemUuid){
             return;
         }
         let quantity = parseInt(inputQuantity.val());
-        let unitPrice = parseInt(value.unitPrice);
+        let unitPrice = parseInt(value.amount);
         let customUnitPrice = parseInt(inputCustomUnitPrice.val().replace(/,/g, ''));
-        let costPrice = parseInt(value.costPrice);
+        let costPrice = parseInt(value.unitPrice);
         tdNo.text(value.no);
         tdUnit.text(value.unit);
         tdUnitPrice.text(unitPrice.toLocaleString());
@@ -397,10 +342,10 @@ function countTotal(){
     let costTax = 0;
     let costTotalAmountWithTax = 0;
     $("#quote-tbody tr").each(function() {
-        let quantity = parseInt($(this).find('.add-product-quantity').val().replace(/,/g, ''));
-        let tdUnitPrice = parseInt($(this).find('.add-product-unit-price').text().replace(/,/g, ''));
-        let inputCustomUnitPrice = parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''));
-        let tdCustomUnitPrice = parseInt($(this).find('.add-product-cost-price').text().replace(/,/g, ''));
+        let quantity = parseInt($(this).find('.add-item-quantity').val().replace(/,/g, ''));
+        let tdUnitPrice = parseInt($(this).find('.add-item-unit-price').text().replace(/,/g, ''));
+        let inputCustomUnitPrice = parseInt($(this).find('.add-item-custom-unit-price').val().replace(/,/g, ''));
+        let tdCustomUnitPrice = parseInt($(this).find('.add-item-cost-price').text().replace(/,/g, ''));
         totalAmount += (tdUnitPrice * quantity);
         customTotalAmount += (inputCustomUnitPrice * quantity);
         costTotalAmount += (tdCustomUnitPrice * quantity);
@@ -431,22 +376,22 @@ function addQuote(){
     const customerUuid = $('.add-product-customer-name-select').val();
     const underTakerName = $('.add-product-under-taker-name').val();
     const underTakerTel = $('.add-product-under-taker-tel').val();
-    let products = [];
-    let product;
+    let items = [];
+    let item;
     $('#quote-tbody tr').each(function() {
-        product = {
-            productUuid: $(this).find('.add-product-specification-select').val(),
-            quantity: parseInt($(this).find('.add-product-quantity').val().replace(/,/g, '')),
-            customUnitPrice: parseInt($(this).find('.add-product-custom-unit-price').val().replace(/,/g, ''))
+        item = {
+            itemUuid: $(this).find('.add-item-name-select').val(),
+            quantity: parseInt($(this).find('.add-item-quantity').val().replace(/,/g, '')),
+            customUnitPrice: parseInt($(this).find('.add-item-custom-unit-price').val().replace(/,/g, ''))
         };
-        products.push(product);
+        items.push(item);
     });
     let data = {
         userUuid: userUuid,
         customerUuid: customerUuid,
         underTakerName: underTakerName,
         underTakerTel: underTakerTel,
-        products: products
+        items: items
     };
     $.ajax({
         url: `/quote/v1`,
