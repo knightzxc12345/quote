@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public record QuoteUpdateRequest(
 
-        @NotBlank(message = "業務uuid不得為空")
+        @NotNull(message = "業務uuid不得為空")
         UUID userUuid,
 
-        @NotBlank(message = "客戶uuid不得為空")
+        @NotNull(message = "客戶uuid不得為空")
         UUID customerUuid,
 
         String underTakerName,

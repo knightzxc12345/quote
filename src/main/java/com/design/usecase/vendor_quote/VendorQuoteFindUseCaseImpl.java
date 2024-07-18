@@ -49,8 +49,8 @@ public class VendorQuoteFindUseCaseImpl implements VendorQuoteFindUseCase {
         for(VendorQuoteDetailEntity vendorQuoteDetailEntity : vendorQuoteDetailEntities){
             products.add(new VendorQuoteFindResponse.Product(
                     vendorQuoteDetailEntity.getItemUuid(),
-                    vendorQuoteDetailEntity.getProductUuid(),
-                    vendorQuoteDetailEntity.getProductQuantity()
+                    null,
+                    null
             ));
         }
         return products;

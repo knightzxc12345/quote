@@ -92,7 +92,7 @@ public class QuoteDetailEntity extends BaseEntity {
 
     // 品項廠商產品單價
     @Column(
-            name = "item_vendor_product_unit_price",
+            name = "item_vendor_product_price",
             nullable = false,
             updatable = true,
             unique = false
@@ -100,7 +100,7 @@ public class QuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal itemVendorProductUnitPrice;
+    private BigDecimal itemVendorProductPrice;
 
     // 品項廠商產品客製單價
     @Column(

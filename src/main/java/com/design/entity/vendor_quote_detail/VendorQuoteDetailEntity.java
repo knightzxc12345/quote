@@ -68,41 +68,41 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @NotBlank
     private String itemName;
 
-    // 產品uuid
+    // 品項規格
     @Column(
-            name = "product_uuid",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 36
-    )
-    @NotNull
-    private UUID productUuid;
-
-    // 產品規格
-    @Column(
-            name = "product_specification",
+            name = "item_spec",
             nullable = false,
             updatable = true,
             unique = false,
             length = 256
     )
     @NotBlank
-    private String productSpecification;
+    private String itemSpec;
 
-    // 產品單位
+    // 品項單位
     @Column(
-            name = "product_unit",
+            name = "item_unit",
             nullable = true,
             updatable = true,
             unique = false,
             length = 32
     )
-    private String productUnit;
+    private String itemUnit;
 
-    // 產品單價
+    // 廠商產品uuid
     @Column(
-            name = "product_unit_price",
+            name = "vendor_product_uuid",
+            nullable = false,
+            updatable = true,
+            unique = false,
+            length = 36
+    )
+    @NotNull
+    private UUID vendorProductUuid;
+
+    // 產商產品單價
+    @Column(
+            name = "vendor_product_unit_price",
             nullable = false,
             updatable = true,
             unique = false
@@ -110,21 +110,22 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productUnitPrice;
+    private BigDecimal vendorProductUnitPrice;
 
-    // 產品數量
+    // 廠商產品數量
     @Column(
-            name = "product_quantity",
+            name = "quantity",
             nullable = false,
             updatable = true,
             unique = false
     )
+    @Min(0)
     @NotNull
-    private Integer productQuantity;
+    private Integer quantity;
 
-    // 產品總計
+    // 廠商產品總計
     @Column(
-            name = "product_amount",
+            name = "vendor_product_amount",
             nullable = false,
             updatable = true,
             unique = false
@@ -132,7 +133,7 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @Digits(integer = 10, fraction = 0)
     @Min(0)
     @NotNull
-    private BigDecimal productAmount;
+    private BigDecimal vendorProductAmount;
 
     // 是否刪除
     @Column(

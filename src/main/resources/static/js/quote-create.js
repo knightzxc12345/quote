@@ -372,10 +372,10 @@ function addQuote(){
     $('#add-quote').prop('disabled', true);
     $('#add-quote-loading').removeClass('hide');
     $('#add-quote-text').text('建立中...');
-    const userUuid = $('.add-product-user-name-select').val();
-    const customerUuid = $('.add-product-customer-name-select').val();
-    const underTakerName = $('.add-product-under-taker-name').val();
-    const underTakerTel = $('.add-product-under-taker-tel').val();
+    const userUuid = $('#user-select').val();
+    const customerUuid = $('#customerair-select').val();
+    const underTakerName = $('#under-taker-name').val();
+    const underTakerTel = $('#under-taker-tel').val();
     let items = [];
     let item;
     $('#quote-tbody tr').each(function() {
