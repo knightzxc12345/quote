@@ -373,7 +373,7 @@ function addQuote(){
     $('#add-quote-loading').removeClass('hide');
     $('#add-quote-text').text('建立中...');
     const userUuid = $('#user-select').val();
-    const customerUuid = $('#customerair-select').val();
+    const customerUuid = $('#customer-select').val();
     const underTakerName = $('#under-taker-name').val();
     const underTakerTel = $('#under-taker-tel').val();
     let items = [];

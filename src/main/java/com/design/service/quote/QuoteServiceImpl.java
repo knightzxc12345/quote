@@ -1,5 +1,6 @@
 package com.design.service.quote;
 
+import com.design.entity.enums.QuoteStatus;
 import com.design.entity.quote.QuoteEntity;
 import com.design.repository.quote.QuoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public QuoteEntity create(QuoteEntity quoteEntity, UUID userUuid) {
         quoteEntity.setIsDeleted(false);
+        quoteEntity.setQuoteStatus(QuoteStatus.CREATE);
         quoteEntity.setCreateTime(Instant.now());
         quoteEntity.setCreateUser(userUuid);
         return quoteRepository.save(quoteEntity);

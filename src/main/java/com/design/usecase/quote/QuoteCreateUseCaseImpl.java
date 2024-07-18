@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -158,30 +159,37 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             if(null == tempVendorProductEntities || tempVendorProductEntities.isEmpty()){
                 continue;
             }
-            costPrice = getVendorProductCostPrice(tempVendorProductEntities);
+            costPrice = getVendorProductCostPrice(tempItemVendorProductEntities, tempVendorProductEntities);
             quoteDetailEntity = new QuoteDetailEntity();
             quoteDetailEntity.setQuoteUuid(quoteEntity.getUuid());
             quoteDetailEntity.setItemUuid(itemEntity.getUuid());
             quoteDetailEntity.setItemNo(itemEntity.getNo());
+            quoteDetailEntity.setItemName(itemEntity.getName());
             quoteDetailEntity.setItemSpec(itemEntity.getSpec());
             quoteDetailEntity.setItemUnit(itemEntity.getUnit());
-            quoteDetailEntity.setItemVendorProductPrice(itemEntity.getAmount());
-            quoteDetailEntity.setItemVendorProductAmount(itemEntity.getAmount().multiply(new BigDecimal(item.quantity())));
-            quoteDetailEntity.setItemVendorProductCustomPrice(item.customUnitPrice());
-            quoteDetailEntity.setItemVendorProductCustomAmount(item.customUnitPrice().multiply(new BigDecimal(item.quantity())));
-            quoteDetailEntity.setItemVendorProductCostPrice(costPrice);
-            quoteDetailEntity.setItemVendorProductCostAmount(costPrice.multiply(new BigDecimal(item.quantity())));
+            quoteDetailEntity.setQuantity(item.quantity());
+            quoteDetailEntity.setItemVendorProductPrice(itemEntity.getAmount().setScale(0, RoundingMode.HALF_UP));
+            quoteDetailEntity.setItemVendorProductAmount(itemEntity.getAmount().multiply(new BigDecimal(item.quantity())).setScale(0, RoundingMode.HALF_UP));
+            quoteDetailEntity.setItemVendorProductCustomPrice(item.customUnitPrice().setScale(0, RoundingMode.HALF_UP));
+            quoteDetailEntity.setItemVendorProductCustomAmount(item.customUnitPrice().multiply(new BigDecimal(item.quantity())).setScale(0, RoundingMode.HALF_UP));
+            quoteDetailEntity.setItemVendorProductCostPrice(costPrice.setScale(0, RoundingMode.HALF_UP));
+            quoteDetailEntity.setItemVendorProductCostAmount(costPrice.multiply(new BigDecimal(item.quantity())).setScale(0, RoundingMode.HALF_UP));
             quoteDetailEntities.add(quoteDetailEntity);
         }
         return quoteDetailEntities;
     }
 
-    private BigDecimal getVendorProductCostPrice(List<VendorProductEntity> vendorProductEntities){
-        BigDecimal unitPrice = new BigDecimal(0);
-        for(VendorProductEntity vendorProductEntity : vendorProductEntities){
-            unitPrice = unitPrice.add(vendorProductEntity.getUnitPrice());
+    private BigDecimal getVendorProductCostPrice(
+            List<ItemVendorProductEntity> itemVendorProductEntities, List<VendorProductEntity> vendorProductEntities){
+        BigDecimal costPrice = new BigDecimal(0);
+        VendorProductEntity vendorProductEntity;
+        BigDecimal unitPrice;
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
+            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty()));
+            costPrice = costPrice.add(unitPrice.setScale(0, RoundingMode.HALF_UP));
         }
-        return unitPrice;
+        return costPrice;
     }
 
     // 取得品項廠商產品清單
@@ -221,13 +229,13 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             return quoteEntity;
         }
         BigDecimal amount = getAmount(quoteDetailEntities);
-        BigDecimal tax = amount.multiply(new BigDecimal(0.05));
+        BigDecimal tax = amount.multiply(new BigDecimal(0.05)).setScale(0, RoundingMode.HALF_UP);
         BigDecimal totalAmount = amount.add(tax);
         BigDecimal customAmount = getCustomAmount(quoteDetailEntities);
-        BigDecimal customTax = customAmount.multiply(new BigDecimal(0.05));
+        BigDecimal customTax = customAmount.multiply(new BigDecimal(0.05)).setScale(0, RoundingMode.HALF_UP);
         BigDecimal customTotalAmount = customAmount.add(customTax);
         BigDecimal costAmount = getCostAmount(quoteDetailEntities);
-        BigDecimal costTax = costAmount.multiply(new BigDecimal(0.05));
+        BigDecimal costTax = costAmount.multiply(new BigDecimal(0.05)).setScale(0, RoundingMode.HALF_UP);
         BigDecimal costTotalAmount = costAmount.add(costTax);
         quoteEntity.setAmount(amount);
         quoteEntity.setTax(tax);
@@ -247,7 +255,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             unitPrice = unitPrice.add(quoteDetailEntity.getItemVendorProductAmount());
         }
-        return unitPrice;
+        return unitPrice.setScale(0, RoundingMode.HALF_UP);
     }
 
     // 取得客製化總計
@@ -256,7 +264,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             customPrice = customPrice.add(quoteDetailEntity.getItemVendorProductCustomAmount());
         }
-        return customPrice;
+        return customPrice.setScale(0, RoundingMode.HALF_UP);
     }
 
     // 取得客製化總計
@@ -265,7 +273,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             costPrice = costPrice.add(quoteDetailEntity.getItemVendorProductCostAmount());
         }
-        return costPrice;
+        return costPrice.setScale(0, RoundingMode.HALF_UP);
     }
 
 }

@@ -185,7 +185,7 @@ function getQuotes() {
                         <td>${status}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-preview-quote-json' data-bs-toggle='offcanvas' data-bs-target='#preview-quote' aria-controls='preview-quote'>預覽</button>
-                            <button type='button' class='btn btn-primary btn-sm margin-right-3 get-download-quote-json'>
+                            <button type='button' class='btn btn-dark btn-sm margin-right-3 get-download-quote-json'>
                                 <span class="spinner-border spinner-border-sm hide download-quote-loading" aria-hidden="true"></span>
                                 <span class="download-quote-text" role="status">下載</span>
                             </button>
