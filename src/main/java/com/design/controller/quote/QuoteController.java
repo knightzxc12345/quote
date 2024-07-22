@@ -81,11 +81,12 @@ public class QuoteController {
     }
 
     @GetMapping(
-            value = "v1/download/{quoteUuid}"
+            value = "v1/download/{quoteUuid}/{company}"
     )
     public void download(
-            @PathVariable("quoteUuid") @NotNull UUID quoteUuid) {
-        quoteFileUseCase.download(quoteUuid);
+            @PathVariable("quoteUuid") @NotNull UUID quoteUuid,
+            @PathVariable("company") @NotNull Integer company) {
+        quoteFileUseCase.download(quoteUuid, company);
     }
 
     @GetMapping(

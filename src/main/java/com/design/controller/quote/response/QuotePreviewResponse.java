@@ -1,11 +1,12 @@
 package com.design.controller.quote.response;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public record QuotePreviewResponse(
+
+        UUID quoteUUid,
 
         String userName,
 
@@ -35,12 +36,11 @@ public record QuotePreviewResponse(
 
         BigDecimal costTotalAmount,
 
-        @NotNull(message = "產品清單")
-        List<QuotePreviewResponse.Product> products
+        List<QuotePreviewResponse.Item> items
 
 ) {
 
-        public record Product(
+        public record Item(
 
                 Integer index,
 
@@ -48,23 +48,23 @@ public record QuotePreviewResponse(
 
                 String itemName,
 
-                String specification,
+                String itemSpec,
 
-                String unit,
+                String itemUnit,
 
                 Integer quantity,
 
-                BigDecimal unitPrice,
+                BigDecimal itemVendorProductPrice,
 
-                BigDecimal amount,
+                BigDecimal itemVendorProductAmount,
 
-                BigDecimal customUnitPrice,
+                BigDecimal itemVendorProductCustomPrice,
 
-                BigDecimal customAmount,
+                BigDecimal itemVendorProductCustomAmount,
 
-                BigDecimal costPrice,
+                BigDecimal itemVendorProductCostPrice,
 
-                BigDecimal costAmount
+                BigDecimal itemVendorProductCostAmount
 
         ){
         }

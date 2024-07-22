@@ -33,6 +33,9 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
     @Value("classpath:files/quote-01.xlsx")
     private Resource quote01Resource;
 
+    @Value("classpath:files/quote-02.xlsx")
+    private Resource quote02Resource;
+
     private final QuoteService quoteService;
 
     private final QuoteDetailService quoteDetailService;
@@ -47,8 +50,9 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         CustomerEntity customerEntity = customerService.findByUuid(quoteEntity.getCustomerUuid());
         UserEntity userEntity = userService.findByUuid(quoteEntity.getUserUuid());
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
-        List<QuotePreviewResponse.Product> products = getProducts(quoteDetailEntities);
+        List<QuotePreviewResponse.Item> items = getItems(quoteDetailEntities);
         return new QuotePreviewResponse(
+                quoteEntity.getUuid(),
                 userEntity.getName(),
                 customerEntity.getName(),
                 customerEntity.getAddress(),
@@ -63,12 +67,12 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
                 quoteEntity.getCostAmount(),
                 quoteEntity.getCostTax(),
                 quoteEntity.getCostTotalAmount(),
-                products
+                items
         );
     }
 
     @Override
-    public void download(UUID quoteUuid) {
+    public void download(UUID quoteUuid, Integer company) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
         // 取得寫入excel陣列資料
@@ -76,9 +80,9 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         // 取得寫入資料
         Map<String, String> params = getParams(quoteEntity);
         // 取得excel原始檔
-        InputStream originQuote01InputStream = getInputStream(quote01Resource);
+        InputStream inputStream = getResource(company);
         // 寫入excel
-        InputStream quoteInputStream = ExcelUtil.create(originQuote01InputStream, quoteDetails, params);
+        InputStream quoteInputStream = ExcelUtil.create(inputStream, quoteDetails, params);
         writeFile(quoteInputStream);
     }
 
@@ -98,29 +102,40 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         return params;
     }
 
-    private List<QuotePreviewResponse.Product> getProducts(List<QuoteDetailEntity> quoteDetailEntities){
-        List<QuotePreviewResponse.Product> products = new ArrayList<>();
-        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
-            return products;
+    // 取得來源
+    private InputStream getResource(Integer company){
+        if(1 == company){
+            return getInputStream(quote01Resource);
         }
-        Integer index = 1;
+        if(2 == company){
+            return getInputStream(quote02Resource);
+        }
+        return null;
+    }
+
+    private List<QuotePreviewResponse.Item> getItems(List<QuoteDetailEntity> quoteDetailEntities){
+        List<QuotePreviewResponse.Item> items = new ArrayList<>();
+        if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
+            return items;
+        }
+        int i = 0;
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
-            products.add(new QuotePreviewResponse.Product(
-                    index++,
+            items.add(new QuotePreviewResponse.Item(
+                    ++i,
                     quoteDetailEntity.getItemNo(),
                     quoteDetailEntity.getItemName(),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
+                    quoteDetailEntity.getItemSpec(),
+                    quoteDetailEntity.getItemUnit(),
+                    quoteDetailEntity.getQuantity(),
+                    quoteDetailEntity.getItemVendorProductPrice(),
+                    quoteDetailEntity.getItemVendorProductAmount(),
+                    quoteDetailEntity.getItemVendorProductCustomPrice(),
+                    quoteDetailEntity.getItemVendorProductCustomAmount(),
+                    quoteDetailEntity.getItemVendorProductCostPrice(),
+                    quoteDetailEntity.getItemVendorProductCostAmount()
             ));
         }
-        return products;
+        return items;
     }
 
     private List<QuoteDetail> getQuoteDetails(List<QuoteDetailEntity> quoteDetailEntities){
@@ -133,13 +148,13 @@ public class QuoteFileUseCaseImpl implements QuoteFileUseCase {
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
             quoteDetail = new QuoteDetail();
             quoteDetail.setIndex(index++);
-            quoteDetail.setProductItemNo(quoteDetailEntity.getItemNo());
-            quoteDetail.setProductItemName(quoteDetailEntity.getItemName());
-            quoteDetail.setProductSpecification(null);
-            quoteDetail.setProductQuantity(null);
-            quoteDetail.setProductUnit(null);
-            quoteDetail.setProductCustomUnitPrice(Common.DECIMAL_FORMAT.format(null));
-            quoteDetail.setProductCustomAmount(Common.DECIMAL_FORMAT.format(null));
+            quoteDetail.setItemNo(quoteDetailEntity.getItemNo());
+            quoteDetail.setItemName(quoteDetailEntity.getItemName());
+            quoteDetail.setItemSpec(quoteDetailEntity.getItemSpec());
+            quoteDetail.setQuantity(quoteDetail.getQuantity());
+            quoteDetail.setItemUnit(quoteDetail.getItemUnit());
+            quoteDetail.setItemVendorProductCustomPrice(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getItemVendorProductCustomPrice()));
+            quoteDetail.setItemVendorProductCustomAmount(Common.DECIMAL_FORMAT.format(quoteDetailEntity.getItemVendorProductCustomAmount()));
             quoteDetails.add(quoteDetail);
         }
         return quoteDetails;

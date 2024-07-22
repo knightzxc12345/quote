@@ -1,7 +1,5 @@
 package com.design.controller.quote.response;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -18,20 +16,51 @@ public record QuoteFindResponse(
 
         String underTakerTel,
 
-        @NotNull(message = "產品清單")
-        List<QuoteFindResponse.Product> products
+        BigDecimal amount,
+
+        BigDecimal tax,
+
+        BigDecimal totalAmount,
+
+        BigDecimal customAmount,
+
+        BigDecimal customTax,
+
+        BigDecimal customTotalAmount,
+
+        BigDecimal costAmount,
+
+        BigDecimal costTax,
+
+        BigDecimal costTotalAmount,
+
+        List<QuoteFindResponse.Item> items
 
 ) {
 
-        public record Product(
+        public record Item(
 
-                UUID itemUuid,
+                String itemNo,
 
-                UUID productUuid,
+                String itemName,
+
+                String itemSpec,
+
+                String itemUnit,
 
                 Integer quantity,
 
-                BigDecimal customUnitPrice
+                BigDecimal itemVendorProductPrice,
+
+                BigDecimal itemVendorProductAmount,
+
+                BigDecimal itemVendorProductCustomPrice,
+
+                BigDecimal itemVendorProductCustomAmount,
+
+                BigDecimal itemVendorProductCostPrice,
+
+                BigDecimal itemVendorProductCostAmount
 
         ){
         }

@@ -7,18 +7,18 @@ public class QuoteDetail {
 
     private Integer index;
 
-    private String productItemNo;
+    private String itemNo;
 
-    private String productItemName;
+    private String itemName;
 
-    private String productSpecification;
+    private String itemSpec;
 
-    private String productQuantity;
+    private String quantity;
 
-    private String productUnit;
+    private String itemUnit;
 
-    private String productCustomUnitPrice;
+    private String itemVendorProductCustomPrice;
 
-    private String productCustomAmount;
+    private String itemVendorProductCustomAmount;
 
 }

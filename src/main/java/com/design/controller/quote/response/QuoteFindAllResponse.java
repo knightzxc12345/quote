@@ -19,7 +19,7 @@ public record QuoteFindAllResponse(
 
         String createTime,
 
-        Integer status
+        String status
 
 ) {
 }

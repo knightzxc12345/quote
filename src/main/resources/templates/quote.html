@@ -6,8 +6,8 @@
     <th:block th:include="common/css.html"></th:block>
     <link th:href="@{/css/quote.css}" rel="stylesheet"/>
     <th:block th:include="common/js.html"></th:block>
+    <script th:src="@{/js/common/xlsx.full.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/quote.js}" type="text/javascript"></script>
-    <script th:src="@{/js/xlsx.full.min.js}" type="text/javascript"></script>
 </head>
 <body class="close-scroller">
 
@@ -46,7 +46,7 @@
                         <th scope="col">調整總計</th>
                         <th scope="col">成本總計</th>
                         <th scope="col">狀態</th>
-                        <th scope="col" style="width: 20%;"></th>
+                        <th scope="col" style="width: 30%;"></th>
                     </tr>
                     </thead>
                     <tbody id="quote-tbody">
@@ -73,49 +73,49 @@
         <div class="offcanvas-body preview-quote">
             <div class="preview-quote-inner">
                 <div class="d-flex">
-                    <div class="p-2 col-8"></div>
+                    <div class="p-2 col-6"></div>
                     <div class="p-2 col-1 title-name">
                         單位名稱
                     </div>
-                    <div class="p-2 col-1 text-blue" id="preview-quote-customer-name">
+                    <div class="p-2 col-2 text-blue" id="preview-quote-customer-name">
 
                     </div>
                     <div class="p-2 col-1 title-name">
                         承辦業務
                     </div>
-                    <div class="p-2 col-1 text-blue" id="preview-quote-user-name">
+                    <div class="p-2 col-2 text-blue" id="preview-quote-user-name">
 
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="p-2 col-8"></div>
+                    <div class="p-2 col-6"></div>
                     <div class="p-2 col-1 title-name">
                         單位地址
                     </div>
-                    <div class="p-2 col-3 text-blue" id="preview-quote-customer-address">
+                    <div class="p-2 col-5 text-blue" id="preview-quote-customer-address">
 
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="p-2 col-8"></div>
+                    <div class="p-2 col-6"></div>
                     <div class="p-2 col-1 title-name">
                         分行承辦
                     </div>
-                    <div class="p-2 col-1 text-blue" id="preview-quote-undertaker-name">
+                    <div class="p-2 col-2 text-blue" id="preview-quote-undertaker-name">
 
                     </div>
                     <div class="p-2 col-1 title-name">
                         承辦電話
                     </div>
-                    <div class="p-2 col-1 text-blue" id="preview-quote-undertaker-tel">
+                    <div class="p-2 col-2 text-blue" id="preview-quote-undertaker-tel">
 
                     </div>
                 </div>
                 <table class="table table-striped vertical-align-middle margin-top-1" id="previewQuoteList">
                     <thead>
                     <tr>
+                        <th scope="col" style="width: 5%;">項次</th>
                         <th scope="col" style="width: 5%;">項目</th>
-                        <th scope="col" style="width: 5%;">編號</th>
                         <th scope="col" style="width: 12%;">品名</th>
                         <th scope="col" style="width: 20%;">規格</th>
                         <th scope="col" style="width: 5%;">數量</th>

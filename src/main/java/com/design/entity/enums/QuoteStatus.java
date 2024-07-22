@@ -4,23 +4,28 @@ import com.design.converter.ConverterBase;
 
 public enum QuoteStatus implements EnumBase<Integer> {
 
-    // 建立
-    CREATE(1),
+    CREATE(1, "建立"),
 
-    // 完成
-    FINISH(3)
+    FINISH(3, "完成")
 
     ;
 
-    private final int status;
+    private int status;
 
-    QuoteStatus(final int status) {
+    private String name;
+
+    QuoteStatus(int status, String name) {
         this.status = status;
+        this.name = name;
     }
 
     @Override
     public Integer get() {
         return status;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public static QuoteStatus from(final Integer status) {

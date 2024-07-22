@@ -53,10 +53,15 @@ function offcanvasEvent(){
         const jsonData = row.data('json');
         previewQuote(jsonData);
     });
-    $('#quoteList').on('click', '.get-download-quote-json', function() {
+    $('#quoteList').on('click', '.get-download-1-quote-json', function() {
         const row = $(this).closest('tr');
         const jsonData = row.data('json');
-        downloadQuote(row, jsonData);
+        download01Quote(row, jsonData);
+    });
+    $('#quoteList').on('click', '.get-download-2-quote-json', function() {
+        const row = $(this).closest('tr');
+        const jsonData = row.data('json');
+        download02Quote(row, jsonData);
     });
     $('#quoteList').on('click', '.get-update-quote-json', function() {
         const row = $(this).closest('tr');
@@ -173,7 +178,6 @@ function getQuotes() {
             $.each(response.data.responses, function (key, value) {
                 let userName = findUserName(value.userUuid);
                 let customerName = findCustomerName(value.customerUuid);
-                let status = findStatusName(value.status);
                 $("#quote-tbody").append(`
                     <tr data-json='${JSON.stringify(value)}'>
                         <td>${value.createTime}</td>
@@ -182,12 +186,16 @@ function getQuotes() {
                         <td>${value.totalAmount.toLocaleString()}</td>
                         <td style="color: red;">${value.customTotalAmount.toLocaleString()}</td>
                         <td style="color: green;">${value.costTotalAmount.toLocaleString()}</td>
-                        <td>${status}</td>
+                        <td>${value.status}</td>
                         <td>
                             <button type='button' class='btn btn-secondary btn-sm margin-right-3 get-preview-quote-json' data-bs-toggle='offcanvas' data-bs-target='#preview-quote' aria-controls='preview-quote'>預覽</button>
-                            <button type='button' class='btn btn-dark btn-sm margin-right-3 get-download-quote-json'>
+                            <button type='button' class='btn btn-dark btn-sm margin-right-3 get-download-1-quote-json'>
                                 <span class="spinner-border spinner-border-sm hide download-quote-loading" aria-hidden="true"></span>
-                                <span class="download-quote-text" role="status">下載</span>
+                                <span class="download-1-quote-text" role="status">詠安-下載</span>
+                            </button>
+                            <button type='button' class='btn btn-dark btn-sm margin-right-3 get-download-2-quote-json'>
+                                <span class="spinner-border spinner-border-sm hide download-quote-loading" aria-hidden="true"></span>
+                                <span class="download-2-quote-text" role="status">創豐-下載</span>
                             </button>
                             <button type='button' class='btn btn-warning btn-sm margin-right-3 get-update-quote-json'>編輯</button>
                             <button type='button' class='btn btn-danger btn-sm margin-right-3 get-delete-quote-json' data-bs-toggle="modal" data-bs-target="#delete-quote">刪除</button>
@@ -233,17 +241,6 @@ function findCustomerName(customerUuid) {
     return null;
 }
 
-// 取得狀態名稱
-function findStatusName(status) {
-    if(1 == status){
-        return "已建立";
-    }
-    if(3 == status){
-        return "完成";
-    }
-    return null;
-}
-
 // 預覽報價單
 function previewQuote(data){
     $('.preview-quote-inner').addClass('hide');
@@ -272,21 +269,21 @@ function previewQuote(data){
             $('#preview-quote-undertaker-name').text(data.underTakerName);
             $('#preview-quote-undertaker-tel').text(data.underTakerTel);
             $('#preview-quote-tbody').empty();
-            $.each(data.products, function(index, value) {
+            $.each(data.items, function(index, value) {
                 $('#preview-quote-tbody').append(`
                     <tr>
                         <td class="preview-quote-index">${value.index}</td>
                         <td class="preview-quote-item-no">${value.itemNo}</td>
                         <td class="preview-quote-item-name">${value.itemName}</td>
-                        <td class="preview-quote-product-specification">${value.specification}</td>
-                        <td class="preview-quote-product-quantity">${value.quantity}</td>
-                        <td class="preview-quote-product-unit">${value.unit}</td>
-                        <td class="preview-quote-product-unit-price">${value.unitPrice.toLocaleString()}</td>
-                        <td class="preview-quote-product-amount">${value.amount.toLocaleString()}</td>
-                        <td class="preview-quote-product-custom-unit-price" style="color: red;">${value.customUnitPrice.toLocaleString()}</td>
-                        <td class="preview-quote-product-custom-amount" style="color: red;">${value.customAmount.toLocaleString()}</td>
-                        <td class="preview-quote-product-cost-price" style="color: green;">${value.costPrice.toLocaleString()}</td>
-                        <td class="preview-quote-product-cost-amount" style="color: green;">${value.costAmount.toLocaleString()}</td>
+                        <td class="preview-quote-item-spec">${value.itemSpec}</td>
+                        <td class="preview-quote-item-quantity">${value.quantity}</td>
+                        <td class="preview-quote-item-unit">${value.itemUnit}</td>
+                        <td class="preview-quote-item-unit-price">${value.itemVendorProductPrice.toLocaleString()}</td>
+                        <td class="preview-quote-item-amount">${value.itemVendorProductAmount.toLocaleString()}</td>
+                        <td class="preview-quote-item-custom-unit-price" style="color: red;">${value.itemVendorProductCustomPrice.toLocaleString()}</td>
+                        <td class="preview-quote-item-custom-amount" style="color: red;">${value.itemVendorProductCustomAmount.toLocaleString()}</td>
+                        <td class="preview-quote-item-cost-price" style="color: green;">${value.itemVendorProductCostPrice.toLocaleString()}</td>
+                        <td class="preview-quote-item-cost-amount" style="color: green;">${value.itemVendorProductCostAmount.toLocaleString()}</td>
                     </tr>
                 `);
             });
@@ -315,15 +312,15 @@ function previewQuote(data){
 }
 
 // 下載報價單
-function downloadQuote(row, data){
+function download01Quote(row, data){
     let loading = row.find('.download-quote-loading');
     loading.removeClass('hide');
-    let loadingText = row.find('.download-quote-text');
+    let loadingText = row.find('.download-1-quote-text');
     loadingText.text('下載中...');
     const quoteUuid = data.quoteUuid;
     const customerName = findCustomerName(data.customerUuid);
     $.ajax({
-        url: '/quote/v1/download/' + quoteUuid,
+        url: '/quote/v1/download/' + quoteUuid + '/1',
         contentType: 'application/json',
         type: 'GET',
         headers: headers,
@@ -331,15 +328,48 @@ function downloadQuote(row, data){
             responseType: 'blob'
         },
         success: function (data) {
-            var a = document.createElement('a');
+            let a = document.createElement('a');
             a.href = window.URL.createObjectURL(data);
-            a.download = '報價單-' + customerName + '.xlsx';
+            a.download = getDate() + customerName + "-詠安設計有限公司報價單" + '.xlsx';
             a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             loading.addClass('hide');
-            loadingText.text('下載');
+            loadingText.text('詠安-下載');
+        },
+        error: function (xhr, status, error) {
+            alertError(message);
+        }
+    });
+}
+
+// 下載報價單
+function download02Quote(row, data){
+    let loading = row.find('.download-quote-loading');
+    loading.removeClass('hide');
+    let loadingText = row.find('.download-2-quote-text');
+    loadingText.text('下載中...');
+    const quoteUuid = data.quoteUuid;
+    const customerName = findCustomerName(data.customerUuid);
+    $.ajax({
+        url: '/quote/v1/download/' + quoteUuid + '/2',
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (data) {
+            let a = document.createElement('a');
+            a.href = window.URL.createObjectURL(data);
+            a.download = getDate() + customerName + "-創豐有限公司報價單" + '.xlsx';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            loading.addClass('hide');
+            loadingText.text('創豐-下載');
         },
         error: function (xhr, status, error) {
             alertError(message);

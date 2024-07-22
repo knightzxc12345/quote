@@ -29,14 +29,23 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
     public QuoteFindResponse findByUuid(UUID quoteUuid) {
         QuoteEntity quoteEntity = quoteService.findByUuid(quoteUuid);
         List<QuoteDetailEntity> quoteDetailEntities = quoteDetailService.findAll(quoteUuid);
-        List<QuoteFindResponse.Product> products = getProducts(quoteDetailEntities);
+        List<QuoteFindResponse.Item> items = getItems(quoteDetailEntities);
         return new QuoteFindResponse(
                 quoteEntity.getUuid(),
                 quoteEntity.getUserUuid(),
                 quoteEntity.getCustomerUuid(),
                 quoteEntity.getUnderTakerName(),
                 quoteEntity.getUnderTakerTel(),
-                products
+                quoteEntity.getAmount(),
+                quoteEntity.getTax(),
+                quoteEntity.getTotalAmount(),
+                quoteEntity.getCustomAmount(),
+                quoteEntity.getCustomTax(),
+                quoteEntity.getCustomTotalAmount(),
+                quoteEntity.getCostAmount(),
+                quoteEntity.getCostTax(),
+                quoteEntity.getCostTotalAmount(),
+                items
         );
     }
 
@@ -72,20 +81,27 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
         );
     }
 
-    private List<QuoteFindResponse.Product> getProducts(List<QuoteDetailEntity> quoteDetailEntities){
-        List<QuoteFindResponse.Product> products = new ArrayList<>();
+    private List<QuoteFindResponse.Item> getItems(List<QuoteDetailEntity> quoteDetailEntities){
+        List<QuoteFindResponse.Item> items = new ArrayList<>();
         if(null == quoteDetailEntities || quoteDetailEntities.isEmpty()){
-            return products;
+            return items;
         }
         for(QuoteDetailEntity quoteDetailEntity : quoteDetailEntities){
-            products.add(new QuoteFindResponse.Product(
-                    quoteDetailEntity.getItemUuid(),
-                    null,
-                    null,
-                    null
+            items.add(new QuoteFindResponse.Item(
+                    quoteDetailEntity.getItemNo(),
+                    quoteDetailEntity.getItemName(),
+                    quoteDetailEntity.getItemSpec(),
+                    quoteDetailEntity.getItemUnit(),
+                    quoteDetailEntity.getQuantity(),
+                    quoteDetailEntity.getItemVendorProductPrice(),
+                    quoteDetailEntity.getItemVendorProductAmount(),
+                    quoteDetailEntity.getItemVendorProductCustomPrice(),
+                    quoteDetailEntity.getItemVendorProductCustomAmount(),
+                    quoteDetailEntity.getItemVendorProductCostPrice(),
+                    quoteDetailEntity.getItemVendorProductCostAmount()
             ));
         }
-        return products;
+        return items;
     }
 
     private List<QuoteFindAllResponse> format(List<QuoteEntity> quoteEntities){
@@ -102,7 +118,7 @@ public class QuoteFindUseCaseImpl implements QuoteFindUseCase {
                     quoteEntity.getCustomTotalAmount(),
                     quoteEntity.getCostTotalAmount(),
                     InstantUtil.to(quoteEntity.getCreateTime()),
-                    quoteEntity.getQuoteStatus().get()
+                    quoteEntity.getQuoteStatus().getName()
             ));
         }
         return responses;
