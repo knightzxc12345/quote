@@ -14,7 +14,7 @@ public class CommonUtil {
         if(null == list || list.isEmpty()){
             return list;
         }
-        final LinkedHashSet<T> set = new LinkedHashSet<>(list);
+        LinkedHashSet<T> set = new LinkedHashSet<>(list);
         return new ArrayList<>(set);
     }
 

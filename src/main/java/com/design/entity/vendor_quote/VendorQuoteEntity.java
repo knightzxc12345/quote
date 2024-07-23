@@ -3,11 +3,14 @@ package com.design.entity.vendor_quote;
 import com.design.entity.base.BaseEntity;
 import com.design.entity.enums.VendorQuoteStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -52,6 +55,18 @@ public class VendorQuoteEntity extends BaseEntity {
     )
     @NotNull
     private UUID customerUuid;
+
+    // 總金額
+    @Column(
+            name = "total_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
+    @NotNull
+    private BigDecimal totalAmount;
 
     // 廠商報價單狀態
     @Column(

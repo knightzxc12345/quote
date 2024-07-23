@@ -8,6 +8,8 @@ import com.design.entity.quote.QuoteEntity;
 import com.design.entity.quote_detail.QuoteDetailEntity;
 import com.design.entity.user.UserEntity;
 import com.design.entity.vendor_product.VendorProductEntity;
+import com.design.entity.vendor_quote.VendorQuoteEntity;
+import com.design.entity.vendor_quote_detail.VendorQuoteDetailEntity;
 import com.design.service.customer.CustomerService;
 import com.design.service.item.ItemService;
 import com.design.service.item_vendor_producct.ItemVendorProductService;
@@ -15,6 +17,8 @@ import com.design.service.quote.QuoteService;
 import com.design.service.quote_detail.QuoteDetailService;
 import com.design.service.user.UserService;
 import com.design.service.vendor_product.VendorProductService;
+import com.design.service.vendor_quote.VendorQuoteService;
+import com.design.service.vendor_quote_detail.VendorQuoteDetailService;
 import com.design.utils.CommonUtil;
 import com.design.utils.JwtUtil;
 import jakarta.transaction.Transactional;
@@ -23,9 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
     private final QuoteService quoteService;
 
     private final QuoteDetailService quoteDetailService;
+
+    private final VendorQuoteService vendorQuoteService;
+
+    private final VendorQuoteDetailService vendorQuoteDetailService;
 
     @Override
     public void create(QuoteCreateRequest request) {
@@ -78,10 +84,28 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         );
         // 更新報價單金額
         quoteEntity = updateQuoteAmount(quoteEntity, quoteDetailEntities);
+        // 初始化廠商出貨清單
+        List<VendorQuoteEntity> vendorQuoteEntities = initVendorQuotes(
+                itemVendorProductEntities,
+                quoteEntity
+        );
+        // 初始化廠商報價單明細清單
+        List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = initVendorQuoteDetails(
+                itemEntities,
+                itemVendorProductEntities,
+                vendorProductEntities,
+                vendorQuoteEntities
+        );
+        // 更新報價單清單
+        vendorQuoteEntities = updateVendorQuotes(vendorQuoteEntities, vendorQuoteDetailEntities);
         // 新增報價單
         quoteService.create(quoteEntity, JwtUtil.extractUserUuid());
         // 新增報價單明細
         quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUserUuid());
+        // 新增廠商出貨清單
+        vendorQuoteService.createAll(vendorQuoteEntities, JwtUtil.extractUserUuid());
+        // 新增廠商出貨明細清單
+        vendorQuoteDetailService.createAll(vendorQuoteDetailEntities, JwtUtil.extractUserUuid());
     }
 
     // 初始化報價單
@@ -276,6 +300,142 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             costPrice = costPrice.add(quoteDetailEntity.getItemVendorProductCostAmount());
         }
         return costPrice.setScale(0, RoundingMode.HALF_UP);
+    }
+
+    // 初始化廠商出貨清單
+    private List<VendorQuoteEntity> initVendorQuotes(
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            QuoteEntity quoteEntity){
+        List<VendorQuoteEntity> vendorQuoteEntities = new ArrayList<>();
+        List<UUID> vendorUuids = getVendorUuids(itemVendorProductEntities);
+        VendorQuoteEntity vendorQuoteEntity;
+        for(UUID vendorUuid : vendorUuids){
+            vendorQuoteEntity = new VendorQuoteEntity();
+            vendorQuoteEntity.setVendorUuid(vendorUuid);
+            vendorQuoteEntity.setQuoteUuid(quoteEntity.getUuid());
+            vendorQuoteEntity.setCustomerUuid(quoteEntity.getCustomerUuid());
+            vendorQuoteEntities.add(vendorQuoteEntity);
+        }
+        return vendorQuoteEntities;
+    }
+
+    // 取得廠商uuid
+    private List<UUID> getVendorUuids(List<ItemVendorProductEntity> itemVendorProductEntities){
+        LinkedHashSet<UUID> vendorUuids = new LinkedHashSet<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return new ArrayList<>(vendorUuids);
+        }
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            vendorUuids.add(itemVendorProductEntity.getVendorUuid());
+        }
+        return new ArrayList<>(vendorUuids);
+    }
+
+    // 初始化廠商報價單明細清單
+    private List<VendorQuoteDetailEntity> initVendorQuoteDetails(
+            List<ItemEntity> itemEntities,
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            List<VendorProductEntity> vendorProductEntities,
+            List<VendorQuoteEntity> vendorQuoteEntities){
+        List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return vendorQuoteDetailEntities;
+        }
+        if(null == vendorQuoteEntities || vendorQuoteEntities.isEmpty()){
+            return vendorQuoteDetailEntities;
+        }
+        List<VendorQuoteDetailEntity> tempVendorQuoteDetailEntities;
+        List<ItemVendorProductEntity> tempItemVendorProductEntities;
+        for(VendorQuoteEntity vendorQuoteEntity : vendorQuoteEntities){
+            // 取得品像廠商產品清單
+            tempItemVendorProductEntities = getItemVendorProducts(itemVendorProductEntities, vendorQuoteEntity);
+            // 初始化廠商報價單明細清單
+            tempVendorQuoteDetailEntities = getVendorQuoteDetails(
+                    itemEntities,
+                    tempItemVendorProductEntities,
+                    vendorProductEntities,
+                    vendorQuoteEntity
+            );
+            vendorQuoteDetailEntities.addAll(tempVendorQuoteDetailEntities);
+        }
+        return vendorQuoteDetailEntities;
+    }
+
+    // 取得品像廠商產品清單
+    private List<ItemVendorProductEntity> getItemVendorProducts(
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            VendorQuoteEntity vendorQuoteEntity){
+        List<ItemVendorProductEntity> result = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return result;
+        }
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            if(itemVendorProductEntity.getVendorUuid().equals(vendorQuoteEntity.getVendorUuid())){
+                result.add(itemVendorProductEntity);
+            }
+        }
+        return result;
+    }
+
+    // 初始化廠商報價單明細清單
+    private List<VendorQuoteDetailEntity> getVendorQuoteDetails(
+            List<ItemEntity> itemEntities,
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            List<VendorProductEntity> vendorProductEntities,
+            VendorQuoteEntity vendorQuoteEntity){
+        List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = new ArrayList<>();
+        if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
+            return vendorQuoteDetailEntities;
+        }
+        VendorQuoteDetailEntity vendorQuoteDetailEntity;
+        ItemEntity itemEntity;
+        VendorProductEntity vendorProductEntity;
+        for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
+            itemEntity = CommonUtil.getEntityByUuid(itemEntities, itemVendorProductEntity.getItemUuid());
+            if(null == itemEntity){
+                continue;
+            }
+            vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
+            if(null == vendorProductEntity){
+                continue;
+            }
+            vendorQuoteDetailEntity = new VendorQuoteDetailEntity();
+            vendorQuoteDetailEntity.setVendorQuoteUuid(vendorQuoteEntity.getUuid());
+            vendorQuoteDetailEntity.setItemUuid(itemEntity.getUuid());
+            vendorQuoteDetailEntity.setItemNo(itemEntity.getNo());
+            vendorQuoteDetailEntity.setItemName(itemEntity.getName());
+            vendorQuoteDetailEntity.setItemSpec(itemEntity.getSpec());
+            vendorQuoteDetailEntity.setItemUnit(itemEntity.getUnit());
+            vendorQuoteDetailEntity.setVendorProductUuid(vendorProductEntity.getUuid());
+            vendorQuoteDetailEntity.setVendorProductUnitPrice(vendorProductEntity.getUnitPrice());
+            vendorQuoteDetailEntity.setQuantity(itemVendorProductEntity.getQty());
+            vendorQuoteDetailEntity.setVendorProductAmount(vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty())));
+            vendorQuoteDetailEntities.add(vendorQuoteDetailEntity);
+        }
+        return vendorQuoteDetailEntities;
+    }
+
+    // 更新報價單清單
+    private List<VendorQuoteEntity> updateVendorQuotes(
+            List<VendorQuoteEntity> vendorQuoteEntities,
+            List<VendorQuoteDetailEntity> vendorQuoteDetailEntities){
+        BigDecimal totalAmount;
+        for(VendorQuoteEntity vendorQuoteEntity : vendorQuoteEntities){
+            totalAmount = getTotalAmount(vendorQuoteEntity, vendorQuoteDetailEntities);
+            vendorQuoteEntity.setTotalAmount(totalAmount);
+        }
+        return vendorQuoteEntities;
+    }
+
+    // 取得廠商報價單總金額
+    private BigDecimal getTotalAmount(VendorQuoteEntity vendorQuoteEntity, List<VendorQuoteDetailEntity> vendorQuoteDetailEntities){
+        BigDecimal totalAmount = new BigDecimal(0);
+        for(VendorQuoteDetailEntity vendorQuoteDetailEntity : vendorQuoteDetailEntities){
+            if(vendorQuoteDetailEntity.getVendorQuoteUuid().equals(vendorQuoteEntity.getUuid())){
+                totalAmount = totalAmount.add(vendorQuoteDetailEntity.getVendorProductAmount());
+            }
+        }
+        return totalAmount;
     }
 
 }
