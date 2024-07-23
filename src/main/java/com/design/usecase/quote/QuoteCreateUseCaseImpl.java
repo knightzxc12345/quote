@@ -311,6 +311,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         VendorQuoteEntity vendorQuoteEntity;
         for(UUID vendorUuid : vendorUuids){
             vendorQuoteEntity = new VendorQuoteEntity();
+            vendorQuoteEntity.setUuid(UUID.randomUUID());
             vendorQuoteEntity.setVendorUuid(vendorUuid);
             vendorQuoteEntity.setQuoteUuid(quoteEntity.getUuid());
             vendorQuoteEntity.setCustomerUuid(quoteEntity.getCustomerUuid());
@@ -390,6 +391,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         VendorQuoteDetailEntity vendorQuoteDetailEntity;
         ItemEntity itemEntity;
         VendorProductEntity vendorProductEntity;
+        BigDecimal unitPrice;
         for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
             itemEntity = CommonUtil.getEntityByUuid(itemEntities, itemVendorProductEntity.getItemUuid());
             if(null == itemEntity){
@@ -399,6 +401,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             if(null == vendorProductEntity){
                 continue;
             }
+            unitPrice = vendorProductEntity.getUnitPrice().setScale(0, RoundingMode.HALF_UP);
             vendorQuoteDetailEntity = new VendorQuoteDetailEntity();
             vendorQuoteDetailEntity.setVendorQuoteUuid(vendorQuoteEntity.getUuid());
             vendorQuoteDetailEntity.setItemUuid(itemEntity.getUuid());
@@ -407,9 +410,9 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             vendorQuoteDetailEntity.setItemSpec(itemEntity.getSpec());
             vendorQuoteDetailEntity.setItemUnit(itemEntity.getUnit());
             vendorQuoteDetailEntity.setVendorProductUuid(vendorProductEntity.getUuid());
-            vendorQuoteDetailEntity.setVendorProductUnitPrice(vendorProductEntity.getUnitPrice());
+            vendorQuoteDetailEntity.setVendorProductUnitPrice(unitPrice);
             vendorQuoteDetailEntity.setQuantity(itemVendorProductEntity.getQty());
-            vendorQuoteDetailEntity.setVendorProductAmount(vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty())));
+            vendorQuoteDetailEntity.setVendorProductAmount(unitPrice.multiply(new BigDecimal(itemVendorProductEntity.getQty())).setScale(0, RoundingMode.HALF_UP));
             vendorQuoteDetailEntities.add(vendorQuoteDetailEntity);
         }
         return vendorQuoteDetailEntities;
@@ -422,7 +425,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal totalAmount;
         for(VendorQuoteEntity vendorQuoteEntity : vendorQuoteEntities){
             totalAmount = getTotalAmount(vendorQuoteEntity, vendorQuoteDetailEntities);
-            vendorQuoteEntity.setTotalAmount(totalAmount);
+            vendorQuoteEntity.setTotalAmount(totalAmount.setScale(0, RoundingMode.HALF_UP));
         }
         return vendorQuoteEntities;
     }
@@ -432,10 +435,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal totalAmount = new BigDecimal(0);
         for(VendorQuoteDetailEntity vendorQuoteDetailEntity : vendorQuoteDetailEntities){
             if(vendorQuoteDetailEntity.getVendorQuoteUuid().equals(vendorQuoteEntity.getUuid())){
-                totalAmount = totalAmount.add(vendorQuoteDetailEntity.getVendorProductAmount());
+                totalAmount = totalAmount.add(vendorQuoteDetailEntity.getVendorProductAmount().setScale(0, RoundingMode.HALF_UP));
             }
         }
-        return totalAmount;
+        return totalAmount.setScale(0, RoundingMode.HALF_UP);
     }
 
 }
