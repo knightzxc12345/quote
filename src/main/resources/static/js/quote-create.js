@@ -1,7 +1,7 @@
 let globalItem = '';
 let globalCustomer = '';
 let globalUser = '';
-let productIndex = 1;
+let itemIndex = 1;
 
 window.onload = function () {
     init();
@@ -76,6 +76,36 @@ function getCustomers(){
     });
 }
 
+// 取得使用者
+function getUsers(){
+    $.ajax({
+        url: `/common/user/v1/business`,
+        contentType: 'application/json',
+        type: 'GET',
+        headers: headers,
+        success: function (response) {
+            if (response.code != 'C00002') {
+                alertError('系統錯誤');
+                return;
+            }
+            // 空陣列
+            if ($.isEmptyObject(response.data)) {
+                return;
+            }
+            globalUser = response.data;
+            setUser();
+        },
+        error: function (xhr, status, error) {
+            let code = xhr.responseJSON.code;
+            if (code == 'A00006') {
+                goBack();
+                return;
+            }
+            console.log(jsonResponse);
+        }
+    });
+}
+
 // 設定使用者
 function setCustomer(){
     let customerSelect = $('#customer-select');
@@ -108,36 +138,6 @@ function setAddress(){
             return;
         }
         $("#customer-address").text(value.address);
-    });
-}
-
-// 取得使用者
-function getUsers(){
-    $.ajax({
-        url: `/common/user/v1/business`,
-        contentType: 'application/json',
-        type: 'GET',
-        headers: headers,
-        success: function (response) {
-            if (response.code != 'C00002') {
-                alertError('系統錯誤');
-                return;
-            }
-            // 空陣列
-            if ($.isEmptyObject(response.data)) {
-                return;
-            }
-            globalUser = response.data;
-            setUser();
-        },
-        error: function (xhr, status, error) {
-            let code = xhr.responseJSON.code;
-            if (code == 'A00006') {
-                goBack();
-                return;
-            }
-            console.log(jsonResponse);
-        }
     });
 }
 
@@ -174,7 +174,7 @@ function appendColumn(){
                 <button class="btn btn-danger btn-sm add-item-cancel">x</button>
             </td>
             <td class="add-item-uuid hide"></td>
-            <td class="add-item-index">${productIndex}</td>
+            <td class="add-item-index">${itemIndex++}</td>
             <td>
                 <select class="form-select select2 add-item-name-select">
                 </select>
@@ -198,7 +198,6 @@ function appendColumn(){
             </td>
         </tr>
     `);
-    productIndex++;
     buttonClick();
     selectChange();
     inputChange();
@@ -218,7 +217,7 @@ function buttonClick(){
             tr.remove();
             countTotal();
             resetIndex();
-            productIndex--;
+            itemIndex--;
         }
         if (nextTr.length <= 0 && prevTr.length > 0) {
             prevTr.find('.add-item-add').removeClass('hide');
@@ -408,7 +407,7 @@ function addQuote(){
                 $('#add-quote-text').text('送出');
                 return;
             }
-            $('.add-product-success-modal').modal('show');
+            $('.add-item-success-modal').modal('show');
         },
         error: function (xhr, status, error) {
             let code = xhr.responseJSON.code;

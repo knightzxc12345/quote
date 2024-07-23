@@ -40,6 +40,8 @@ public record QuoteFindResponse(
 
         public record Item(
 
+                UUID itemUuid,
+
                 String itemNo,
 
                 String itemName,

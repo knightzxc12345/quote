@@ -80,7 +80,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         quoteEntity = updateQuoteAmount(quoteEntity, quoteDetailEntities);
         // 新增報價單
         quoteService.create(quoteEntity, JwtUtil.extractUserUuid());
-        // 新增爆價單明細
+        // 新增報價單明細
         quoteDetailService.createAll(quoteDetailEntities, JwtUtil.extractUserUuid());
     }
 
@@ -179,8 +179,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         return quoteDetailEntities;
     }
 
+    // 取得廠商產品成本
     private BigDecimal getVendorProductCostPrice(
-            List<ItemVendorProductEntity> itemVendorProductEntities, List<VendorProductEntity> vendorProductEntities){
+            List<ItemVendorProductEntity> itemVendorProductEntities,
+            List<VendorProductEntity> vendorProductEntities){
         BigDecimal costPrice = new BigDecimal(0);
         VendorProductEntity vendorProductEntity;
         BigDecimal unitPrice;
