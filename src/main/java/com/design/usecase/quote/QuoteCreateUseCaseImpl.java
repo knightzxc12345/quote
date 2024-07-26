@@ -27,7 +27,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -91,10 +94,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         );
         // 初始化廠商報價單明細清單
         List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = initVendorQuoteDetails(
-                itemEntities,
                 itemVendorProductEntities,
                 vendorProductEntities,
-                vendorQuoteEntities
+                vendorQuoteEntities,
+                request
         );
         // 更新報價單清單
         vendorQuoteEntities = updateVendorQuotes(vendorQuoteEntities, vendorQuoteDetailEntities);
@@ -212,7 +215,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal unitPrice;
         for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
             vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
-            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty()));
+            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQuantity()));
             costPrice = costPrice.add(unitPrice.setScale(0, RoundingMode.HALF_UP));
         }
         return costPrice;
@@ -334,10 +337,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
 
     // 初始化廠商報價單明細清單
     private List<VendorQuoteDetailEntity> initVendorQuoteDetails(
-            List<ItemEntity> itemEntities,
             List<ItemVendorProductEntity> itemVendorProductEntities,
             List<VendorProductEntity> vendorProductEntities,
-            List<VendorQuoteEntity> vendorQuoteEntities){
+            List<VendorQuoteEntity> vendorQuoteEntities,
+            QuoteCreateRequest request){
         List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = new ArrayList<>();
         if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
             return vendorQuoteDetailEntities;
@@ -352,10 +355,10 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
             tempItemVendorProductEntities = getItemVendorProducts(itemVendorProductEntities, vendorQuoteEntity);
             // 初始化廠商報價單明細清單
             tempVendorQuoteDetailEntities = getVendorQuoteDetails(
-                    itemEntities,
                     tempItemVendorProductEntities,
                     vendorProductEntities,
-                    vendorQuoteEntity
+                    vendorQuoteEntity,
+                    request
             );
             vendorQuoteDetailEntities.addAll(tempVendorQuoteDetailEntities);
         }
@@ -380,42 +383,57 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
 
     // 初始化廠商報價單明細清單
     private List<VendorQuoteDetailEntity> getVendorQuoteDetails(
-            List<ItemEntity> itemEntities,
             List<ItemVendorProductEntity> itemVendorProductEntities,
             List<VendorProductEntity> vendorProductEntities,
-            VendorQuoteEntity vendorQuoteEntity){
+            VendorQuoteEntity vendorQuoteEntity,
+            QuoteCreateRequest request){
         List<VendorQuoteDetailEntity> vendorQuoteDetailEntities = new ArrayList<>();
         if(null == itemVendorProductEntities || itemVendorProductEntities.isEmpty()){
             return vendorQuoteDetailEntities;
         }
         VendorQuoteDetailEntity vendorQuoteDetailEntity;
-        ItemEntity itemEntity;
         VendorProductEntity vendorProductEntity;
+        QuoteCreateRequest.Item item;
         BigDecimal unitPrice;
+        BigDecimal vendorProductAmount;
+        BigDecimal vendorProductTotalAmount;
         for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
-            itemEntity = CommonUtil.getEntityByUuid(itemEntities, itemVendorProductEntity.getItemUuid());
-            if(null == itemEntity){
-                continue;
-            }
             vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
             if(null == vendorProductEntity){
                 continue;
             }
+            item = getItem(request.items(), itemVendorProductEntity.getItemUuid());
+            if(null == item){
+                continue;
+            }
             unitPrice = vendorProductEntity.getUnitPrice().setScale(0, RoundingMode.HALF_UP);
+            vendorProductAmount = unitPrice.multiply(new BigDecimal(itemVendorProductEntity.getQuantity())).setScale(0, RoundingMode.HALF_UP);
+            vendorProductTotalAmount = vendorProductAmount.multiply(new BigDecimal(item.quantity())).setScale(0, RoundingMode.HALF_UP);
             vendorQuoteDetailEntity = new VendorQuoteDetailEntity();
             vendorQuoteDetailEntity.setVendorQuoteUuid(vendorQuoteEntity.getUuid());
-            vendorQuoteDetailEntity.setItemUuid(itemEntity.getUuid());
-            vendorQuoteDetailEntity.setItemNo(itemEntity.getNo());
-            vendorQuoteDetailEntity.setItemName(itemEntity.getName());
-            vendorQuoteDetailEntity.setItemSpec(itemEntity.getSpec());
-            vendorQuoteDetailEntity.setItemUnit(itemEntity.getUnit());
+            vendorQuoteDetailEntity.setItemUuid(itemVendorProductEntity.getItemUuid());
             vendorQuoteDetailEntity.setVendorProductUuid(vendorProductEntity.getUuid());
             vendorQuoteDetailEntity.setVendorProductUnitPrice(unitPrice);
-            vendorQuoteDetailEntity.setQuantity(itemVendorProductEntity.getQty());
-            vendorQuoteDetailEntity.setVendorProductAmount(unitPrice.multiply(new BigDecimal(itemVendorProductEntity.getQty())).setScale(0, RoundingMode.HALF_UP));
+            vendorQuoteDetailEntity.setQuantity(itemVendorProductEntity.getQuantity());
+            vendorQuoteDetailEntity.setVendorProductAmount(vendorProductAmount);
+            vendorQuoteDetailEntity.setProductQuantity(item.quantity());
+            vendorQuoteDetailEntity.setVendorProductTotalAmount(vendorProductTotalAmount);
             vendorQuoteDetailEntities.add(vendorQuoteDetailEntity);
         }
         return vendorQuoteDetailEntities;
+    }
+
+    // 取得項目
+    private QuoteCreateRequest.Item getItem(List<QuoteCreateRequest.Item> items, UUID itemUuid){
+        if(null == items || items.isEmpty()){
+            return null;
+        }
+        for(QuoteCreateRequest.Item item : items){
+            if(item.itemUuid().equals(itemUuid)){
+                return item;
+            }
+        }
+        return null;
     }
 
     // 更新報價單清單
@@ -435,7 +453,7 @@ public class QuoteCreateUseCaseImpl implements QuoteCreateUseCase {
         BigDecimal totalAmount = new BigDecimal(0);
         for(VendorQuoteDetailEntity vendorQuoteDetailEntity : vendorQuoteDetailEntities){
             if(vendorQuoteDetailEntity.getVendorQuoteUuid().equals(vendorQuoteEntity.getUuid())){
-                totalAmount = totalAmount.add(vendorQuoteDetailEntity.getVendorProductAmount().setScale(0, RoundingMode.HALF_UP));
+                totalAmount = totalAmount.add(vendorQuoteDetailEntity.getVendorProductTotalAmount().setScale(0, RoundingMode.HALF_UP));
             }
         }
         return totalAmount.setScale(0, RoundingMode.HALF_UP);

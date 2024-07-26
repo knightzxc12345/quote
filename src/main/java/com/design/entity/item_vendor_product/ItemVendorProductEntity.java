@@ -56,13 +56,13 @@ public class ItemVendorProductEntity extends BaseEntity {
 
     // 數量
     @Column(
-            name = "qty",
+            name = "quantity",
             nullable = false,
             updatable = true,
             unique = false
     )
     @NotNull
-    private Integer qty;
+    private Integer quantity;
 
     // 是否刪除
     @Column(

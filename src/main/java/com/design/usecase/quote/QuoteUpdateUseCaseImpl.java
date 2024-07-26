@@ -172,7 +172,7 @@ public class QuoteUpdateUseCaseImpl implements QuoteUpdateUseCase {
         BigDecimal unitPrice;
         for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
             vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
-            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty()));
+            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQuantity()));
             costPrice = costPrice.add(unitPrice.setScale(0, RoundingMode.HALF_UP));
         }
         return costPrice;

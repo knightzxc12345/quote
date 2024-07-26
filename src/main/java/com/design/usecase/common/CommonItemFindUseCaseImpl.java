@@ -111,7 +111,7 @@ public class CommonItemFindUseCaseImpl implements CommonItemFindUseCase {
         VendorProductEntity vendorProductEntity;
         for(ItemVendorProductEntity itemVendorProductEntity : itemVendorProductEntities){
             vendorProductEntity = CommonUtil.getEntityByUuid(vendorProductEntities, itemVendorProductEntity.getVendorProductUuid());
-            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQty()));
+            unitPrice = vendorProductEntity.getUnitPrice().multiply(new BigDecimal(itemVendorProductEntity.getQuantity()));
             total = total.add(unitPrice);
         }
         return total;

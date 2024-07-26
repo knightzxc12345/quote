@@ -189,7 +189,7 @@ public class ItemFindUseCaseImpl implements ItemFindUseCase {
                     vendorEntity.getName(),
                     vendorProductEntity.getUuid(),
                     vendorProductEntity.getName(),
-                    itemVendorProductEntity.getQty(),
+                    itemVendorProductEntity.getQuantity(),
                     vendorProductEntity.getUnitPrice()
             ));
         }

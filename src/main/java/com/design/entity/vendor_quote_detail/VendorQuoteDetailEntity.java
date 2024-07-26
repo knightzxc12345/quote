@@ -47,48 +47,6 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @NotNull
     private UUID itemUuid;
 
-    // 品項編號
-    @Column(
-            name = "item_no",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 10
-    )
-    private String itemNo;
-
-    // 品項名稱
-    @Column(
-            name = "item_name",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 64
-    )
-    @NotBlank
-    private String itemName;
-
-    // 品項規格
-    @Column(
-            name = "item_spec",
-            nullable = false,
-            updatable = true,
-            unique = false,
-            length = 256
-    )
-    @NotBlank
-    private String itemSpec;
-
-    // 品項單位
-    @Column(
-            name = "item_unit",
-            nullable = true,
-            updatable = true,
-            unique = false,
-            length = 32
-    )
-    private String itemUnit;
-
     // 廠商產品uuid
     @Column(
             name = "vendor_product_uuid",
@@ -123,7 +81,7 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @NotNull
     private Integer quantity;
 
-    // 廠商產品總計
+    // 廠商產品合計
     @Column(
             name = "vendor_product_amount",
             nullable = false,
@@ -134,6 +92,29 @@ public class VendorQuoteDetailEntity extends BaseEntity {
     @Min(0)
     @NotNull
     private BigDecimal vendorProductAmount;
+
+    // 產品數量
+    @Column(
+            name = "product_quantity",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Min(0)
+    @NotNull
+    private Integer productQuantity;
+
+    // 廠商產品總計
+    @Column(
+            name = "vendor_product_total_amount",
+            nullable = false,
+            updatable = true,
+            unique = false
+    )
+    @Digits(integer = 10, fraction = 0)
+    @Min(0)
+    @NotNull
+    private BigDecimal vendorProductTotalAmount;
 
     // 是否刪除
     @Column(
