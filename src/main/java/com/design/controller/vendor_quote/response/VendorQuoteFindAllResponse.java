@@ -6,9 +6,9 @@ public record VendorQuoteFindAllResponse(
 
         UUID vendorQuoteUuid,
 
-        UUID vendorUuid,
+        String vendorName,
 
-        UUID customerUuid,
+        String customerName,
 
         String status,
 

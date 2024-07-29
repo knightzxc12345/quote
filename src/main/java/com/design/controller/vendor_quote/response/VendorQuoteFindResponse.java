@@ -5,21 +5,25 @@ import java.util.UUID;
 
 public record VendorQuoteFindResponse(
 
-        UUID vendorUuid,
+        String vendorName,
 
-        UUID customerUuid,
+        String customerName,
 
         Integer status,
 
-        List<VendorQuoteFindResponse.Product> products
+        List<VendorQuoteFindResponse.Item> items
 
 ) {
 
-        public record Product(
+        public record Item(
 
-                UUID itemUuid,
+                String itemName,
 
-                UUID productUuid,
+                String itemNo,
+
+                String itemSpec,
+
+                String itemUnit,
 
                 Integer qty
 
